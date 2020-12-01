@@ -96,7 +96,7 @@ input {
   transform: translateX(-50%);
   width: 52%;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     width: 75%;
   }
 }
@@ -105,7 +105,7 @@ input {
   position: relative;
   display: flex;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     display: block;
     padding: 1rem;
   }
@@ -148,7 +148,7 @@ input {
   padding-right: 1rem;
   font-size: .75em;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     font-size: .6em;
     margin-bottom: .15em;
   }
@@ -158,7 +158,7 @@ input {
   font-size: .8em;
   text-align: right;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     text-align: left;
   }
 }
