@@ -343,11 +343,10 @@ body {
 .ellogo {
   z-index: 4;
   position: absolute;
-  bottom: .5rem;
+  bottom: .75rem;
   left: 50%;
-  width: 6rem;
+  height: calc(10vmin - 1.25rem);
   box-sizing: border-box;
-  padding: .5rem;
   transform: translateX(-50%);
 
   svg {
