@@ -43,11 +43,6 @@ body {
   overflow: hidden;
 }
 
-input {
-  position: absolute;
-  z-index: 2;
-}
-
 .wrap__hasGradients {
   .colors .color {
     &::after {
@@ -171,7 +166,7 @@ input {
   left: 100%;
   margin: 0;
   padding: 0;
-  transform: translate(-60%, -60%);
+  transform: translate(-55%, -55%);
   font-size: 2em;
   width: 1.2em;
   height: 1.2em;
@@ -221,7 +216,7 @@ input {
   pointer-events: none;
   box-sizing: border-box;
   padding: 1rem;
-  padding-right: calc(25% + 1rem); 
+  padding-right: calc(25% + 2rem); 
   background: var(--color-bg);
   //backdrop-filter: blur(5px);
 
@@ -230,10 +225,12 @@ input {
   
   color: #fff;
 
-
   transform: translateX(-50%) scale(.99);
   
-  
+  @media (max-width: 800px) {
+    padding-right: 1rem; 
+  }
+
   &__setting {
     display: block;
 
@@ -249,9 +246,14 @@ input {
       }
     }
   }
-
-  input {
-    position: relative;
+  select {
+    font-size: .8em;
+    border-radius: 2rem;
+    padding: .2rem;
+  }
+  input, select {
+    display: block;
+    box-sizing: border-box;
 
     &[type=number] {
       color: #fff;
@@ -287,13 +289,30 @@ input {
   transition: 400ms transform cubic-bezier(0.3, 0.7, 0, 1);
 }
 
+.pannel {
+  @media (max-width: 800px) {
+    opacity: 0;
+    z-index: 5;
+    transform: translateX(-50%) scale(.8);
+  }
+}
+
 .wrap__showSettings .pannel {
   pointer-events: all;
   transform: translateX(-75%);
+
+  @media (max-width: 800px) {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
 }
 
 .wrap__showSettings .colors {
   transform: translateX(-25%);
+
+  @media (max-width: 800px) {
+    transform: translateX(-50%);
+  }
 }
 
 .pannel__settingtitle {
@@ -301,7 +320,7 @@ input {
   font-weight: bold;
   font-style: italic;
   line-height: 1;
-  margin-bottom: .25em;
+  margin-bottom: .4em;
 }
 
 .pannel__inputs {
