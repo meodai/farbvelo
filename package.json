@@ -1,0 +1,37 @@
+{
+  "name": "farbvelo",
+  "version": "1.0.0",
+  "description": "color harmonie cycler",
+  "main": "index.pug",
+  "scripts": {
+    "start": "parcel index.pug",
+    "build": "parcel build *.pug",
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meodai/farbvelo.git"
+  },
+  "author": "meodai",
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/meodai/farbvelo/issues"
+  },
+  "homepage": "https://github.com/meodai/farbvelo#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.5.0",
+    "pug": "^3.0.0",
+    "sass": "^1.29.0"
+  },
+  "dependencies": {
+    "chroma-js": "^2.1.0",
+    "hsluv": "^0.1.0",
+    "vue": "^2.6.12"
+  },
+  "staticFiles": {
+    "staticPath": "public"
+  }
+}

@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
+:root {
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+
+  background: transparent;
+
+  /* inherit font & color from ancestor */
+  color: inherit;
+  font: inherit;
+
+  /* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+  line-height: normal;
+
+  /* Corrects font smoothing for webkit */
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+
+  /* Corrects inability to style clickable `input` types in iOS */
+  -webkit-appearance: none;
+}
+
+html {
+  font-size: calc(.75rem + 1.15vh);
+  font-family: 'Space Mono', monospace;
+}
+
+body {
+  height: 100vh;
+  background: #212121;
+  overflow: hidden;
+}
+
+input {
+  position: absolute;
+  z-index: 2;
+}
+
+.wrap__hasGradients {
+  .colors .color {
+    &::after {
+      opacity: .5;
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      box-shadow: 0 0 10rem currentColor;
+    }
+  }
+  .bg {
+    display: block;
+  }
+}
+
+.wrap,
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.bg {
+  display: none;
+}
+
+.colors {
+  position: absolute;
+  left: 50%;
+  bottom: 10vmin;
+  top: 10vmin;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  transform: translateX(-50%);
+  width: 52%;
+
+  @media (max-width: 700px) {
+    width: 75%;
+  }
+}
+
+.colors .color {
+  position: relative;
+  display: flex;
+
+  @media (max-width: 700px) {
+    display: block;
+    padding: 1rem;
+  }
+
+  align-items: center;
+  padding: 0 1rem;
+  flex-grow: 1;
+
+  /*
+  border: solid currentColor;
+  border-width: 0 2px;
+  */
+  transition: 200ms color linear,
+  200ms background-color linear,
+  300ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
+  min-height: 0.1vmax;
+
+  &:last-child {
+    padding-bottom: #{1.61803 * 4rem};
+  }
+
+  &:hover {
+    padding-bottom: #{1.61803 * 4rem};
+  }
+}
+
+.colors:hover .color {
+  &:last-child {
+    padding-bottom: 1rem;
+  }
+
+  &:hover {
+    padding-bottom: #{1.61803 * 4rem};
+  }
+}
+
+.label {
+  flex-grow: 1;
+  padding-right: 1rem;
+  font-size: .75em;
+
+  @media (max-width: 700px) {
+    font-size: .6em;
+    margin-bottom: .15em;
+  }
+}
+
+.name {
+  font-size: .8em;
+  text-align: right;
+
+  @media (max-width: 700px) {
+    text-align: left;
+  }
+}
+
+.refresh,
+.settings {
+  z-index: 1;
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  margin: 0;
+  padding: 0;
+  transform: translate(-60%, -60%);
+  font-size: 2em;
+  width: 1.2em;
+  height: 1.2em;
+  background: #000;
+  color: #fff;
+
+  border-radius: 50%;
+  outline: 0;
+  box-shadow: 0 0 2rem rgba(#000, .2);
+  cursor: pointer;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-name: rotate;
+    animation-duration: 3s;
+    width: .6em;
+    height: .6em;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-play-state: paused;
+    line-height: 1;
+    fill: #fff;
+  }
+
+  &:hover {
+    svg {
+      animation-play-state: running;
+    }
+  }
+}
+
+.settings {
+  margin-left: -1.6em;
+
+  svg {
+    fill: #fff;
+    animation: none;
+    width: .5em;  
+    height: .5em;
+  }
+}
+
+.pannel {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  box-sizing: border-box;
+  padding: 1rem;
+  top: -1rem;
+  left: -1rem;
+  right: -1rem;
+  bottom: -1rem;
+  background: rgba(#000,.2);
+  backdrop-filter: blur(5px);
+  
+  color: #fff;
+
+  transition: 200ms opacity linear, 400ms transform cubic-bezier(0.3,0.7,0.3,1.6);
+  transform: scale(.8);
+  border: 4px solid #fff;
+
+  &__setting {
+    display: block;
+  }
+}
+
+.pannel__visible {
+  opacity: 1;
+  pointer-events: all;
+  display: block;
+  transform: scale(1);
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
