@@ -482,7 +482,7 @@ body {
     margin-top: 1em;
     margin-bottom: 2em;
   }
-  
+
   ol, ul, li {
     list-style: none;
   }
@@ -498,6 +498,18 @@ body {
   a {
     color: #fff;
   }
+}
 
-  
+.title {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  left: 0;
+  font-weight: normal;
+  //font-style: italic;
+  text-align: center;
+  top: 100%;
+  font-size: .8rem;
+  padding: 1rem;
+  color: #fff;
 }

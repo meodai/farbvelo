@@ -86,6 +86,16 @@ let colors = new Vue({
     }
   },
   computed: {
+    paletteTitle: function() {
+      if( this.names.length ) {
+        const first = this.names[0].name.match(/[^\s-]+-?/g)[0];
+        let last = this.names[this.names.length - 1].name.match(/[^\s-]+-?/g);
+        last = last[last.length - 1];
+        return `${first} ${last}`;
+      } else {
+        return 'Doubble Rainbow'
+      }
+    },
     colors: function () {
       const colors = chroma
         .scale(this.colorsValues.length ? this.colorsValues : ['#f00', '#0f0', '#00f', '#0ff'])
