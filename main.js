@@ -59,10 +59,13 @@ let colors = new Vue({
       hasGradients: true,
       hasBackground: true,
       padding: .175,
+      minHueDistance: 60,
       intermpolationColorModel: 'lab',
       intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
+      geneartorFunction: 'Legacy',
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random']
     }
   },
   watch: {
@@ -75,6 +78,12 @@ let colors = new Vue({
     randomOrder: function () {
       this.newColors();
     },
+    geneartorFunction: function () {
+      this.newColors();
+    },
+    minHueDistance: function () {
+      this.newColors();
+    }
   },
   computed: {
     colors: function () {
@@ -105,66 +114,135 @@ let colors = new Vue({
       mode = 'lab', 
       padding = .175, 
       parts = 4, 
-      randomOrder = false
+      randomOrder = false,
+      minHueDiffAngle = 60,
     ) {
       let colors = [];
+
+      minHueDiffAngle = parseInt(minHueDiffAngle);
       total = parseInt(total);
       parts = parseInt(parts);
-      const part = Math.floor(total / parts);
-      const reminder = total % parts;
 
-      // hues to pick from
-      const baseHue = random(0, 360);
-      const hues = [0, 60, 120, 180, 240, 300].map(offset => {
-        return (baseHue + offset) % 360;
-      });
+      minHueDiffAngle = Math.min(minHueDiffAngle, 360/parts);
+      
+      if (this.geneartorFunction === 'Hue Bingo') {
+        // create an array of hues to pick from.
+        const baseHue = random(0, 360);
+        const hues = new Array(360 / minHueDiffAngle).fill('').map((offset, i) => {
+          return (baseHue + i * minHueDiffAngle) % 360;
+        });
 
-      //  low saturated color
-      const baseSaturation = random(5, 40);
-      const baseLightness = random(0, 20);
-      const rangeLightness = 90 - baseLightness;
+        //  low saturation color
+        const baseSaturation = random(5, 40);
+        const baseLightness = random(0, 20);
+        const rangeLightness = 90 - baseLightness;
 
-      colors.push(
-        hsluvToHex([
-          hues[0],
-          baseSaturation,
-          baseLightness * random(0.25, 0.75),
-        ])
-      );
+        colors.push(
+          hsluvToHex([
+            hues[0],
+            baseSaturation,
+            baseLightness * random(0.25, 0.75),
+          ])
+        );
 
-      for (let i = 0; i < (part - 1); i++) {
+        // random shades
+        const minSat = random(50, 70);
+        const maxSat = minSat + 30;
+        const minLight = random(35, 70);
+        const maxLight = Math.min(minLight + random(20, 40), 95);
+        // const lightDiff = maxLight - minLight;
+
+        const remainingHues = [...hues];
+
+        for (let i = 0; i < parts - 2; i++) {
+          const hue = remainingHues.splice(random(0, remainingHues.length - 1),1)[0];
+          const saturation = random(minSat, maxSat);
+          const light = baseLightness + random(0,10) + ((rangeLightness/(parts - 1)) * i);
+
+          colors.push( 
+            hsluvToHex([
+              hue,
+              saturation,
+              random(light, maxLight),
+            ])
+          )
+        }
+        
+        colors.push( 
+          hsluvToHex([
+            remainingHues[0],
+            baseSaturation,
+            rangeLightness + 10,
+          ])
+        );
+      } else if (this.geneartorFunction === 'Legacy') {
+        const part = Math.floor(total / parts);
+        const reminder = total % parts;
+
+        // hues to pick from
+        const baseHue = random(0, 360);
+        const hues = new Array(360 / minHueDiffAngle).fill('').map((offset, i) => {
+          return (baseHue + i * minHueDiffAngle) % 360;
+        });
+
+        //  low saturated color
+        const baseSaturation = random(5, 40);
+        const baseLightness = random(0, 20);
+        const rangeLightness = 90 - baseLightness;
+
+        colors.push(
+          hsluvToHex([
+            hues[0],
+            baseSaturation,
+            baseLightness * random(0.25, 0.75),
+          ])
+        );
+
+        for (let i = 0; i < (part - 1); i++) {
+          colors.push( 
+            hsluvToHex([
+              hues[0],
+              baseSaturation,
+              baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
+            ]) 
+          );
+        }
+
+        // random shades
+        const minSat = random(50, 70);
+        const maxSat = minSat + 30;
+        const minLight = random(45, 80);
+        const maxLight = Math.min(minLight + 40, 95);
+
+        for (let i = 0; i < (part + reminder - 1); i++) {
+          colors.push( 
+            hsluvToHex([
+              hues[random(0, hues.length - 1)],
+              random(minSat, maxSat),
+              random(minLight, maxLight),
+            ])
+          )
+        }
+        
         colors.push( 
           hsluvToHex([
             hues[0],
             baseSaturation,
-            baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
-          ]) 
-        );
-      }
-
-      // random shades
-      const minSat = random(50, 70);
-      const maxSat = minSat + 30;
-      const minLight = random(45, 80);
-      const maxLight = Math.min(minLight + 40, 95);
-
-      for (let i = 0; i < (part + reminder - 1); i++) {
-        colors.push( 
-          hsluvToHex([
-            hues[random(0, hues.length - 1)],
-            random(minSat, maxSat),
-            random(minLight, maxLight),
+            rangeLightness,
           ])
-        )
+        );
+      } if (this.geneartorFunction === 'Full Random') {
+        for (let i = 0; i < parts; i++) {
+          colors.push( 
+            hsluvToHex([  
+              random(0, 360),
+              random(0, 100),
+              random(0, 100),
+            ])
+          )
+        }
+        console.log(colors)
       }
-      
-      colors.push( 
-        hsluvToHex([
-          hues[0],
-          baseSaturation,
-          rangeLightness,
-        ])
-      );
       
       if ( randomOrder ) {
         colors = shuffleArray(colors);
