@@ -1,6 +1,7 @@
 // import Vue from 'vue';
 import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
+import 'cmyk-rgb'
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -12,14 +13,21 @@ const random = (min, max) => {
 };
 
 Vue.component('color', {
-  props: ['color', 'name'],
-  template: `<div class="color" v-bind:style="{background: color, color: textColor}">
-              <div class="label">{{ color }}</div>
+  props: ['colorhex', 'name', 'colorvaluetype'],
+  template: `<div class="color" v-bind:style="{background: colorhex, color: textColor}">
+              <div class="label">{{ value }}</div>
               <div class="name">{{ name.name }}</div>
              </div>`,
   computed: {
+    value: function () {
+      if(this.colorvaluetype === 'hex') {
+        return this.colorhex;
+      } else  {
+        return chroma(this.colorhex).css(this.colorvaluetype);
+      }
+    },
     textColor: function () {
-      let currentColor = chroma( this.color );
+      let currentColor = chroma( this.colorhex );
       let lum = currentColor.luminance();
       let contrastColor;
       if ( lum < 0.15 ) {
@@ -46,6 +54,9 @@ let colors = new Vue({
       hasBackground: true,
       padding: .175,
       intermpolationColorModel: 'lab',
+      intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
+      colorValueType: 'hex',
+      colorValueTypes: ['hex', 'rgb', 'hsl'],
     }
   },
   watch: {

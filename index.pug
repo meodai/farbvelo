@@ -67,6 +67,13 @@ html
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasGradients")
           h4.pannel__settingtitle Show Glow
+
+        label.pannel__setting 
+          h4.pannel__settingtitle Color Values
+          .pannel__inputs 
+            select(v-model="colorValueType")
+              option(v-for="valueType in colorValueTypes", :value=valueType).
+                {{ valueType }}
       
       .colors
         button.refresh(v-on:click="newColors").
@@ -79,7 +86,7 @@ html
               <path d="M73.9,68.3H37a13.16,13.16,0,0,0-25.4,0H3.7A3.69,3.69,0,0,0,0,72a3.63,3.63,0,0,0,3.7,3.7h7.9a13.16,13.16,0,0,0,25.4,0H73.9A3.69,3.69,0,0,0,77.6,72,3.63,3.63,0,0,0,73.9,68.3ZM24.3,78a6,6,0,0,1-6-6,6,6,0,0,1,12,0A6,6,0,0,1,24.3,78Z"/>
             </g>
           </svg>
-        color(v-for="(c, i) in colors", :name="names.length ? names[i] : 'rainbow'" :color="c")
+        color(v-for="(c, i) in colors", :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c")
 
       a(href="https://www.elastiq.ch/" hreflang="en").ellogo
         svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 352 185')
