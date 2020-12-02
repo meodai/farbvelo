@@ -14,10 +14,16 @@ const random = (min, max) => {
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype'],
-  template: `<div class="color" v-bind:style="{background: colorhex, color: textColor}">
+  template: `<div @click="copy" class="color" v-bind:style="{background: colorhex, color: textColor}">
               <div class="label">{{ value }}</div>
               <div class="name">{{ name.name }}</div>
              </div>`,
+  
+  methods: {
+    copy: function () {
+      navigator.clipboard.writeText(`${this.name.name}: ${this.value}`);
+    }
+  },
   computed: {
     value: function () {
       if(this.colorvaluetype === 'hex') {
