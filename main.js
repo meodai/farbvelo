@@ -108,6 +108,8 @@ let colors = new Vue({
       randomOrder = false
     ) {
       let colors = [];
+      total = parseInt(total);
+      parts = parseInt(parts);
       const part = Math.floor(total / parts);
       const reminder = total % parts;
 
@@ -170,6 +172,7 @@ let colors = new Vue({
       
       return colors;
     },
+
     getNames: function (colors) {
       fetch(`https://api.color.pizza/v1/${colors.join().replace(/#/g, '')}?noduplicates=true&goodnamesonly=true`)
       .then(data => data.json())
