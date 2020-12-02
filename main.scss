@@ -380,7 +380,6 @@ body {
       background-color: transparent;
     }
   }
-
 }
 
 .colors,
@@ -445,13 +444,11 @@ body {
 }
 
 .ellogo {
-  z-index: 4;
-  position: absolute;
-  bottom: .75rem;
-  left: 50%;
-  height: calc(10vmin - 1.25rem);
+  margin: 1rem auto;
+  display: block;
+  position: relative;
+  width: 40%;
   box-sizing: border-box;
-  transform: translateX(-50%);
 
   svg {
     display: block;
@@ -470,4 +467,32 @@ body {
       stroke: var(--color-inverted);
     }
   }
+}
+
+.footer {
+  h2 {
+    font-style: italic;
+  }
+
+  font-size: .6em;
+  margin-top: 2rem;
+  padding-top: 1rem;
+
+  ol, ul, li {
+    list-style: none;
+  }
+
+  li + li{
+    margin-top: 1em;
+  }
+
+  ul, ol {
+    margin-top: 1em;
+  }
+
+  a {
+    color: #fff;
+  }
+
+  
 }
