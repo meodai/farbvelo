@@ -12,3 +12,20 @@ FarbVelo (Swiss-German for color bicycle) is a playful color picking tool. It us
 4. Icons made by [Ravindra Kalkani](https://thenounproject.com/search/?q=reload&i=1973430).
 5. Originally released as a [Codepen](https://codepen.io/meodai/pen/RerqjG).
 6. Source is on [github](https://github.com/meodai/farbvelo) and licensed under a [Creative Commons Attribution Share Alike 4.0](https://github.com/meodai/farbvelo/blob/main/LICENSE.md) license.
+
+## Samples
+
+[sample screenshot of color bingo engine](public/samples/engine-color-bingo-01.png)
+[sample screenshot of color bingo engine](public/samples/engine-color-bingo-02.png)
+[sample screenshot of color bingo engine](public/samples/engine-color-bingo-03.png)
+[sample screenshot of color bingo engine](public/samples/engine-color-bingo-04.png)
+[sample screenshot of color bingo engine](public/samples/engine-color-bingo-05.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-01.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-02.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-03.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-04.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-05.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-06.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-07.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-08.png)
+[sample screenshot of legacy engine](public/samples/engine-legacy-09.png)
