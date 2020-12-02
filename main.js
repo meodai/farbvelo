@@ -122,18 +122,22 @@ let colors = new Vue({
       const baseLightness = random(0, 20);
       const rangeLightness = 90 - baseLightness;
 
-      colors.push( hsluvToHex([
-        hues[0],
-        baseSaturation,
-        baseLightness * random(.25, .75),
-      ]) );
-
-      for (let i = 0; i < (part - 1); i++) {
-        colors.push( hsluvToHex([
+      colors.push(
+        hsluvToHex([
           hues[0],
           baseSaturation,
-          baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
-        ]) );
+          baseLightness * random(0.25, 0.75),
+        ])
+      );
+
+      for (let i = 0; i < (part - 1); i++) {
+        colors.push( 
+          hsluvToHex([
+            hues[0],
+            baseSaturation,
+            baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
+          ]) 
+        );
       }
 
       // random shades
@@ -143,18 +147,22 @@ let colors = new Vue({
       const maxLight = Math.min(minLight + 40, 95);
 
       for (let i = 0; i < (part + reminder - 1); i++) {
-        colors.push( hsluvToHex([
-          hues[random(0, hues.length - 1)],
-          random(minSat, maxSat),
-          random(minLight, maxLight),
-        ]) )
+        colors.push( 
+          hsluvToHex([
+            hues[random(0, hues.length - 1)],
+            random(minSat, maxSat),
+            random(minLight, maxLight),
+          ])
+        )
       }
       
-      colors.push( hsluvToHex([
-        hues[0],
-        baseSaturation,
-        rangeLightness,
-      ]) );
+      colors.push( 
+        hsluvToHex([
+          hues[0],
+          baseSaturation,
+          rangeLightness,
+        ])
+      );
       
       if ( randomOrder ) {
         colors = shuffleArray(colors);
