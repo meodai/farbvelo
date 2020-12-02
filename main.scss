@@ -393,6 +393,7 @@ body {
 }
 .pannel {
   box-shadow: inset 0 0 0 1px #fff;
+  overflow: auto;
   @media (max-width: 850px) {
     opacity: 0;
     z-index: 5;
