@@ -18,6 +18,7 @@ button {
   padding: 0;
   width: auto;
   overflow: visible;
+  touch-action: manipulation;
 
   background: transparent;
 
@@ -258,6 +259,7 @@ body {
   input, select {
     display: block;
     box-sizing: border-box;
+    touch-action: manipulation;
 
     &[type=number] {
       color: #fff;
