@@ -501,15 +501,9 @@ body {
 }
 
 .title {
-  position: absolute;
-  z-index: 4;
-  right: 0;
-  left: 0;
-  font-weight: normal;
+  font-weight: bold;
   //font-style: italic;
-  text-align: center;
-  bottom: 100%;
-  font-size: .8rem;
-  padding: 1rem;
   color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1em;
 }
