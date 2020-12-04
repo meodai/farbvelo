@@ -202,7 +202,8 @@ body {
 }
 
 .refresh,
-.settings {
+.settings,
+.copy {
   z-index: 20;
   position: absolute;
   top: 100%;
@@ -213,7 +214,7 @@ body {
   font-size: 2em;
   width: 1.2em;
   height: 1.2em;
-  background: #000;
+  background: var(--color-last, #212121);
   color: #fff;
 
   border-radius: 50%;
@@ -248,10 +249,21 @@ body {
   margin-left: -1.6em;
 
   svg {
-    fill: #fff;
     animation: none;
     width: .5em;  
     height: .5em;
+  }
+}
+
+.copy {
+  margin-left: -3.2em;
+  svg {
+    animation: none;
+    width: .6em;
+    height: .6em;
+    stroke: #fff;
+    stroke-width: 1px;
+    margin-top: -.01em;
   }
 }
 

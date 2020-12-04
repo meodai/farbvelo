@@ -97,6 +97,12 @@ let colors = new Vue({
         return 'Doubble Rainbow'
       }
     },
+    lastColor: function () {
+      return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#2121';
+    },
+    firstColor: function () {
+      return this.colors && this.colors.length ? this.colors[0] : '#212121';
+    },
     colors: function () {
       const colors = chroma
         .scale(this.colorsValues.length ? this.colorsValues : ['#f00', '#0f0', '#00f', '#0ff'])
@@ -262,6 +268,11 @@ let colors = new Vue({
       return colors;
     },
 
+    copy: function () {
+      const list = this.names.map(color => ({name: color.name ,value: color.requestedHex}));
+      navigator.clipboard.writeText(JSON.stringify(list));
+    },
+
     getNames: function (colors) {
       fetch(`https://api.color.pizza/v1/${colors.join().replace(/#/g, '')}?noduplicates=true&goodnamesonly=true`)
       .then(data => data.json())
@@ -279,9 +290,6 @@ let colors = new Vue({
       )
       
       this.colorsValues = colorArr;
-      
-      document.querySelector('.refresh').style.background = this.colors[this.colors.length - 1];
-      document.querySelector('.settings').style.background = this.colors[this.colors.length - 1];
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
