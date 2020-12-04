@@ -123,7 +123,7 @@ body {
   */
   transition: 200ms color linear,
               200ms background-color linear,
-              300ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
+              250ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
 
   min-height: 0.1vmax;
 
@@ -500,10 +500,11 @@ body {
     font-weight: 900;
   }
 
-  font-size: .6em;
+  font-size: .7em;
   margin-top: 2rem;
   padding-top: 1rem;
-
+  line-height: 1.4;
+  
   p {
     margin-top: 1em;
     margin-bottom: 2em;
