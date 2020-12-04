@@ -269,8 +269,15 @@ let colors = new Vue({
     },
 
     copy: function () {
+
       const list = this.names.map(color => ({name: color.name ,value: color.requestedHex}));
-      navigator.clipboard.writeText(JSON.stringify(list));
+      let expString = this.paletteTitle + '\n';
+      expString += `⸺\n`;
+      expString = list.reduce((rem, color) => (
+        rem + color.name + ' ' + color.value + '\n'
+      ), expString);
+      
+      navigator.clipboard.writeText(expString);
     },
 
     getNames: function (colors) {
