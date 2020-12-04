@@ -117,13 +117,21 @@ body {
   padding: 0 1rem;
   flex-grow: 1;
 
+
   /*
   border: solid currentColor;
   border-width: 0 2px;
   */
-  transition: 200ms color linear,
-              200ms background-color linear,
+  transition: 0ms color linear,
+              0ms background-color linear,
               250ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
+
+  
+  @for $i from 1 through 30 {
+   &:nth-child(#{$i}) {
+     // transition-delay: #{50 + $i * 50}ms, #{50 + $i * 50}ms, 0ms;
+   }
+  }
 
   min-height: 0.1vmax;
 
