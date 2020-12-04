@@ -38,16 +38,19 @@ html
           h1.title {{paletteTitle}}
 
         label.pannel__setting 
-          h4.pannel__settingtitle Colors
-          .pannel__inputs 
-            input(type="range", v-model="amount", min="3", max="10")
+          h4.pannel__settingtitle 
+            span Colors
             input(type="number", v-model="amount", min="3", max="10")
 
+          .pannel__inputs 
+            input(type="range", v-model="amount", min="3", max="10")
+
         label.pannel__setting 
-          h4.pannel__settingtitle Color Stops
+          h4.pannel__settingtitle 
+            span Color Stops
+            input(type="number", v-model="colorsInGradient", min="2", :max="amount")
           .pannel__inputs 
             input(type="range", v-model="colorsInGradient", min="2", :max="amount")
-            input(type="number", v-model="colorsInGradient", min="2", :max="amount")
 
         label.pannel__setting 
           h4.pannel__settingtitle Randomizer Engine
@@ -57,17 +60,21 @@ html
                 {{ functionName }}
 
         label.pannel__setting 
-          h4.pannel__settingtitle Mix Padding
-          .pannel__inputs 
-            input(type="range", v-model="padding", min="0", max="1", step=".001")
+          h4.pannel__settingtitle 
+            span Mix Padding
             input(type="number", v-model="padding", min="0", max="1", step=".001")
         
-        label.pannel__setting(v-if="geneartorFunction !== 'Full Random'") 
-          h4.pannel__settingtitle Min. Hue Distance
           .pannel__inputs 
-            input(type="range", v-model="minHueDistance", min="0", :max="360/colorsInGradient", step="1")
+            input(type="range", v-model="padding", min="0", max="1", step=".001")
+            
+        label.pannel__setting(v-if="geneartorFunction !== 'Full Random'") 
+          h4.pannel__settingtitle 
+            span Min. Hue Distance
             input(type="number", v-model="minHueDistance", min="0", :max="360/colorsInGradient", step="1")
 
+          .pannel__inputs 
+            input(type="range", v-model="minHueDistance", min="0", :max="360/colorsInGradient", step="1")
+            
         label.pannel__setting 
           h4.pannel__settingtitle Interpolation Model
           .pannel__inputs 

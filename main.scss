@@ -44,7 +44,7 @@ button {
 
 html {
   font-size: calc(.75rem + 1.15vh);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter UI', sans-serif;
 }
 
 body {
@@ -151,7 +151,9 @@ body {
 .label {
   flex-grow: 1;
   padding-right: 1rem;
-  font-size: .75em;
+  font-size: 0.75em;
+  font-family: 'Space Mono', monospace;
+  
 
   @media (max-width: 850px) {
     font-size: .6em;
@@ -160,7 +162,6 @@ body {
 }
 
 .name {
-  font-family: 'Inter UI', sans-serif;
   font-size: 1em;
   text-align: right;
   font-weight: 300;
@@ -168,6 +169,7 @@ body {
 
   @media (max-width: 850px) {
     text-align: left;
+    font-weight: 400;
   }
 }
 
@@ -229,7 +231,7 @@ body {
   pointer-events: none;
   box-sizing: border-box;
   padding: 1rem;
-  padding-right: calc(25% + 2rem); 
+  padding-right: calc(25% + 1rem); 
   background: var(--color-bg);
   //backdrop-filter: blur(5px);
 
@@ -268,20 +270,32 @@ body {
     display: block;
     box-sizing: border-box;
     touch-action: manipulation;
+    font-family: 'Space Mono', monospace;
 
     &[type=number] {
       color: #fff;
       background: none;
       border: none;
-      font: inherit;
       text-align: right;
-      font-size: .6em;
+      font-size: .8em;
       flex: 0 0 3rem;
       width: 3rem;
     }
   }
   input {
     background-color: transparent;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 
   input[type=range],
@@ -435,12 +449,12 @@ body {
 .pannel__settingtitle {
   font-size: 0.7rem;
   font-weight: normal;
-  font-style: italic;
   line-height: 1;
   margin-bottom: .4em;
 }
 
-.pannel__inputs {
+.pannel__inputs,
+.pannel__settingtitle {
   display: flex;
   > *:first-child {
     flex: 1 0 auto;
@@ -485,7 +499,7 @@ body {
 
 .footer {
   h2 {
-    font-style: italic;
+    font-weight: 900;
   }
 
   font-size: .6em;
@@ -515,8 +529,7 @@ body {
 }
 
 .title {
-  font-weight: bold;
-  font-style: italic;
+  font-weight: 900;
   color: #fff;
   font-size: 1rem;
   margin-bottom: 1em;
