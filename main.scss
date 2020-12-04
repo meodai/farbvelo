@@ -66,6 +66,31 @@ body {
   }
 }
 
+.wrap__hasOutlines {
+  .pannel {
+    border: 2px solid #fff;
+  }
+  .refresh,
+  .settings {
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .colors {
+    .color {
+      &::before {
+        z-index: 10;
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: 0;
+        bottom: -2px;
+        right: 0;
+        border: 4px solid #fff;
+
+      }
+    }
+  }
+} 
+
 .wrap__hasBackground {
   .bg {
     display: block;
@@ -181,7 +206,7 @@ body {
 
 .refresh,
 .settings {
-  z-index: 1;
+  z-index: 20;
   position: absolute;
   top: 100%;
   left: 100%;

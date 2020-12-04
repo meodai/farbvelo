@@ -58,6 +58,7 @@ let colors = new Vue({
       randomOrder: false,
       hasGradients: true,
       hasBackground: true,
+      hasOutlines: false,
       padding: .175,
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
