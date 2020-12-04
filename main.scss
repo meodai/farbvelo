@@ -1,6 +1,11 @@
+@import url('https://rsms.me/inter/inter-ui.css');
+
 :root {
   --color-bg: #212121;
   --color-inverted: #fff;
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body, html {
@@ -155,8 +160,11 @@ body {
 }
 
 .name {
-  font-size: .8em;
+  font-family: 'Inter UI', sans-serif;
+  font-size: 1em;
   text-align: right;
+  font-weight: 300;
+  letter-spacing: -0.02em;
 
   @media (max-width: 850px) {
     text-align: left;
