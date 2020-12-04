@@ -160,10 +160,7 @@ body {
 
   min-height: 0.1vmax;
 
-  &:last-child {
-    padding-bottom: #{1.61803 * 4rem};
-  }
-
+  &:last-child,
   &:hover {
     padding-bottom: #{1.61803 * 4rem};
   }
