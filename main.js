@@ -368,7 +368,7 @@ let colors = new Vue({
           this.padding = Math.max(0, this.padding -= .01);s
         }
       });
-    }
+    } 
   },
   mounted: function () {
     this.newColors();

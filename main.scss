@@ -581,6 +581,12 @@ body {
   font-weight: normal;
   line-height: 1;
   margin-bottom: .4em;
+
+  i {
+    display: inline-block;
+    font-size: .7em;
+    margin-left: 1em;
+  }
 }
 
 .pannel__inputs,
