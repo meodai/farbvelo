@@ -28,7 +28,7 @@ Vue.component('color', {
   
   methods: {
     copy: function () {
-      navigator.clipboard.writeText(`${this.name.name}: ${this.value}`);
+      navigator.clipboard.writeText(`${this.name.name} ・ ${this.value} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
     }
   },
   computed: {
@@ -285,7 +285,10 @@ let colors = new Vue({
     },
 
     copy: function () {
-      const list = this.names.map(color => ({name: color.name ,value: color.requestedHex}));
+      const list = this.names.map(color => ({
+        name: color.name,
+        value: color.requestedHex
+      }));
       let expString = this.paletteTitle + '\n';
       expString += `⸺\n`;
       expString = list.reduce((rem, color) => (

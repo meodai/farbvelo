@@ -157,11 +157,11 @@ body {
               250ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
 
   
-  @for $i from 1 through 30 {
-   &:nth-child(#{$i}) {
+  //@for $i from 1 through 30 {
+  // &:nth-child(#{$i}) {
      // transition-delay: #{50 + $i * 50}ms, #{50 + $i * 50}ms, 0ms;
-   }
-  }
+  // }
+  //}
 
   min-height: 0.1vmax;
 
@@ -182,10 +182,9 @@ body {
 }
 
 .color__info {
-  position: absolute;
-  top: 100%;
   display: none;
 }
+
 
 .color__value {
   flex-grow: 1;
