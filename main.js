@@ -161,7 +161,7 @@ let colors = new Vue({
       if (this.geneartorFunction === 'Hue Bingo') {
         // create an array of hues to pick from.
         const baseHue = random(0, 360);
-        const hues = new Array(360 / minHueDiffAngle).fill('').map((offset, i) => {
+        const hues = new Array(Math.round( 360 / minHueDiffAngle) ).fill('').map((offset, i) => {
           return (baseHue + i * minHueDiffAngle) % 360;
         });
 
@@ -214,7 +214,7 @@ let colors = new Vue({
 
         // hues to pick from
         const baseHue = random(0, 360);
-        const hues = new Array(360 / minHueDiffAngle).fill('').map((offset, i) => {
+        const hues = new Array(Math.round( 360 / minHueDiffAngle)).fill('').map((offset, i) => {
           return (baseHue + i * minHueDiffAngle) % 360;
         });
 
