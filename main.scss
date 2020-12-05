@@ -92,12 +92,6 @@ body {
   }
 } 
 
-.wrap__hasBackground {
-  .bg {
-    display: block;
-  }
-}
-
 .wrap,
 .bg,
 .pannel {
@@ -109,7 +103,16 @@ body {
 }
 
 .bg {
-  display: none;
+  opacity: 0;
+  transform: scale(.7);
+  transition: 300ms opacity linear, 200ms transform ease-out 50ms;
+}
+
+.wrap__hasBackground {
+  .bg {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .colors,
@@ -146,7 +149,6 @@ body {
   align-items: center;
   padding: 0 1rem;
   flex-grow: 1;
-
 
   /*
   border: solid currentColor;
