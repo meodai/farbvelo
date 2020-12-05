@@ -16,7 +16,7 @@ Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype'],
   template: `<aside @click="copy" class="color" v-bind:style="{background: colorhex, color: textColor}">
               <var class="color__value">{{ value }}</var>
-              <h3 class="color__name">{{ name.name }}</h3>
+              <h3 class="color__name">{{ name && name.name }}</h3>
               <section class="color__info">
                 <ol>
                   <li>{{ valueRGB }}</li>
@@ -297,7 +297,6 @@ let colors = new Vue({
       
       navigator.clipboard.writeText(expString);
     },
-
     getNames: function (colors) {
       fetch(`https://api.color.pizza/v1/${colors.join().replace(/#/g, '')}?noduplicates=true&goodnamesonly=true`)
       .then(data => data.json())
@@ -309,6 +308,7 @@ let colors = new Vue({
 
       const $favicon = document.querySelector('[rel="icon"]');
       const faviconSize = 100;
+      const innerSize = 80;
 
       const canvas = document.createElement('canvas');
       canvas.width = faviconSize;
@@ -319,13 +319,27 @@ let colors = new Vue({
       ctx.fillRect(0, 0, faviconSize, faviconSize);
       
       this.colors.forEach((color, i) => {
-        gradient.addColorStop(i/color.length, color);
+        /*ctx.fillStyle = color;
+        ctx.fillRect(
+          (faviconSize - innerSize) / 2,
+          ((faviconSize - innerSize) / 2) + (i/color.length * innerSize),
+          innerSize,
+          (i/color.length) * innerSize
+        )*/
+        gradient.addColorStop(Math.min(1, i/color.length), color);
       });
+
       ctx.fillStyle = gradient;
       ctx.fillRect(faviconSize * .1, faviconSize * .1, faviconSize * .8, faviconSize * .8);
       
       // Replace favicon
       $favicon.href = canvas.toDataURL('image/png');
+    },
+    updateURL: function () {
+      if(this.colors && this.colors.length) {
+        const colorURL = this.colors.reduce((rem,color) => `${rem}${color.replace('#', '')}-`,'').slice(0, -1);;
+        window.location.hash = colorURL;
+      }
     },
     newColors: function () {
       let colorArr = this.generateRandomColors(
@@ -338,6 +352,7 @@ let colors = new Vue({
       
       this.colorsValues = colorArr;
       this.updateFavicon();
+      //this.updateURL();
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
@@ -345,5 +360,22 @@ let colors = new Vue({
   },
   mounted: function () {
     this.newColors();
+    
+    /* intro
+    let i = 6;
+    
+    const loop = () => {
+
+      setTimeout(() => {
+        this.newColors();
+        if(i) {
+          loop();
+        }
+      }, 300 - i * 50);
+      i--;
+    };
+
+    loop();*/
+
   }
 });
