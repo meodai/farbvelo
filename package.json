@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "chroma-js": "^2.1.0",
-    "cmyk-rgb": "^1.0.0",
     "hsluv": "^0.1.0",
+    "lib": "^4.3.0",
     "vue": "^2.6.12"
   },
   "staticFiles": {

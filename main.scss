@@ -130,6 +130,10 @@ body {
   }
 }
 
+.colors__title {
+  display: none;
+}
+
 .colors .color {
   position: relative;
   display: flex;
@@ -177,12 +181,18 @@ body {
   }
 }
 
-.label {
+.color__info {
+  position: absolute;
+  top: 100%;
+  display: none;
+}
+
+.color__value {
   flex-grow: 1;
   padding-right: 1rem;
   font-size: 0.75em;
   font-family: 'Space Mono', monospace;
-  
+  font-style: normal;
 
   @media (max-width: 850px) {
     font-size: .6em;
@@ -190,7 +200,7 @@ body {
   }
 }
 
-.name {
+.color__name {
   font-size: 1em;
   text-align: right;
   font-weight: 300;

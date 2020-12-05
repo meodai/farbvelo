@@ -1,7 +1,7 @@
 // import Vue from 'vue';
 import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
-import 'cmyk-rgb'
+import rgbtocmyk from './lib/rgb-cymk';
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -14,10 +14,17 @@ const random = (min, max) => {
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype'],
-  template: `<div @click="copy" class="color" v-bind:style="{background: colorhex, color: textColor}">
-              <div class="label">{{ value }}</div>
-              <div class="name">{{ name.name }}</div>
-             </div>`,
+  template: `<aside @click="copy" class="color" v-bind:style="{background: colorhex, color: textColor}">
+              <var class="color__value">{{ value }}</var>
+              <h3 class="color__name">{{ name.name }}</h3>
+              <section class="color__info">
+                <ol>
+                  <li>{{ valueRGB }}</li>
+                  <li>{{ valueHSL }}</li>
+                  <li>{{ valueCMYK }}</li>
+                </ol>
+              </section>
+             </aside>`,
   
   methods: {
     copy: function () {
@@ -25,6 +32,15 @@ Vue.component('color', {
     }
   },
   computed: {
+    valueCMYK: function () {
+      return `cmyk(${rgbtocmyk(chroma(this.colorhex).rgb()).map(d => Math.round(d * 100) + `°`).join(',')})`;
+    },
+    valueRGB: function () {
+      return chroma(this.colorhex).css('rgb');
+    },
+    valueHSL: function () {
+      return chroma(this.colorhex).css('hsl');
+    },
     value: function () {
       if(this.colorvaluetype === 'hex') {
         return this.colorhex;
@@ -269,7 +285,6 @@ let colors = new Vue({
     },
 
     copy: function () {
-
       const list = this.names.map(color => ({name: color.name ,value: color.requestedHex}));
       let expString = this.paletteTitle + '\n';
       expString += `⸺\n`;
