@@ -154,7 +154,8 @@ body {
   @media (max-width: 850px) {
     flex-direction: column;
     align-items: flex-start;
-    padding: 1rem;
+    padding: 0 1rem;
+    justify-content: center;
   }
 
   align-items: center;
@@ -212,6 +213,7 @@ body {
 
   @media (max-width: 850px) {
     font-size: .6em;
+    flex-grow: 0;
   }
 }
 
