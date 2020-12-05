@@ -123,7 +123,6 @@ body {
   top: 10vmin;
   display: flex;
   flex-direction: column;
-  cursor: pointer;
 
   transform: translateX(-50%);
   width: 52%;
@@ -213,16 +212,48 @@ body {
   }
 }
 
-.refresh,
-.settings,
-.copy {
-  z-index: 20;
+.buttons {
   position: absolute;
-  top: 100%;
-  left: 100%;
+  
+  right: 24%;
+  bottom: 10vmin;
+  display: flex;
+  z-index: 20;
+  transform: translate(1.1em, 1.1em);
+  
+  @media (max-width: 850px) {
+    right: 12.5%;
+  }
+}
+
+.botton {
+  transform: translateX(0);
+  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms;
+  
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      transition-delay: #{50 + $i * 50}ms;
+    }
+  }
+  
+}
+
+.wrap__showSettings .botton {
+  transform: translateX(13.5vw);
+  @for $i from 1 through 5 {
+    &:nth-child(#{5 - $i}) {
+      transition-delay: #{50 + $i * 50}ms;
+    }
+  }
+  @media (max-width: 850px) {
+    transform: translateX(0);
+  }
+}
+
+.botton {
+  position: relative;
   margin: 0;
   padding: 0;
-  transform: translate(-55%, -55%);
   font-size: 2em;
   width: 1.2em;
   height: 1.2em;
@@ -234,6 +265,9 @@ body {
   box-shadow: 0 0 2rem rgba(#000, .2);
   cursor: pointer;
 
+  & + & {
+    margin-left: .5rem;
+  }
   svg {
     position: absolute;
     top: 50%;
@@ -258,18 +292,37 @@ body {
 }
 
 .settings {
-  margin-left: -1.6em;
-
   svg {
     animation: none;
-    width: .5em;  
+    width: .5em;    
     height: .5em;
+  }
+  &::after {
+    content: '×';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -.075em;
+    transform: translate(-50%, -50%) scale(.2);
+    opacity: 0;
+  }
+}
+
+.wrap__showSettings .settings {
+  &::after {
+    opacity: 1;
+    transition: 100ms opacity linear 50ms,
+      300ms transform cubic-bezier(.3, 0, .7, 1.8);
+    transform: translate(-50%, -50%) scale(.75);
+  }
+
+  svg {
+    transition: 100ms opacity linear;
+    opacity: 0;
   }
 }
 
 .copy {
-  margin-left: -3.2em;
-
   svg {
     animation: none;
     width: .6em;
