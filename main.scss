@@ -258,6 +258,7 @@ body {
 
 .copy {
   margin-left: -3.2em;
+
   svg {
     animation: none;
     width: .6em;
@@ -265,6 +266,28 @@ body {
     stroke: #fff;
     stroke-width: 1px;
     margin-top: -.01em;
+  }
+
+  &::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+
+  &:focus {
+    &::after {
+      opacity: 1;
+      transition: 100ms opacity linear 50ms,
+                  300ms transform cubic-bezier(.3, 0, .7, 1.8);
+      transform: translate(-50%, -50%) scale(.75);
+    }
+    svg {
+      transition: 100ms opacity linear;
+      opacity: 0;
+    }
   }
 }
 
