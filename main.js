@@ -305,8 +305,7 @@ let colors = new Vue({
       });
     },
     updateFavicon: function () {
-
-      const $favicon = document.querySelector('[rel="icon"]');
+      const favicons = document.querySelectorAll('[rel="icon"]');
       const faviconSize = 100;
       const innerSize = 80;
 
@@ -333,7 +332,9 @@ let colors = new Vue({
       ctx.fillRect(faviconSize * .1, faviconSize * .1, faviconSize * .8, faviconSize * .8);
       
       // Replace favicon
-      $favicon.href = canvas.toDataURL('image/png');
+
+      const faviconBase64 = canvas.toDataURL('image/png')
+      favicons.forEach($icon => $icon.href = faviconBase64);
     },
     updateURL: function () {
       if(this.colors && this.colors.length) {
