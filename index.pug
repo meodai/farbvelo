@@ -38,7 +38,8 @@ html(lang="en-US")
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor}" 
       :class="{'wrap__hasOutlines': hasOutlines, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground,}")
-      .bg(:style="{'background-image': backgroundGradient}")
+      .bg-wrap
+        .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
         span.pannel__title
           h4.pannel__settingtitle Palette Name

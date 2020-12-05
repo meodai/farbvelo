@@ -94,7 +94,8 @@ body {
 
 .wrap,
 .bg,
-.pannel {
+.pannel,
+.bg-wrap {
   position: absolute;
   top: 0;
   left: 0;
@@ -106,6 +107,10 @@ body {
   opacity: 0;
   transform: scale(.7);
   transition: 300ms opacity linear, 200ms transform ease-out 50ms;
+}
+
+.bg-wrap {
+  overflow: hidden;
 }
 
 .wrap__hasBackground {
