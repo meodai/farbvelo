@@ -305,6 +305,28 @@ let colors = new Vue({
         this.names = data.colors;
       });
     },
+    updateFavicon: function () {
+
+      const $favicon = document.querySelector('[rel="icon"]');
+      const faviconSize = 100;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = faviconSize;
+      canvas.height = faviconSize;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, faviconSize);
+      ctx.fillStyle = '#212121';
+      ctx.fillRect(0, 0, faviconSize, faviconSize);
+      
+      this.colors.forEach((color, i) => {
+        gradient.addColorStop(i/color.length, color);
+      });
+      ctx.fillStyle = gradient;
+      ctx.fillRect(faviconSize * .1, faviconSize * .1, faviconSize * .8, faviconSize * .8);
+      
+      // Replace favicon
+      $favicon.href = canvas.toDataURL('image/png');
+    },
     newColors: function () {
       let colorArr = this.generateRandomColors(
         this.amount, 
@@ -315,6 +337,7 @@ let colors = new Vue({
       )
       
       this.colorsValues = colorArr;
+      this.updateFavicon();
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
