@@ -240,6 +240,7 @@ body {
 
 .wrap__showSettings .botton {
   transform: translateX(13.5vw);
+
   @for $i from 1 through 5 {
     &:nth-child(#{5 - $i}) {
       transition-delay: #{50 + $i * 50}ms;
@@ -297,6 +298,7 @@ body {
     width: .5em;    
     height: .5em;
   }
+
   &::after {
     content: '×';
     position: absolute;

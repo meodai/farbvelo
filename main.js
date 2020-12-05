@@ -358,10 +358,22 @@ let colors = new Vue({
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
     },
+    addMagicControls: function () {
+      document.addEventListener('keydown', (e) => {
+        if ( e.code === 'Space' ) {
+          this.newColors();
+        } else if ( e.code === 'ArrowRight' ) {
+          this.padding = Math.min(1, this.padding += .01);
+        } else if ( e.code === 'ArrowLeft' ) {
+          this.padding = Math.max(0, this.padding -= .01);s
+        }
+      });
+    }
   },
   mounted: function () {
     this.newColors();
     
+    this.addMagicControls();
     /* intro
     let i = 6;
     
