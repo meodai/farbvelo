@@ -77,10 +77,10 @@ html(lang="en-US")
         label.pannel__setting(v-if="geneartorFunction !== 'Full Random'") 
           h4.pannel__settingtitle 
             span Min. Hue Distance
-            input(type="number", v-model.number="minHueDistance", min="0", :max="360/colorsInGradient", step="1")
+            input(type="number", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
           .pannel__inputs 
-            input(type="range", v-model.number="minHueDistance", min="0", :max="360/colorsInGradient", step="1")
+            input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
             
         label.pannel__setting 
           h4.pannel__settingtitle Interpolation Model

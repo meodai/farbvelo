@@ -347,7 +347,8 @@ let colors = new Vue({
         this.intermpolationColorModel, 
         parseFloat(this.padding), 
         this.colorsInGradient, 
-        this.randomOrder
+        this.randomOrder,
+        this.minHueDistance
       )
       
       this.colorsValues = colorArr;
