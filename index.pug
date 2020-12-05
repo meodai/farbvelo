@@ -39,7 +39,7 @@ html(lang="en-US")
       :style="{'--color-first': firstColor, '--color-last': lastColor}" 
       :class="{'wrap__hasOutlines': hasOutlines, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground,}")
       .bg(:style="{'background-image': backgroundGradient}")
-      .pannel
+      .pannel(v-on:pointerdown="cancelSwipe")
         span.pannel__title
           h4.pannel__settingtitle Palette Name
           h1.title {{paletteTitle}}
@@ -136,7 +136,7 @@ html(lang="en-US")
                   path(:fill='colors[0]' fill-rule='nonzero' d='M.3 104.52l12.41-58.55h35.31v10.72H21.65l-2.94 13.62h23.06v10.72H16.46l-2.89 13.78h25.14v10.71H.3v-1zm77.08 1.69a12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.93 12.93 0 01.34-3l9.27-38.71-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.67 12.67 0 013.49-.51 10.09 10.09 0 013.57.64 9.26 9.26 0 013 1.79 8.05 8.05 0 012 2.81 9.17 9.17 0 01.72 3.7 14.62 14.62 0 01-.34 3L75.6 95.4l.85.6 11.4-7.83 5.36 8-12.34 8.35a11.68 11.68 0 01-3.49 1.69zm62.88-10.8l.85.6 4.08-2.89 5.36 8-5 3.4a12.39 12.39 0 01-7 2.21 9.85 9.85 0 01-5.79-1.79 7.85 7.85 0 01-3.23-5H128a15.69 15.69 0 01-1.79 2.68 9.7 9.7 0 01-2.5 2.1 14.05 14.05 0 01-3.49 1.45 17.83 17.83 0 01-4.72.55 14.23 14.23 0 01-6.13-1.32 15.05 15.05 0 01-4.89-3.66 17.4 17.4 0 01-3.28-5.49 19.3 19.3 0 01-1.19-6.89 35.69 35.69 0 011.53-10.63 26.73 26.73 0 014.42-8.64 20.46 20.46 0 0116.59-8 12.9 12.9 0 017.4 1.87 9.08 9.08 0 013.66 4.94h1.53l1.19-5.62h10.72l-6.79 32.13zm-20.55 1.11a11.54 11.54 0 009.4-4.51 15.06 15.06 0 002.42-4.81c.574-1.89.86-3.855.85-5.83a9.27 9.27 0 00-2.3-6.51 7.91 7.91 0 00-6.13-2.51 11.68 11.68 0 00-5.45 1.23 12.16 12.16 0 00-4 3.28 14.54 14.54 0 00-2.47 4.81 19.7 19.7 0 00-.85 5.83 10.06 10.06 0 002.08 6.3c1.38 1.813 3.53 2.72 6.45 2.72z')
       
       
-      article.colors
+      article.colors(v-on:pointerdown="cancelSwipe")
         h2.colors__title Generated Color Palette
         color(v-for="(c, i) in colors", :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c")
 

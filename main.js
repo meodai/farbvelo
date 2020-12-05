@@ -82,7 +82,7 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       geneartorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random']
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random'],
     }
   },
   watch: {
@@ -358,17 +358,60 @@ let colors = new Vue({
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
     },
+    cancelSwipe: function (e) {
+      e.stopPropagation();
+    },
     addMagicControls: function () {
       document.addEventListener('keydown', (e) => {
         if ( e.code === 'Space' ) {
           this.newColors();
         } else if ( e.code === 'ArrowRight' ) {
-          this.padding = Math.min(1, this.padding += .01);
+          this.padding = Math.min(1, this.padding + .01);
         } else if ( e.code === 'ArrowLeft' ) {
-          this.padding = Math.max(0, this.padding -= .01);s
+          this.padding = Math.max(0, this.padding - .01);
         }
       });
-    } 
+      
+      let isTouching = false;
+      let lastX;
+
+      // maybe add swipe controls at some point
+      document.addEventListener('pointerdown', (e)  => {
+        isTouching = true;
+        lastX = e.clientX;
+      });
+
+      document.addEventListener('pointermove', (e)=> {
+        if(isTouching) {
+          const direction = Math.sign(e.clientX - lastX);
+          let lastPadd = this.padding;
+          if (direction == -1) {
+            this.padding = Math.max(
+              0, 
+              this.padding - (
+                Math.abs(e.clientX - lastX) / window.innerWidth
+              )
+            );
+          } else {
+            this.padding = Math.min(
+              1, 
+              this.padding + (
+                Math.abs(e.clientX - lastX) / window.innerWidth
+              )
+            );
+          }
+          lastX = e.clientX;
+          console.log(
+            this.padding - lastPadd 
+          )
+        }
+      });
+
+      document.addEventListener('pointerup', (e)  => {
+        isTouching = false;
+        console.log( e )
+      });
+    }
   },
   mounted: function () {
     this.newColors();
