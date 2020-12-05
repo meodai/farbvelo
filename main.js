@@ -383,6 +383,7 @@ let colors = new Vue({
 
       document.addEventListener('pointermove', (e)=> {
         if(isTouching) {
+          e.preventDefault();
           const direction = Math.sign(e.clientX - lastX);
           let lastPadd = this.padding;
           if (direction == -1) {
