@@ -73,8 +73,9 @@ let colors = new Vue({
       settingsVisible: false,
       randomOrder: false,
       hasGradients: true,
-      hasBackground: true,
+      hasBackground: false,
       hasOutlines: false,
+      hideText: false,
       padding: .175,
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
@@ -83,6 +84,8 @@ let colors = new Vue({
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       geneartorFunction: 'Legacy',
       generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random'],
+      isLoading: true,
+      isAnimating: true,
     }
   },
   watch: {
@@ -411,7 +414,6 @@ let colors = new Vue({
 
       document.addEventListener('pointerup', (e)  => {
         isTouching = false;
-        console.log( e )
       });
     }
   },
@@ -419,21 +421,19 @@ let colors = new Vue({
     this.newColors();
     
     this.addMagicControls();
-    /* intro
-    let i = 6;
-    
-    const loop = () => {
 
-      setTimeout(() => {
-        this.newColors();
-        if(i) {
-          loop();
-        }
-      }, 300 - i * 50);
-      i--;
-    };
+    document.querySelector('body').classList.remove('is-loading');
 
-    loop();*/
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 100);    
 
+    setTimeout(() => {
+      this.isAnimating = false;
+    }, 1800);
+
+    setTimeout(() => {
+      this.hasBackground = true;
+    }, 2200);
   }
 });
