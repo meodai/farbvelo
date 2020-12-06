@@ -719,6 +719,15 @@ body {
 
 // intro animation
 
+.is-loading {
+  .bg {
+    opacity: 0;
+  }
+  .pannel {
+    opacity: 0;
+  }
+}
+
 .is-loading.is-animating {
   pointer-events: none;
 
@@ -726,10 +735,14 @@ body {
     opacity: 0;
   }
 
+  .colors {
+    perspective: 600px;
+  }
+
   .colors .color {
     opacity: 0;
-    transform: translateY(-50%) scaleY(0);
-    transform-origin: 50% 50%;
+    transform: translateY(250%) scaleY(.7) rotate3d(-.1, .01, 0, 90deg);
+    transform-origin: 50% 150%;
 
     &::after {
       opacity: 0;
@@ -765,13 +778,17 @@ body {
   .botton {
     opacity: 0;
   }
-
+  
+  .colors {
+    perspective: 600px;
+  }
+  
   .colors .color {
     opacity: 1;
     transform: translateY(0) scaleY(1);
-    transform-origin: 50% 0%;
-    transition: 300ms opacity linear,
-                500ms transform cubic-bezier(0.13, 1, 0.4, 1.8);
+    transform-origin: 50% 150%;
+    transition: 250ms opacity linear,
+                200ms transform cubic-bezier(.445, .05, .55, .95);
     
     &::after {
       visibility: hidden;
@@ -787,17 +804,16 @@ body {
     
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        transition-delay: #{50 + $i * 120}ms, #{50 + $i * 120}ms;
+        transition-delay: #{60 + $i * 50}ms, #{50 + $i * 50}ms;
         
         &::after {
-          animation-delay: #{1700 + $i * 50}ms;
+          animation-delay: #{700 + $i * 50}ms;
         }
 
         .color__value,
         .color__name {
-          transition-delay: #{500 + $i * 100}ms, #{500 + $i * 100}ms;
+          transition-delay: #{350 + $i * 50}ms, #{350 + $i * 50}ms;
         }
-
       }
     }
   }

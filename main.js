@@ -414,7 +414,6 @@ let colors = new Vue({
 
       document.addEventListener('pointerup', (e)  => {
         isTouching = false;
-        console.log( e )
       });
     }
   },
@@ -423,16 +422,18 @@ let colors = new Vue({
     
     this.addMagicControls();
 
+    document.querySelector('body').classList.remove('is-loading');
+
     setTimeout(() => {
       this.isLoading = false;
     }, 100);    
 
     setTimeout(() => {
       this.isAnimating = false;
-    },2600);
+    }, 1800);
 
     setTimeout(() => {
       this.hasBackground = true;
-    }, 3300);
+    }, 2200);
   }
 });
