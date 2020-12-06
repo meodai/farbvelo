@@ -804,8 +804,8 @@ body {
     
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
-        transition-delay: #{60 + $i * 50}ms, #{50 + $i * 50}ms;
-        
+        transition-delay: #{130 + $i * 50}ms, #{50 + $i * 50}ms;
+
         &::after {
           animation-delay: #{700 + $i * 50}ms;
         }
