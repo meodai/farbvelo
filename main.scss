@@ -229,6 +229,30 @@ body {
   }
 }
 
+.color__value,
+.color__name {
+  opacity: 1;
+  transition: 100ms opacity linear;
+}
+
+.color {
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      .color__value,
+      .color__name { 
+        transition-delay: #{$i * 50}ms;
+      }
+    }
+  }
+}
+
+.wrap__hidetext {
+  .color__value,
+  .color__name {
+    opacity: 0;
+  }
+}
+
 .buttons {
   position: absolute;
   
@@ -691,4 +715,113 @@ body {
   color: #fff;
   font-size: 1rem;
   margin-bottom: 1em;
+}
+
+// intro animation
+
+.is-loading.is-animating {
+  pointer-events: none;
+
+  .bg {
+    opacity: 0;
+  }
+
+  .colors .color {
+    opacity: 0;
+    transform: translateY(-50%) scaleY(0);
+    transform-origin: 50% 50%;
+
+    &::after {
+      opacity: 0;
+    }
+
+    .color__value,
+    .color__name {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .colors .color:last-child {
+    padding-bottom: 1rem;
+  }
+
+  .pannel {
+    display: none
+  }
+
+  .botton {
+    opacity: 0;
+  }
+}
+
+.is-animating {
+  pointer-events: none;
+
+  .pannel {
+    display: none
+  }
+
+  .botton {
+    opacity: 0;
+  }
+
+  .colors .color {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    transform-origin: 50% 0%;
+    transition: 300ms opacity linear,
+                500ms transform cubic-bezier(0.13, 1, 0.4, 1.8);
+    
+    &::after {
+      visibility: hidden;
+      opacity: 0;
+      animation: 500ms reveal linear;
+      animation-fill-mode: forwards;
+    }
+
+    .color__value,
+    .color__name {
+      transition: 100ms opacity linear;
+    }
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        transition-delay: #{50 + $i * 120}ms, #{50 + $i * 120}ms;
+        
+        &::after {
+          animation-delay: #{1700 + $i * 50}ms;
+        }
+
+        .color__value,
+        .color__name {
+          transition-delay: #{500 + $i * 100}ms, #{500 + $i * 100}ms;
+        }
+
+      }
+    }
+  }
+
+  .colors .color:last-child {
+    padding-bottom: 1rem;
+  }
+
+  .bg {
+    opacity: 0;
+  }
+}
+
+@keyframes reveal {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  1% {
+    visibility: visible;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 0.5;
+  }
 }
