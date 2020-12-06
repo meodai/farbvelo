@@ -741,7 +741,7 @@ body {
 
   .colors .color {
     opacity: 0;
-    transform: translateY(250%) scaleY(.7) rotate3d(-.1, .01, 0, 90deg);
+    transform: translateY(-150%) scaleY(.7) rotate3d(-.1, .01, 0, -100deg);
     transform-origin: 50% 150%;
 
     &::after {
