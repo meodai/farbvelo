@@ -863,12 +863,12 @@ body {
         transition-duration: #{250ms + $i * $i * 5ms}, #{200ms + $i * $i * 5ms};
 
         &::after {
-          animation-delay: #{700 + $i * 50}ms;
+          animation-delay: #{800 + $i * 50}ms;
         }
 
         .color__value,
         .color__name {
-          transition-delay: #{350 + $i * 50}ms, #{350 + $i * 50}ms;
+          transition-delay: #{450 + $i * 70}ms, #{450 + $i * 70}ms;
         }
       }
     }

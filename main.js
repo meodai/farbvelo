@@ -437,10 +437,10 @@ let colors = new Vue({
 
     setTimeout(() => {
       this.isAnimating = false;
-    }, 1400);
+    }, 1600);
 
     setTimeout(() => {
       this.hasBackground = true;
-    }, 1700);
+    }, 2000);
   }
 });
