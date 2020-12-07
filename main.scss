@@ -719,8 +719,44 @@ body {
 
 // intro animation
 
+.intro {
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  perspective: 500px;
+  font-weight: 200;
+  font-size: 2em;
+  transform: translate(-50%, -50%);
+
+  i {
+    display: inline-block;
+    opacity: 1;
+    font-style: normal;
+    transform: translateX(0) rotate3d(0, 0, 0, 0deg);
+    transition: 50ms opacity linear,
+                40ms transform cubic-bezier(.445, .05, .55, .95);
+  }
+
+  &.moveit {
+    i {
+      opacity: 0;
+      transform: translateX(10%) rotate3d(1, .5, 0, 90deg);
+      transition: 150ms opacity linear,
+                  150ms transform cubic-bezier(.445, .05, .55, .95);
+
+      @for $i from 1 through 8 {
+        &:nth-child(#{$i}) {
+          transition-delay: #{30 + $i * 35}ms,
+                            #{40 + $i * 35}ms;
+        }
+      }
+    }
+  }
+}
+
 .is-loading {
-  .bg {
+  .bg { 
     opacity: 0;
   }
   .pannel {
@@ -770,6 +806,7 @@ body {
 
 .is-animating {
   pointer-events: none;
+
 
   .pannel {
     display: none

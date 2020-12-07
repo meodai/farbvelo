@@ -423,6 +423,10 @@ let colors = new Vue({
     this.addMagicControls();
 
     document.querySelector('body').classList.remove('is-loading');
+    
+    setTimeout(() => {
+      document.querySelector('.intro').classList.add('moveit');
+    }, 100);
 
     setTimeout(() => {
       this.isLoading = false;

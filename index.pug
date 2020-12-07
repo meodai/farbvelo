@@ -50,6 +50,15 @@ html(lang="en-US")
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor}" 
       :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__hasOutlines': hasOutlines, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground,}")
+      strong.intro(aria-hidden)
+        i F
+        i a
+        i r
+        i b
+        i V
+        i e
+        i l
+        i o
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
