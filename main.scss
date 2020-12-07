@@ -187,7 +187,7 @@ body {
 
 .colors:hover .color {
   &:last-child {
-    padding-bottom: 1rem;
+    padding-bottom: 0rem;
   }
 
   &:hover {
@@ -804,7 +804,7 @@ body {
   }
 
   .colors .color:last-child {
-    padding-bottom: 1rem;
+    padding-bottom: 0rem;
   }
 
   .pannel {
@@ -868,7 +868,7 @@ body {
   }
 
   .colors .color:last-child {
-    padding-bottom: 1rem;
+    padding-bottom: 0rem;
   }
 
   .bg {
