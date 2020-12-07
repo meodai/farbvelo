@@ -606,6 +606,10 @@ body {
     border-radius: 0;
     padding: 0.25rem 1rem 0.25rem 0rem;
     background-color: transparent;
+    background-size: 1.25em 1.25em;
+    background-image: conic-gradient(#fff 5%, transparent 0 95%, #fff 0);
+    background-repeat: no-repeat;
+    background-position: right 0% top 120%;
 
     &:focus {
       outline: none;
