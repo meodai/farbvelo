@@ -89,13 +89,11 @@ let colors = new Vue({
     randomOrder: function () {
       this.newColors();
     },
-    geneartorFunction: function () {
-      this.newColors();
-    },
     minHueDistance: function () {
       this.newColors();
     },
     geneartorFunction: function () {
+      this.newColors();
       if ( this.geneartorFunction == 'Legacy' ) {
         console.info('Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100.');
       } else if ( this.geneartorFunction == 'Hue Bingo' ) {
