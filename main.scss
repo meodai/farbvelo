@@ -417,6 +417,37 @@ body {
     padding-right: 1rem; 
   }
 
+  input[type=checkbox] {
+    display: none;
+  }
+
+  input[type=checkbox]:checked + &__checkbox {
+    &::after {
+      opacity: 1;
+      transform: translate(-55%, -50%) scale(.8);
+    }
+  }
+  
+  &__checkbox {
+    position: relative;
+    display: inline-block;
+    width: .8em;
+    height: .8em;
+    border: 1px solid #fff;
+    margin-top: -0.2em;
+    
+    &::after {
+      opacity: 0;
+      content: '✓';
+      transform: translate(-55%, -50%) scale(.1);
+      transition: 60ms opacity linear,
+                  120ms transform cubic-bezier(0.7, 0.3, .8, 2);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+  }
+  
   &__setting {
     display: block;
 

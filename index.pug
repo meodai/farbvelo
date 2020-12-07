@@ -104,22 +104,27 @@ html(lang="en-US")
 
         label.pannel__setting.pannel__setting--inline(v-if="geneartorFunction !== 'Full Random'")
           input(type="checkbox", v-model="randomOrder") 
+          i.pannel__checkbox
           h4.pannel__settingtitle Randomize Order
         
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasBackground")
+          i.pannel__checkbox
           h4.pannel__settingtitle Show Background
 
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasGradients")
+          i.pannel__checkbox
           h4.pannel__settingtitle Show Glow
 
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hideText")
+          i.pannel__checkbox
           h4.pannel__settingtitle Hide Text
 
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasOutlines")
+          i.pannel__checkbox
           h4.pannel__settingtitle Visually Separate Things
 
         label.pannel__setting 
