@@ -417,6 +417,7 @@ body {
     padding: 1rem; 
     background: rgba(#212121,.1);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   input[type=checkbox] {
