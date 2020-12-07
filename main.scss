@@ -414,7 +414,9 @@ body {
   transform: translateX(-50%) scale(.95);
   
   @media (max-width: 850px) {
-    padding-right: 1rem; 
+    padding: 1rem; 
+    background: rgba(#212121,.1);
+    backdrop-filter: blur(10px);
   }
 
   input[type=checkbox] {
