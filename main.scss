@@ -508,6 +508,8 @@ body {
   // range sliders
   input[type=range] {
     margin: 0;
+    padding-top: 0.7em;
+    margin-top: -0.7em;
   }
 
   input[type=range]:focus {
