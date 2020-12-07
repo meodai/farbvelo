@@ -401,8 +401,8 @@ body {
 .pannel {
   pointer-events: none;
   box-sizing: border-box;
-  padding: 1rem;
-  padding-right: calc(25% + 1rem); 
+  padding: 2rem;
+  padding-right: calc(25% + 2rem); 
   background: var(--color-bg);
   //backdrop-filter: blur(5px);
 

@@ -90,9 +90,11 @@ let colors = new Vue({
   },
   watch: {
     amount: function () {
+      this.amount = Math.min(Math.max(this.amount, 3),10);
       this.colorsInGradient = Math.min(this.colorsInGradient, this.amount);
     },
     colorsInGradient: function () {
+      this.colorsInGradient = Math.min(Math.max(this.colorsInGradient, 2), this.amount);
       this.newColors();
     },
     randomOrder: function () {
