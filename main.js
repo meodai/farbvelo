@@ -25,7 +25,7 @@ Vue.component('color', {
                 </ol>
               </section>
              </aside>`,
-  
+
   methods: {
     copy: function () {
       navigator.clipboard.writeText(`${this.name.name} ・ ${this.value} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
@@ -53,7 +53,7 @@ Vue.component('color', {
       let lum = currentColor.luminance();
       let contrastColor;
       if ( lum < 0.15 ) {
-        contrastColor = currentColor.set('hsl.l', '+.25');  
+        contrastColor = currentColor.set('hsl.l', '+.25');
       } else {
         contrastColor = currentColor.set('hsl.l', '-.35');
       }
@@ -157,10 +157,10 @@ let colors = new Vue({
   },
   methods: {
     generateRandomColors: function (
-      total, 
-      mode = 'lab', 
-      padding = .175, 
-      parts = 4, 
+      total,
+      mode = 'lab',
+      padding = .175,
+      parts = 4,
       randomOrder = false,
       minHueDiffAngle = 60,
     ) {
@@ -171,7 +171,7 @@ let colors = new Vue({
       parts = parseInt(parts);
 
       minHueDiffAngle = Math.min(minHueDiffAngle, 360/parts);
-      
+
       if (this.geneartorFunction === 'Hue Bingo') {
         // create an array of hues to pick from.
         const baseHue = random(0, 360);
@@ -206,7 +206,7 @@ let colors = new Vue({
           const saturation = random(minSat, maxSat);
           const light = baseLightness + random(0,10) + ((rangeLightness/(parts - 1)) * i);
 
-          colors.push( 
+          colors.push(
             hsluvToHex([
               hue,
               saturation,
@@ -214,8 +214,8 @@ let colors = new Vue({
             ])
           )
         }
-        
-        colors.push( 
+
+        colors.push(
           hsluvToHex([
             remainingHues[0],
             baseSaturation,
@@ -246,12 +246,12 @@ let colors = new Vue({
         );
 
         for (let i = 0; i < (part - 1); i++) {
-          colors.push( 
+          colors.push(
             hsluvToHex([
               hues[0],
               baseSaturation,
               baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
-            ]) 
+            ])
           );
         }
 
@@ -262,7 +262,7 @@ let colors = new Vue({
         const maxLight = Math.min(minLight + 40, 95);
 
         for (let i = 0; i < (part + reminder - 1); i++) {
-          colors.push( 
+          colors.push(
             hsluvToHex([
               hues[random(0, hues.length - 1)],
               random(minSat, maxSat),
@@ -270,8 +270,8 @@ let colors = new Vue({
             ])
           )
         }
-        
-        colors.push( 
+
+        colors.push(
           hsluvToHex([
             hues[0],
             baseSaturation,
@@ -280,8 +280,8 @@ let colors = new Vue({
         );
       } else if (this.geneartorFunction === 'Full Random') {
         for (let i = 0; i < parts; i++) {
-          colors.push( 
-            hsluvToHex([  
+          colors.push(
+            hsluvToHex([
               random(0, 360),
               random(0, 100),
               random(0, 100),
@@ -289,11 +289,11 @@ let colors = new Vue({
           )
         }
       }
-      
+
       if ( randomOrder ) {
         colors = shuffleArray(colors);
       }
-      
+
       return colors;
     },
 
@@ -307,7 +307,7 @@ let colors = new Vue({
       expString = list.reduce((rem, color) => (
         rem + color.name + ' ' + color.value + '\n'
       ), expString);
-      
+
       navigator.clipboard.writeText(expString);
     },
     getNames: function (colors) {
@@ -329,7 +329,7 @@ let colors = new Vue({
       const gradient = ctx.createLinearGradient(0, 0, 0, faviconSize);
       ctx.fillStyle = '#212121';
       ctx.fillRect(0, 0, faviconSize, faviconSize);
-      
+
       this.colors.forEach((color, i) => {
         /*ctx.fillStyle = color;
         ctx.fillRect(
@@ -343,7 +343,7 @@ let colors = new Vue({
 
       ctx.fillStyle = gradient;
       ctx.fillRect(faviconSize * .1, faviconSize * .1, faviconSize * .8, faviconSize * .8);
-      
+
       // Replace favicon
 
       const faviconBase64 = canvas.toDataURL('image/png')
@@ -357,14 +357,14 @@ let colors = new Vue({
     },
     newColors: function () {
       let colorArr = this.generateRandomColors(
-        this.amount, 
-        this.intermpolationColorModel, 
-        parseFloat(this.padding), 
-        this.colorsInGradient, 
+        this.amount,
+        this.intermpolationColorModel,
+        parseFloat(this.padding),
+        this.colorsInGradient,
         this.randomOrder,
         this.minHueDistance
       )
-      
+
       this.colorsValues = colorArr;
       this.updateFavicon();
       //this.updateURL();
@@ -385,7 +385,7 @@ let colors = new Vue({
           this.padding = Math.max(0, this.padding - .01);
         }
       });
-      
+
       let isTouching = false;
       let lastX;
 
@@ -402,14 +402,14 @@ let colors = new Vue({
           let lastPadd = this.padding;
           if (direction == -1) {
             this.padding = Math.max(
-              0, 
+              0,
               this.padding - (
                 Math.abs(e.clientX - lastX) / window.innerWidth
               )
             );
           } else {
             this.padding = Math.min(
-              1, 
+              1,
               this.padding + (
                 Math.abs(e.clientX - lastX) / window.innerWidth
               )
@@ -426,14 +426,14 @@ let colors = new Vue({
   },
   mounted: function () {
     this.newColors();
-    
+
     this.addMagicControls();
 
     document.querySelector('body').classList.remove('is-loading');
 
     setTimeout(() => {
       this.isLoading = false;
-    }, 100);    
+    }, 100);
 
     setTimeout(() => {
       this.isAnimating = false;

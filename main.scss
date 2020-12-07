@@ -1,7 +1,7 @@
 :root {
   --color-bg: #212121;
   --color-inverted: #fff;
-  
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -96,7 +96,7 @@ body {
       }
     }
   }
-} 
+}
 
 .wrap,
 .bg,
@@ -120,7 +120,7 @@ body {
   height: -webkit-fill-available;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  
+
 }
 
 .wrap__hasBackground {
@@ -174,7 +174,7 @@ body {
               0ms background-color linear,
               250ms padding-bottom cubic-bezier(.7, .3, .3, 1) 100ms;
 
-  
+
   //@for $i from 1 through 30 {
   // &:nth-child(#{$i}) {
      // transition-delay: #{50 + $i * 50}ms, #{50 + $i * 50}ms, 0ms;
@@ -243,7 +243,7 @@ body {
   @for $i from 1 through 10 {
     &:nth-child(#{$i}) {
       .color__value,
-      .color__name { 
+      .color__name {
         transition-delay: #{$i * 50}ms;
       }
     }
@@ -259,13 +259,13 @@ body {
 
 .buttons {
   position: absolute;
-  
+
   right: 24%;
   bottom: 10vmin;
   display: flex;
   z-index: 20;
   transform: translate(1.1em, 1.1em);
-  
+
   @media (max-width: 850px) {
     right: 12.5%;
   }
@@ -274,13 +274,13 @@ body {
 .botton {
   transform: translateX(0);
   transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms;
-  
+
   @for $i from 1 through 5 {
     &:nth-child(#{$i}) {
       transition-delay: #{50 + $i * 50}ms;
     }
   }
-  
+
 }
 
 .wrap__showSettings .botton {
@@ -309,7 +309,7 @@ body {
   border-radius: 50%;
   outline: 0;
   cursor: pointer;
-  
+
   box-shadow: 0 0 0 1px rgba(#fff, 0);
 
   .wrap__hasGradients & {
@@ -319,7 +319,7 @@ body {
   & + & {
     margin-left: .5rem;
   }
-  
+
   svg {
     position: absolute;
     top: 50%;
@@ -346,7 +346,7 @@ body {
 .settings {
   svg {
     animation: none;
-    width: .5em;    
+    width: .5em;
     height: .5em;
   }
 
@@ -412,19 +412,19 @@ body {
   pointer-events: none;
   box-sizing: border-box;
   padding: 2rem;
-  padding-right: calc(25% + 2rem); 
+  padding-right: calc(25% + 2rem);
   background: var(--color-bg);
   //backdrop-filter: blur(5px);
 
   display: block;
   cursor: default;
-  
+
   color: #fff;
 
   transform: translateX(-50%) scale(.95);
-  
+
   @media (max-width: 850px) {
-    padding: 1rem; 
+    padding: 1rem;
     background: rgba(#212121,.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -440,7 +440,7 @@ body {
       transform: translate(-55%, -50%) scale(.8);
     }
   }
-  
+
   &__checkbox {
     position: relative;
     display: inline-block;
@@ -448,7 +448,7 @@ body {
     height: .8em;
     border: 1px solid #fff;
     margin-top: -0.2em;
-    
+
     &::after {
       opacity: 0;
       content: '✓';
@@ -460,7 +460,7 @@ body {
       left: 50%;
     }
   }
-  
+
   &__setting {
     display: block;
 
@@ -738,7 +738,7 @@ body {
   margin-top: 2rem;
   padding-top: 1rem;
   line-height: 1.4;
-  
+
   p {
     margin-top: 1em;
     margin-bottom: 2em;
@@ -833,18 +833,18 @@ body {
   .botton {
     opacity: 0;
   }
-  
+
   .colors {
     perspective: 600px;
   }
-  
+
   .colors .color {
     opacity: 1;
     transform: translateY(0) scaleY(1);
     transform-origin: 50% 0%;
     transition: 250ms opacity linear,
                 200ms transform cubic-bezier(.445, .05, .55, .95);
-    
+
     &::after {
       visibility: hidden;
       opacity: 0;
@@ -856,12 +856,12 @@ body {
     .color__name {
       transition: 100ms opacity linear;
     }
-    
+
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
         transition-delay: #{130 + $i * 60}ms, #{50 + $i * 60}ms;
         transition-duration: #{250ms + $i * $i * 5ms}, #{200ms + $i * $i * 5ms};
-        
+
         &::after {
           animation-delay: #{700 + $i * 50}ms;
         }
