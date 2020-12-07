@@ -278,7 +278,7 @@ let colors = new Vue({
             rangeLightness,
           ])
         );
-      } if (this.geneartorFunction === 'Full Random') {
+      } else if (this.geneartorFunction === 'Full Random') {
         for (let i = 0; i < parts; i++) {
           colors.push( 
             hsluvToHex([  
@@ -437,7 +437,7 @@ let colors = new Vue({
 
     setTimeout(() => {
       this.isAnimating = false;
-    }, 1200);
+    }, 1400);
 
     setTimeout(() => {
       this.hasBackground = true;
