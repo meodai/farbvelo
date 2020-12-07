@@ -13,8 +13,8 @@ const random = (min, max) => {
 };
 
 Vue.component('color', {
-  props: ['colorhex', 'name', 'colorvaluetype'],
-  template: `<aside @click="copy" class="color" v-bind:style="{background: colorhex, color: textColor}">
+  props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor'],
+  template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-text': contrastcolor}">
               <var class="color__value">{{ value }}</var>
               <h3 class="color__name">{{ name && name.name }}</h3>
               <section class="color__info">
@@ -48,17 +48,6 @@ Vue.component('color', {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }
     },
-    textColor: function () {
-      let currentColor = chroma( this.colorhex );
-      let lum = currentColor.luminance();
-      let contrastColor;
-      if ( lum < 0.15 ) {
-        contrastColor = currentColor.set('hsl.l', '+.25');
-      } else {
-        contrastColor = currentColor.set('hsl.l', '-.35');
-      }
-      return contrastColor;
-    }
   }
 });
 
@@ -156,6 +145,19 @@ let colors = new Vue({
     }
   },
   methods: {
+    getContrastColor: function (color) {
+      let currentColor = chroma( color );
+      let lum = currentColor.luminance();
+      let contrastColor;
+
+      if ( lum < 0.15 ) {
+        contrastColor = currentColor.set('hsl.l', '+.25');
+      } else {
+        contrastColor = currentColor.set('hsl.l', '-.35');
+      }
+
+      return contrastColor.hex();
+    },
     generateRandomColors: function (
       total,
       mode = 'lab',

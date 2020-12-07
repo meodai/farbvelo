@@ -176,7 +176,7 @@ html(lang="en-US")
 
       article.colors(v-on:pointerdown="cancelSwipe")
         h2.colors__title Generated Color Palette
-        color(v-for="(c, i) in colors", :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c")
+        color(v-for="(c, i) in colors", :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)")
 
       .buttons
         button.botton.settings(v-on:click="toggleSettings", aria-label="show settngs pannel").
