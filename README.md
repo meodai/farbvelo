@@ -13,6 +13,70 @@ FarbVelo (Swiss-German for color bicycle) is a playful color picking tool. It us
 5. Originally released as a [Codepen](https://codepen.io/meodai/pen/RerqjG).
 6. Source is on [github](https://github.com/meodai/farbvelo) and licensed under a [Creative Commons Attribution Share Alike 4.0](https://github.com/meodai/farbvelo/blob/main/LICENSE.md) license.
 
+## Engine
+
+If you are anything like me, you are probably here to find out how the color picking works. Since this code is based on an old project and the code is very 
+messy, let me help you:
+
+```js
+// minHueDiffAngle = 60
+
+// create an array of hues to pick from.
+  const baseHue = random(0, 360);
+  const hues = new Array(Math.round( 360 / minHueDiffAngle) ).fill('').map((offset, i) => {
+    return (baseHue + i * minHueDiffAngle) % 360;
+  });
+
+  //  low saturation color
+  const baseSaturation = random(5, 40);
+  const baseLightness = random(0, 20);
+  const rangeLightness = 90 - baseLightness;
+
+  colors.push(
+    hsluvToHex([
+      hues[0],
+      baseSaturation,
+      baseLightness * random(0.25, 0.75),
+    ])
+  );
+
+  // random shades
+  const minSat = random(50, 70);
+  const maxSat = minSat + 30;
+  const minLight = random(35, 70);
+  const maxLight = Math.min(minLight + random(20, 40), 95);
+  // const lightDiff = maxLight - minLight;
+
+  const remainingHues = [...hues];
+
+  for (let i = 0; i < parts - 2; i++) {
+    const hue = remainingHues.splice(random(0, remainingHues.length - 1),1)[0];
+    const saturation = random(minSat, maxSat);
+    const light = baseLightness + random(0,10) + ((rangeLightness/(parts - 1)) * i);
+
+    colors.push( 
+      hsluvToHex([
+        hue,
+        saturation,
+        random(light, maxLight),
+      ])
+    )
+  }
+  
+  colors.push( 
+    hsluvToHex([
+      remainingHues[0],
+      baseSaturation,
+      rangeLightness + 10,
+    ])
+  );
+
+  chroma.scale(colors)
+        .padding(.175)
+        .mode('lab')
+        .colors(6);
+```
+
 ## Samples
 
 ![sample screenshot of color bingo engine](public/samples/engine-color-bingo-01.png)
