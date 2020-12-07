@@ -12,6 +12,10 @@ body, html {
   min-height: -webkit-fill-available;
 }
 
+a {
+  color: inherit;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -292,8 +296,6 @@ body {
   }
 }
 
-
-
 .botton {
   position: relative;
   margin: 0;
@@ -317,6 +319,7 @@ body {
   & + & {
     margin-left: .5rem;
   }
+  
   svg {
     position: absolute;
     top: 50%;
@@ -472,6 +475,11 @@ body {
         margin-left: .5rem;
       }
     }
+  }
+
+  &__desc {
+    margin: 1em 0 3em;
+    font-size: .6em;
   }
   select {
     font-size: .8em;

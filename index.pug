@@ -89,7 +89,7 @@ html(lang="en-US")
             
         label.pannel__setting(v-if="geneartorFunction !== 'Full Random'") 
           h4.pannel__settingtitle 
-            span Min. Hue Distance
+            span Min. Hue angle difference 
             input(type="number", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
           .pannel__inputs 

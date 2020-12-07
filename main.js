@@ -105,6 +105,15 @@ let colors = new Vue({
     },
     minHueDistance: function () {
       this.newColors();
+    },
+    geneartorFunction: function () {
+      if ( this.geneartorFunction == 'Legacy' ) {
+        console.info('Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100.');
+      } else if ( this.geneartorFunction == 'Hue Bingo' ) {
+        console.info('Hue Bingo: Selects ℕ0 hue`s (color stops) at a user defined minimum angle ∠, using a controlled random lightness ramp.');
+      } else if ( this.geneartorFunction == 'Full Random'  ) {
+        console.info('Random: Picks ℕ0 random hsl colors. Make sure to use "Mix Padding" with this one.');
+      }
     }
   },
   computed: {
@@ -279,7 +288,6 @@ let colors = new Vue({
             ])
           )
         }
-        console.log(colors)
       }
       
       if ( randomOrder ) {
@@ -408,9 +416,6 @@ let colors = new Vue({
             );
           }
           lastX = e.clientX;
-          console.log(
-            this.padding - lastPadd 
-          )
         }
       });
 
