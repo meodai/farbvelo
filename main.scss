@@ -292,6 +292,8 @@ body {
   }
 }
 
+
+
 .botton {
   position: relative;
   margin: 0;
@@ -304,8 +306,13 @@ body {
 
   border-radius: 50%;
   outline: 0;
-  box-shadow: 0 0 2rem rgba(#000, .2);
   cursor: pointer;
+  
+  box-shadow: 0 0 0 1px rgba(#fff, 0);
+
+  .wrap__hasGradients & {
+    box-shadow: 0 0 2rem rgba(#212121, .2);
+  }
 
   & + & {
     margin-left: .5rem;
