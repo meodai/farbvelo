@@ -2,15 +2,12 @@
 import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import rgbtocmyk from './lib/rgb-cymk';
+import Seedrandom from 'seedrandom';
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
   .sort((a, b) => a[0] - b[0])
   .map(a => a[1]);
-
-const random = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor'],
@@ -75,6 +72,8 @@ let colors = new Vue({
       generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random'],
       isLoading: true,
       isAnimating: true,
+      currentSeed: Math.random(),
+      rnd: new Seedrandom(),
     }
   },
   watch: {
@@ -143,6 +142,9 @@ let colors = new Vue({
     }
   },
   methods: {
+    random: function (min, max) {
+      return Math.floor(this.rnd()  * (max - min + 1)) + min;
+    },
     getContrastColor: function (color) {
       let currentColor = chroma( color );
       let lum = currentColor.luminance();
@@ -174,43 +176,43 @@ let colors = new Vue({
 
       if (this.geneartorFunction === 'Hue Bingo') {
         // create an array of hues to pick from.
-        const baseHue = random(0, 360);
+        const baseHue = this.random(0, 360);
         const hues = new Array(Math.round( 360 / minHueDiffAngle) ).fill('').map((offset, i) => {
           return (baseHue + i * minHueDiffAngle) % 360;
         });
 
         //  low saturation color
-        const baseSaturation = random(5, 40);
-        const baseLightness = random(0, 20);
+        const baseSaturation = this.random(5, 40);
+        const baseLightness = this.random(0, 20);
         const rangeLightness = 90 - baseLightness;
 
         colors.push(
           hsluvToHex([
             hues[0],
             baseSaturation,
-            baseLightness * random(0.25, 0.75),
+            baseLightness * this.random(0.25, 0.75),
           ])
         );
 
         // random shades
-        const minSat = random(50, 70);
+        const minSat = this.random(50, 70);
         const maxSat = minSat + 30;
-        const minLight = random(35, 70);
-        const maxLight = Math.min(minLight + random(20, 40), 95);
+        const minLight = this.random(35, 70);
+        const maxLight = Math.min(minLight + this.random(20, 40), 95);
         // const lightDiff = maxLight - minLight;
 
         const remainingHues = [...hues];
 
         for (let i = 0; i < parts - 2; i++) {
-          const hue = remainingHues.splice(random(0, remainingHues.length - 1),1)[0];
-          const saturation = random(minSat, maxSat);
-          const light = baseLightness + random(0,10) + ((rangeLightness/(parts - 1)) * i);
+          const hue = remainingHues.splice(this.random(0, remainingHues.length - 1),1)[0];
+          const saturation = this.random(minSat, maxSat);
+          const light = baseLightness + this.random(0,10) + ((rangeLightness/(parts - 1)) * i);
 
           colors.push(
             hsluvToHex([
               hue,
               saturation,
-              random(light, maxLight),
+              this.random(light, maxLight),
             ])
           )
         }
@@ -227,21 +229,21 @@ let colors = new Vue({
         const reminder = total % parts;
 
         // hues to pick from
-        const baseHue = random(0, 360);
+        const baseHue = this.random(0, 360);
         const hues = new Array(Math.round( 360 / minHueDiffAngle)).fill('').map((offset, i) => {
           return (baseHue + i * minHueDiffAngle) % 360;
         });
 
         //  low saturated color
-        const baseSaturation = random(5, 40);
-        const baseLightness = random(0, 20);
+        const baseSaturation = this.random(5, 40);
+        const baseLightness = this.random(0, 20);
         const rangeLightness = 90 - baseLightness;
 
         colors.push(
           hsluvToHex([
             hues[0],
             baseSaturation,
-            baseLightness * random(0.25, 0.75),
+            baseLightness * this.random(0.25, 0.75),
           ])
         );
 
@@ -256,17 +258,17 @@ let colors = new Vue({
         }
 
         // random shades
-        const minSat = random(50, 70);
+        const minSat = this.random(50, 70);
         const maxSat = minSat + 30;
-        const minLight = random(45, 80);
+        const minLight = this.random(45, 80);
         const maxLight = Math.min(minLight + 40, 95);
 
         for (let i = 0; i < (part + reminder - 1); i++) {
           colors.push(
             hsluvToHex([
-              hues[random(0, hues.length - 1)],
-              random(minSat, maxSat),
-              random(minLight, maxLight),
+              hues[this.random(0, hues.length - 1)],
+              this.random(minSat, maxSat),
+              this.random(minLight, maxLight),
             ])
           )
         }
@@ -282,9 +284,9 @@ let colors = new Vue({
         for (let i = 0; i < parts; i++) {
           colors.push(
             hsluvToHex([
-              random(0, 360),
-              random(0, 100),
-              random(0, 100),
+              this.random(0, 360),
+              this.random(0, 100),
+              this.random(0, 100),
             ])
           )
         }
@@ -355,7 +357,13 @@ let colors = new Vue({
         window.location.hash = colorURL;
       }
     },
-    newColors: function () {
+    newColors: function (newSeed) {
+      if (newSeed) {
+        this.currentSeed = Math.random();
+      }
+
+      this.rnd = new Seedrandom(this.currentSeed);
+
       let colorArr = this.generateRandomColors(
         this.amount,
         this.intermpolationColorModel,
@@ -425,9 +433,11 @@ let colors = new Vue({
     }
   },
   mounted: function () {
+
     this.newColors();
 
     this.addMagicControls();
+
 
     document.querySelector('body').classList.remove('is-loading');
 
