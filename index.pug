@@ -65,20 +65,6 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="amount", min="3", max="10")
 
-        label.pannel__setting
-          h4.pannel__settingtitle
-            span Color Stops
-            input(type="number", v-model.number="colorsInGradient", min="2", :max="amount")
-          .pannel__inputs
-            input(type="range", v-model.number="colorsInGradient", min="2", :max="amount")
-
-        label.pannel__setting
-          h4.pannel__settingtitle Randomizer Engine
-          .pannel__inputs
-            select(v-model.number="geneartorFunction")
-              option(v-for="functionName in generatorFunctionList", :value=functionName).
-                {{ functionName }}
-
         label.pannel__setting(title="Or use arrow keys ↔")
           h4.pannel__settingtitle
             span Mix Padding
@@ -87,6 +73,27 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="padding", min="0", max="1", step=".001")
 
+        label.pannel__setting
+          h4.pannel__settingtitle Interpolation Model
+          .pannel__inputs
+            select(v-model="intermpolationColorModel")
+              each mode in ['lab', 'rgb', 'lrgb', 'hsl', 'hsv', 'hsi', 'lch']
+                option(value=mode)=mode
+
+        label.pannel__setting
+          h4.pannel__settingtitle Randomizer Engine
+          .pannel__inputs
+            select(v-model.number="geneartorFunction")
+              option(v-for="functionName in generatorFunctionList", :value=functionName).
+                {{ functionName }}
+
+        label.pannel__setting
+          h4.pannel__settingtitle
+            span Color Stops
+            input(type="number", v-model.number="colorsInGradient", min="2", :max="amount")
+          .pannel__inputs
+            input(type="range", v-model.number="colorsInGradient", min="2", :max="amount")
+
         label.pannel__setting(v-if="geneartorFunction !== 'Full Random'")
           h4.pannel__settingtitle
             span Min. Hue angle difference
@@ -94,13 +101,6 @@ html(lang="en-US")
 
           .pannel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
-
-        label.pannel__setting
-          h4.pannel__settingtitle Interpolation Model
-          .pannel__inputs
-            select(v-model="intermpolationColorModel")
-              each mode in ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb']
-                option(value=mode)=mode
 
         label.pannel__setting.pannel__setting--inline(v-if="geneartorFunction !== 'Full Random'")
           input(type="checkbox", v-model="randomOrder")
