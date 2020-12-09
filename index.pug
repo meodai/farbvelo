@@ -55,7 +55,8 @@ html(lang="en-US")
       .pannel(v-on:pointerdown="cancelSwipe")
         span.pannel__title
           h4.pannel__settingtitle Palette Name
-          h1.title {{paletteTitle}}
+          h1.title
+            |{{paletteTitle}}
 
         label.pannel__setting
           h4.pannel__settingtitle
@@ -63,7 +64,7 @@ html(lang="en-US")
             input(type="number", v-model.number="amount", min="3", max="10")
 
           .pannel__inputs
-            input(type="range", v-model.number="amount", min="3", max="10")
+            input(type="range", v-model.number="amount", , min="3", max="10")
 
         label.pannel__setting(title="Or use arrow keys ↔")
           h4.pannel__settingtitle

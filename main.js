@@ -79,6 +79,7 @@ let colors = new Vue({
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
       trackInURL: [
+        {key:'s' , prop: 'currentSeed'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
         {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
         {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
@@ -89,7 +90,6 @@ let colors = new Vue({
         {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'geneartorFunction'}, // 'Legacy'
-        {key:'s' , prop: 'currentSeed'}, // em,
       ],
     }
   },
@@ -326,6 +326,8 @@ let colors = new Vue({
       expString = list.reduce((rem, color) => (
         rem + color.name + ' ' + color.value + '\n'
       ), expString);
+      expString += `⸺\n`;
+      expString += `URL: ${window.location.origin + "/?s=" + this.constructURL()}`;
 
       navigator.clipboard.writeText(expString);
     },
@@ -380,20 +382,27 @@ let colors = new Vue({
           this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
         });
 
+        console.log(settings)
+
         return true;
       } else {
         return false;
       }
     },
-    updateURL: function () {
+    shareURL: function () {
+      navigator.clipboard.writeText(`${window.location.origin + "/?s=" + this.constructURL()}`);
+    },
+    constructURL: function () {
       const state = this.trackInURL.reduce((o,i)=> Object.assign(o, {[i.key]: this[i.prop]}) ,{});
       const serializedState = btoa(JSON.stringify(state));
-      history.replaceState(history.state, document.title, "?s=" + serializedState);
+      return serializedState;
+    },
+    updateURL: function () {
+      history.replaceState(history.state, document.title, "?s=" + this.constructURL);
     },
     newColors: function (newSeed) {
       if (newSeed) {
         this.currentSeed = randomStr();
-        this.updateURL();
       }
 
       this.rnd = new Seedrandom(this.currentSeed);
@@ -409,7 +418,6 @@ let colors = new Vue({
 
       this.colorsValues = colorArr;
       this.updateFavicon();
-      //this.updateURL();
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
@@ -467,8 +475,13 @@ let colors = new Vue({
     }
   },
   mounted: function () {
-    const hatSettings = this.settingsFromURL();
-    this.newColors(!hatSettings);
+    const hadSettings = this.settingsFromURL();
+
+    this.newColors(!hadSettings);
+
+    if (hadSettings) {
+      window.history.replaceState({}, document.title, location.pathname);
+    }
 
     this.addMagicControls();
 
