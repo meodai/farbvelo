@@ -327,7 +327,8 @@ let colors = new Vue({
         rem + color.name + ' ' + color.value + '\n'
       ), expString);
       expString += `⸺\n`;
-      expString += `URL: ${window.location.origin + "/?s=" + this.constructURL()}`;
+      expString += `URL:\n`;
+      expString += `${window.location.origin + "/?s=" + this.constructURL()}`;
 
       navigator.clipboard.writeText(expString);
     },
