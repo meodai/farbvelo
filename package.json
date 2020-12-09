@@ -30,6 +30,7 @@
     "chroma-js": "^2.1.0",
     "hsluv": "^0.1.0",
     "seedrandom": "^3.0.5",
+    "simplex-noise": "^2.4.0",
     "vue": "^2.6.12"
   },
   "staticFiles": {

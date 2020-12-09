@@ -3,6 +3,7 @@ import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import rgbtocmyk from './lib/rgb-cymk';
 import Seedrandom from 'seedrandom';
+import SimplexNoise from 'simplex-noise';
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -73,7 +74,7 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       geneartorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random'],
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Simplex Noise', 'Full Random'],
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
@@ -307,6 +308,23 @@ let colors = new Vue({
             ])
           )
         }
+      } else if (this.geneartorFunction === 'Simplex Noise') {
+        const simplex = new SimplexNoise(this.currentSeed);
+
+        const minLight = this.random(50, 80);
+        const maxLight = Math.min(minLight + 40, 95);
+        const minSat = this.random(20, 80);
+        const maxSat = this.random(80,100)
+        const satRamp = maxSat - minSat;
+        for (let i = 0; i < parts + 1; i++) {
+          colors.push(
+            hsluvToHex([
+              simplex.noise2D(.5, (i/parts) * (3 * (minHueDiffAngle / 360))) * 360,
+              minSat + (i/parts) * satRamp,
+              i ? 55 + i/parts * (maxLight - minLight) : this.random(10, 40),
+            ])
+          )
+        }
       }
 
       if ( randomOrder ) {
@@ -382,8 +400,6 @@ let colors = new Vue({
           //this[setting.prop] = settings[settingKey].prop;
           this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
         });
-
-        console.log(settings)
 
         return true;
       } else {
