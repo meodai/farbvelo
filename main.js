@@ -9,6 +9,10 @@ const shuffleArray = arr => arr
   .sort((a, b) => a[0] - b[0])
   .map(a => a[1]);
 
+const randomStr = (length = 14) => {
+    return Math.random().toString(16).substr(2, length);
+};
+
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor'],
   template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-text': contrastcolor}">
@@ -72,8 +76,21 @@ let colors = new Vue({
       generatorFunctionList: ['Hue Bingo', 'Legacy', 'Full Random'],
       isLoading: true,
       isAnimating: true,
-      currentSeed: Math.random(),
+      currentSeed: randomStr(),
       rnd: new Seedrandom(),
+      trackInURL: [
+        {key:'a' , prop: 'amount', p: parseInt}, //6
+        {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
+        {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
+        {key:'hb' , prop: 'hasBackground', p: Boolean}, // false
+        {key:'ho' , prop: 'hasOutlines', p: Boolean}, // false
+        {key:'ht' , prop: 'hideText', p: Boolean}, // false,
+        {key:'p' , prop: 'padding', p: parseFloat}, // .175
+        {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
+        {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
+        {key:'f' , prop: 'geneartorFunction'}, // 'Legacy'
+        {key:'s' , prop: 'currentSeed'}, // em,
+      ],
     }
   },
   watch: {
@@ -351,15 +368,32 @@ let colors = new Vue({
       const faviconBase64 = canvas.toDataURL('image/png')
       favicons.forEach($icon => $icon.href = faviconBase64);
     },
-    updateURL: function () {
-      if(this.colors && this.colors.length) {
-        const colorURL = this.colors.reduce((rem,color) => `${rem}${color.replace('#', '')}-`,'').slice(0, -1);;
-        window.location.hash = colorURL;
+    settingsFromURL: function () {
+      const params = window.location.search;
+      const stateString = new URLSearchParams(params).get('s');
+
+      if (stateString) {
+        let settings = JSON.parse(atob(stateString));
+        Object.keys(settings).forEach(settingKey => {
+          const setting = this.trackInURL.find(s => (s.key === settingKey));
+          //this[setting.prop] = settings[settingKey].prop;
+          this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
+        });
+
+        return true;
+      } else {
+        return false;
       }
+    },
+    updateURL: function () {
+      const state = this.trackInURL.reduce((o,i)=> Object.assign(o, {[i.key]: this[i.prop]}) ,{});
+      const serializedState = btoa(JSON.stringify(state));
+      history.replaceState(history.state, document.title, "?s=" + serializedState);
     },
     newColors: function (newSeed) {
       if (newSeed) {
-        this.currentSeed = Math.random();
+        this.currentSeed = randomStr();
+        this.updateURL();
       }
 
       this.rnd = new Seedrandom(this.currentSeed);
@@ -433,8 +467,8 @@ let colors = new Vue({
     }
   },
   mounted: function () {
-
-    this.newColors();
+    const hatSettings = this.settingsFromURL();
+    this.newColors(!hatSettings);
 
     this.addMagicControls();
 
