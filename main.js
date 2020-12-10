@@ -15,8 +15,8 @@ const randomStr = (length = 14) => {
 };
 
 Vue.component('color', {
-  props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor'],
-  template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-text': contrastcolor}">
+  props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex'],
+  template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor}">
               <var class="color__value">{{ value }}</var>
               <h3 class="color__name">{{ name && name.name }}</h3>
               <section class="color__info">
@@ -66,6 +66,8 @@ let colors = new Vue({
       hasGradients: true,
       hasBackground: false,
       hasOutlines: false,
+      hasBleed: false,
+      hasGrain: false,
       hideText: false,
       padding: .175,
       minHueDistance: 60,
