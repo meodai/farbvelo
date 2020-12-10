@@ -89,6 +89,7 @@ let colors = new Vue({
         {key:'hb' , prop: 'hasBackground', p: Boolean}, // false
         {key:'ho' , prop: 'hasOutlines', p: Boolean}, // false
         {key:'ht' , prop: 'hideText', p: Boolean}, // false,
+        {key:'b' , prop: 'hasBleed', p: Boolean}, // false,
         {key:'p' , prop: 'padding', p: parseFloat}, // .175
         {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
@@ -397,6 +398,7 @@ let colors = new Vue({
 
       if (stateString) {
         let settings = JSON.parse(atob(stateString));
+
         Object.keys(settings).forEach(settingKey => {
           const setting = this.trackInURL.find(s => (s.key === settingKey));
           //this[setting.prop] = settings[settingKey].prop;
