@@ -449,7 +449,7 @@ let colors = new Vue({
     addMagicControls: function () {
       document.addEventListener('keydown', (e) => {
         if ( e.code === 'Space' ) {
-          this.newColors();
+          this.newColors(true);
         } else if ( e.code === 'ArrowRight' ) {
           this.padding = Math.min(1, this.padding + .01);
         } else if ( e.code === 'ArrowLeft' ) {
