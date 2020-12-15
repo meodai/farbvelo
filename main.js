@@ -53,6 +53,18 @@ Vue.component('color', {
   }
 });
 
+function coordsToHex (angle, val1, val2, mode = 'hsluv') {
+  if (mode === 'hsluv') {
+    return hsluvToHex([ angle, val1, val2, ]);
+  } else if (mode === 'hcl') {
+    return chroma(angle, val1, val2, 'hcl').hex();
+  } else if (mode === 'lch') {
+    return chroma(val1, val2, angle, 'lch').hex();
+  } else if (mode === 'hsl' || mode === 'hsv' || mode === 'hcg') {
+    return chroma(angle, val1/100, val2/100, mode).hex();
+  }
+}
+
 let colors = new Vue({
   el: '#app',
   data: () => {
@@ -70,6 +82,8 @@ let colors = new Vue({
       hasGrain: false,
       hideText: false,
       padding: .175,
+      colorMode: 'hsluv',
+      colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch'],
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
       intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
@@ -94,6 +108,7 @@ let colors = new Vue({
         {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'geneartorFunction'}, // 'Legacy'
+        {key:'c', prop: 'colorMode'}, // 'hsluv'
       ],
     }
   },
@@ -110,6 +125,9 @@ let colors = new Vue({
       this.newColors();
     },
     minHueDistance: function () {
+      this.newColors();
+    },
+    colorMode: function () {
       this.newColors();
     },
     geneartorFunction: function () {
@@ -208,11 +226,12 @@ let colors = new Vue({
         const rangeLightness = 90 - baseLightness;
 
         colors.push(
-          hsluvToHex([
+          coordsToHex(
             hues[0],
             baseSaturation,
             baseLightness * this.random(0.25, 0.75),
-          ])
+            this.colorMode
+          )
         );
 
         // random shades
@@ -230,20 +249,22 @@ let colors = new Vue({
           const light = baseLightness + this.random(0,10) + ((rangeLightness/(parts - 1)) * i);
 
           colors.push(
-            hsluvToHex([
+            coordsToHex(
               hue,
               saturation,
               this.random(light, maxLight),
-            ])
+              this.colorMode,
+            )
           )
         }
 
         colors.push(
-          hsluvToHex([
+          coordsToHex(
             remainingHues[0],
             baseSaturation,
             rangeLightness + 10,
-          ])
+            this.colorMode,
+          )
         );
       } else if (this.geneartorFunction === 'Legacy') {
         const part = Math.floor(total / parts);
@@ -261,20 +282,22 @@ let colors = new Vue({
         const rangeLightness = 90 - baseLightness;
 
         colors.push(
-          hsluvToHex([
+          coordsToHex(
             hues[0],
             baseSaturation,
             baseLightness * this.random(0.25, 0.75),
-          ])
+            this.colorMode,
+          )
         );
 
         for (let i = 0; i < (part - 1); i++) {
           colors.push(
-            hsluvToHex([
+            coordsToHex(
               hues[0],
               baseSaturation,
-              baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5))
-            ])
+              baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5)),
+              this.colorMode
+            )
           );
         }
 
@@ -286,29 +309,32 @@ let colors = new Vue({
 
         for (let i = 0; i < (part + reminder - 1); i++) {
           colors.push(
-            hsluvToHex([
+            coordsToHex(
               hues[this.random(0, hues.length - 1)],
               this.random(minSat, maxSat),
               this.random(minLight, maxLight),
-            ])
+              this.colorMode,
+            )
           )
         }
 
         colors.push(
-          hsluvToHex([
+          coordsToHex(
             hues[0],
             baseSaturation,
             rangeLightness,
-          ])
+            this.colorMode,
+          )
         );
       } else if (this.geneartorFunction === 'Full Random') {
         for (let i = 0; i < parts; i++) {
           colors.push(
-            hsluvToHex([
+            coordsToHex(
               this.random(0, 360),
               this.random(0, 100),
               this.random(0, 100),
-            ])
+              this.colorMode,
+            )
           )
         }
       } else if (this.geneartorFunction === 'Simplex Noise') {
@@ -321,11 +347,12 @@ let colors = new Vue({
         const satRamp = maxSat - minSat;
         for (let i = 0; i < parts + 1; i++) {
           colors.push(
-            hsluvToHex([
+            coordsToHex(
               simplex.noise2D(.5, (i/parts) * (3 * (minHueDiffAngle / 360))) * 360,
               minSat + (i/parts) * satRamp,
               i ? 55 + i/parts * (maxLight - minLight) : this.random(10, 40),
-            ])
+              this.colorMode,
+            )
           )
         }
       }
