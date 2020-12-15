@@ -485,6 +485,7 @@ body {
 
   &__setting {
     display: block;
+    touch-action: manipulation;
 
     & + & {
       margin-top: 1.7rem;
