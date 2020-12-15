@@ -66,13 +66,6 @@ html(lang="en-US")
                 {{ functionName }}
 
         label.pannel__setting
-          h4.pannel__settingtitle Color Mode
-          .pannel__inputs
-            select(v-model="colorMode")
-              option(v-for="mode in colorModeList", :value=mode).
-                {{ mode }}
-
-        label.pannel__setting
           h4.pannel__settingtitle
             span Colors
             input(type="number", v-model.number="amount", min="3", max="10")
@@ -87,6 +80,13 @@ html(lang="en-US")
 
           .pannel__inputs
             input(type="range", v-model.number="padding", min="0", max="1", step=".001")
+
+        label.pannel__setting
+          h4.pannel__settingtitle Color Mode
+          .pannel__inputs
+            select(v-model="colorMode")
+              option(v-for="mode in colorModeList", :value=mode).
+                {{ mode }}
 
         label.pannel__setting
           h4.pannel__settingtitle Interpolation Model
