@@ -261,6 +261,14 @@ body {
   z-index: 1;
   opacity: 1;
   transition: 100ms opacity linear;
+
+  @media (max-width: 850px) {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .color {
