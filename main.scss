@@ -217,7 +217,7 @@ body {
 
 .colors:hover .color {
   &:last-child {
-    padding-bottom: 0rem;
+    padding-bottom: .7rem;
   }
 
   &:hover {
@@ -299,7 +299,8 @@ body {
   transform: translate(1.1em, 1.1em);
 
   @media (max-width: 850px) {
-    right: 12.5%;
+    right: 10vmin;
+    bottom: 10vmin;
   }
 }
 
