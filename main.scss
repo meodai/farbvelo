@@ -172,6 +172,7 @@ body {
     width: auto;
     left: 10vmin;
     right: 10vmin;
+    bottom: 12vmin;
     transform: none;
   }
 }
@@ -300,7 +301,7 @@ body {
 
   @media (max-width: 850px) {
     right: 10vmin;
-    bottom: 10vmin;
+    bottom: 12vmin;
   }
 }
 
