@@ -60,7 +60,7 @@ body {
 }
 
 .wrap__hasGradients {
-  .colors .color {
+  .color {
     &::after {
       opacity: .5;
       content: '';
@@ -75,7 +75,7 @@ body {
 }
 
 .wrap__hasBleed {
-  .colors .color {
+  .color {
     &::before {
       position: absolute;
       left: 0;
@@ -89,7 +89,7 @@ body {
 }
 
 .wrap__hasDithering {
-  .colors .color {
+  .color {
     &::before {
       mask: $noise, linear-gradient(black -100%, transparent);
       -webkit-mask: $noise, linear-gradient(black -100%, transparent);
@@ -169,7 +169,10 @@ body {
   width: 52%;
 
   @media (max-width: 850px) {
-    width: 75%;
+    width: auto;
+    left: 10vmin;
+    right: 10vmin;
+    transform: none;
   }
 }
 
@@ -177,7 +180,7 @@ body {
   display: none;
 }
 
-.colors .color {
+.color {
   position: relative;
   display: flex;
   background-color: var(--color);
@@ -189,7 +192,6 @@ body {
   @media (max-width: 850px) {
     flex-direction: column;
     align-items: flex-start;
-    padding: 0 1rem;
     justify-content: center;
   }
 
@@ -447,10 +449,16 @@ body {
 
   @media (max-width: 850px) {
     padding: 1rem;
-    background: rgba(#212121,.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(#212121,0.8);
+
+    @supports ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(#212121, .1);
+    }
   }
+
+
 
   input[type=checkbox] {
     display: none;
@@ -674,7 +682,7 @@ body {
   @media (max-width: 850px) {
     opacity: 0;
     z-index: 5;
-    transform: translateX(-50%) scale(.8);
+    transform: translateX(0%) scale(.8);
   }
 }
 
@@ -687,7 +695,7 @@ body {
   transform: translateX(-75%);
 
   @media (max-width: 850px) {
-    transform: translateX(-50%);
+    transform: none;
     opacity: 1;
   }
 }
@@ -696,7 +704,7 @@ body {
   transform: translateX(-25%);
 
   @media (max-width: 850px) {
-    transform: translateX(-50%);
+    transform: none;
   }
 }
 
@@ -822,7 +830,7 @@ body {
     perspective: 600px;
   }
 
-  .colors .color {
+  .color {
     opacity: 0;
     transform: translateY(0%) scaleY(.5) rotate3d(.1, 0, 0, 80deg);
     transform-origin: 50% 150%;
@@ -838,7 +846,7 @@ body {
     }
   }
 
-  .colors .color:last-child {
+  .color:last-child {
     padding-bottom: 0rem;
   }
 
@@ -866,7 +874,7 @@ body {
     perspective: 600px;
   }
 
-  .colors .color {
+  .color {
     opacity: 1;
     transform: translateY(0) scaleY(1);
     transform-origin: 50% 0%;
@@ -902,7 +910,7 @@ body {
     }
   }
 
-  .colors .color:last-child {
+  .color:last-child {
     padding-bottom: 0rem;
   }
 
