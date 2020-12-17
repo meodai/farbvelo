@@ -153,7 +153,10 @@ let colors = new Vue({
       }
     },
     lastColor: function () {
-      return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#2121';
+      return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#212121';
+    },
+    lastColorContrast: function () {
+      return chroma(this.lastColor).luminance() < .5 ? '#fff' : '#212121';
     },
     firstColor: function () {
       return this.colors && this.colors.length ? this.colors[0] : '#212121';

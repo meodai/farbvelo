@@ -224,7 +224,6 @@ button {
   display: none;
 }
 
-
 .color__value {
   flex-grow: 1;
   padding-right: var(--size-gutter);
@@ -331,7 +330,7 @@ button {
   width: 1.2em;
   height: 1.2em;
   background: var(--color-last, #212121);
-  color: var(--color-inverted);
+  color: var(--color-last-contrast, var(--color-inverted));
 
   border-radius: 50%;
   outline: 0;
@@ -360,7 +359,7 @@ button {
     animation-timing-function: linear;
     animation-play-state: paused;
     line-height: 1;
-    fill: var(--color-inverted);
+    fill: var(--color-last-contrast, var(--color-inverted));
   }
 
   &:hover {
@@ -407,7 +406,7 @@ button {
     animation: none;
     width: .6em;
     height: .6em;
-    stroke: var(--color-inverted);
+    stroke: var(--color-last-contrast, var(--color-inverted));
     stroke-width: 1px;
     margin-top: -.01em;
   }
