@@ -176,11 +176,14 @@ let colors = new Vue({
       let gradient = [...this.colors];
       gradient[0] += ' 12vmin'
       gradient[gradient.length - 1] += ' 69%'
-      //url("https://www.transparenttextures.com/patterns/concrete-wall.png"),
 
-      return `
-        linear-gradient(to bottom, ${gradient.join(',')})
-      `;
+      /*
+      // hard stops
+      let col = this.colors.reduce((r,d,i) => (`${r ? r + ',' : ''} ${d} ${((i)/this.colors.length) * 100}%, ${d} ${((i + 1)/this.colors.length) * 100}%`),'');
+      return `linear-gradient(to bottom, ${col})`;
+      */
+
+      return `linear-gradient(to bottom, ${gradient.join(',')})`;
     }
   },
   methods: {
@@ -372,14 +375,18 @@ let colors = new Vue({
         name: color.name,
         value: color.requestedHex
       }));
+
       let expString = this.paletteTitle + '\n';
       expString += `⸺\n`;
       expString = list.reduce((rem, color) => (
         rem + color.name + ' ' + color.value + '\n'
       ), expString);
       expString += `⸺\n`;
+      expString += `${this.colors.join(',')}\n`;
+      expString += `⸺\n`;
       expString += `URL:\n`;
-      expString += `${window.location.origin + "/?s=" + this.constructURL()}`;
+      expString += `${window.location.origin + "/?s=" + this.constructURL()}\n`;
+
 
       navigator.clipboard.writeText(expString);
     },
