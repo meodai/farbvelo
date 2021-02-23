@@ -665,7 +665,11 @@ button {
     background-image: conic-gradient(var(--color-inverted) 5%, transparent 0 95%, var(--color-inverted) 0);
     background-repeat: no-repeat;
     background-position: right 0% top 120%;
-
+    
+    option {
+      color: var(--color-bg);
+    }
+    
     &:focus {
       outline: none;
       background-color: transparent;
