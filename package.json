@@ -29,6 +29,7 @@
   "dependencies": {
     "chroma-js": "^2.1.0",
     "hsluv": "^0.1.0",
+    "randomcolor": "^0.6.2",
     "seedrandom": "^3.0.5",
     "simplex-noise": "^2.4.0",
     "vue": "^2.6.12"

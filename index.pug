@@ -8,7 +8,6 @@ html(lang="en-US")
     meta(name='title', content='FarbVélo — Random Color Cycler')
     meta(name='description', content='Generative color harmonies. The random color expolorer')
 
-
     link(rel="apple-touch-icon" sizes="180x180" href="./public//apple-touch-icon.png")
 
     link(rel="icon", href="./public/favicon.ico", type="image/x-icon")
@@ -23,14 +22,14 @@ html(lang="en-US")
 
     //  Open Graph / Facebook
     meta(property='og:type', content='website')
-    meta(property='og:url', content='https://FarbVelo.elastiq.ch/')
+    meta(property='og:url', content='https://farbVelo.elastiq.ch/')
     meta(property='og:title', content='FarbVélo — Random Color Cycler')
     meta(property='og:description', content='Generative color harmonies. The random color expolorer')
     meta(property='og:image', content='https://farbvelo.elastiq.ch/farbvelo.png')
 
     //  Twitter
     meta(property='twitter:card', content='summary_large_image')
-    meta(property='twitter:url', content='https://FarbVelo.elastiq.ch/')
+    meta(property='twitter:url', content='https://farbVelo.elastiq.ch/')
     meta(property='twitter:title', content='FarbVélo — Random Color Cycler')
     meta(property='twitter:description', content='Generative color harmonies. The random color expolorer')
     meta(property='twitter:image', content='https://farbvelo.elastiq.ch/farbvelo.png')
@@ -81,7 +80,7 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="padding", min="0", max="1", step=".001")
 
-        label.pannel__setting
+        label.pannel__setting(v-if="geneartorFunction !== 'RandomColor.js' ")
           h4.pannel__settingtitle Color Mode
           .pannel__inputs
             select(v-model="colorMode")
@@ -102,7 +101,7 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="colorsInGradient", min="2", :max="amount")
 
-        label.pannel__setting(v-if="geneartorFunction !== 'Full Random'")
+        label.pannel__setting(v-if="geneartorFunction !== 'Full Random' && geneartorFunction !== 'RandomColor.js'")
           h4.pannel__settingtitle
             span Min. Hue angle difference
             input(type="number", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")

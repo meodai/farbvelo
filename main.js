@@ -4,6 +4,9 @@ import chroma from 'chroma-js';
 import rgbtocmyk from './lib/rgb-cymk';
 import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
+import randomColor from 'randomcolor';
+
+
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -90,7 +93,7 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       geneartorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'Simplex Noise', 'Full Random'],
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
@@ -361,6 +364,22 @@ let colors = new Vue({
             )
           )
         }
+      } else if (this.geneartorFunction === 'RandomColor.js') {
+        colors = [
+          randomColor({
+            luminosity: 'dark', //bright, light or dark
+            seed: this.currentSeed,
+          }),
+          ...randomColor({
+            //  luminosity: 'bright', //bright, light or dark
+            seed: this.currentSeed + 50,
+            count: parts - 2,
+          }),
+          randomColor({
+            luminosity: 'light', //bright, light or dark
+            seed: this.currentSeed + 100,
+          })
+        ];
       }
 
       if ( randomOrder ) {
@@ -391,7 +410,19 @@ let colors = new Vue({
       navigator.clipboard.writeText(expString);
     },
     getNames: function (colors) {
-      fetch(`https://api.color.pizza/v1/${colors.join().replace(/#/g, '')}?noduplicates=true&goodnamesonly=true`)
+      const url = new URL('https://api.color.pizza/v1/');
+
+      const params = {
+        noduplicates: true,
+        goodnamesonly: true,
+        colors: ['f0f0f0', 'f00'],
+      };
+
+      url.pathname += colors.join().replace(/#/g, '');
+
+      url.search = new URLSearchParams(params).toString();
+      //console.log(url)
+      return fetch(url)
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
