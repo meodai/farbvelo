@@ -92,7 +92,7 @@ let colors = new Vue({
       intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
-      geneartorFunction: 'Legacy',
+      generatorFunction: 'Legacy',
       generatorFunctionList: ['Hue Bingo', 'Legacy', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
       isLoading: true,
       isAnimating: true,
@@ -110,7 +110,7 @@ let colors = new Vue({
         {key:'p' , prop: 'padding', p: parseFloat}, // .175
         {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
-        {key:'f' , prop: 'geneartorFunction'}, // 'Legacy'
+        {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
         {key:'c', prop: 'colorMode'}, // 'hsluv'
       ],
     }
@@ -133,14 +133,16 @@ let colors = new Vue({
     colorMode: function () {
       this.newColors();
     },
-    geneartorFunction: function () {
+    generatorFunction: function () {
       this.newColors();
-      if ( this.geneartorFunction == 'Legacy' ) {
+      if ( this.generatorFunction == 'Legacy' ) {
         console.info('Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100.');
-      } else if ( this.geneartorFunction == 'Hue Bingo' ) {
+      } else if ( this.generatorFunction == 'Hue Bingo' ) {
         console.info('Hue Bingo: Selects ℕ0 hue`s (color stops) at a user defined minimum angle ∠, using a controlled random lightness ramp.');
-      } else if ( this.geneartorFunction == 'Full Random'  ) {
+      } else if ( this.generatorFunction == 'Full Random' ) {
         console.info('Random: Picks ℕ0 random hsl colors. Make sure to use "Mix Padding" with this one.');
+      } else if ( this.generatorFunction === 'RandomColor.js' ) {
+        console.info('RandomColor.js: https://randomcolor.lllllllllllllllll.com/');
       }
     }
   },
@@ -222,7 +224,7 @@ let colors = new Vue({
 
       minHueDiffAngle = Math.min(minHueDiffAngle, 360/parts);
 
-      if (this.geneartorFunction === 'Hue Bingo') {
+      if (this.generatorFunction === 'Hue Bingo') {
         // create an array of hues to pick from.
         const baseHue = this.random(0, 360);
         const hues = new Array(Math.round( 360 / minHueDiffAngle) ).fill('').map((offset, i) => {
@@ -275,7 +277,7 @@ let colors = new Vue({
             this.colorMode,
           )
         );
-      } else if (this.geneartorFunction === 'Legacy') {
+      } else if (this.generatorFunction === 'Legacy') {
         const part = Math.floor(total / parts);
         const reminder = total % parts;
 
@@ -335,7 +337,7 @@ let colors = new Vue({
             this.colorMode,
           )
         );
-      } else if (this.geneartorFunction === 'Full Random') {
+      } else if (this.generatorFunction === 'Full Random') {
         for (let i = 0; i < parts; i++) {
           colors.push(
             coordsToHex(
@@ -346,7 +348,7 @@ let colors = new Vue({
             )
           )
         }
-      } else if (this.geneartorFunction === 'Simplex Noise') {
+      } else if (this.generatorFunction === 'Simplex Noise') {
         const simplex = new SimplexNoise(this.currentSeed);
 
         const minLight = this.random(50, 80);
@@ -364,7 +366,7 @@ let colors = new Vue({
             )
           )
         }
-      } else if (this.geneartorFunction === 'RandomColor.js') {
+      } else if (this.generatorFunction === 'RandomColor.js') {
         colors = [
           randomColor({
             luminosity: 'dark', //bright, light or dark
