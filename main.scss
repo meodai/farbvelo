@@ -298,10 +298,9 @@ button {
   }
 }
 
-.botton {
+.button {
   transform: translateX(0);
-  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms,
-              50ms box-shadow linear;
+  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms;
 
   @for $i from 1 through 5 {
     &:nth-child(#{$i}) {
@@ -310,7 +309,7 @@ button {
   }
 }
 
-.wrap__showSettings .botton {
+.wrap__showSettings .button {
   transform: translateX(13vw);
 
   @for $i from 1 through 5 {
@@ -323,7 +322,7 @@ button {
   }
 }
 
-.botton {
+.button {
   position: relative;
   margin: 0;
   padding: 0;
@@ -336,17 +335,10 @@ button {
   border-radius: 50%;
   outline: 0;
 
-  box-shadow: 0 0 0 1px rgba(#fff, 0),
-              inset 0 0 0 0 currentColor;
+  box-shadow: 0 0 0 1px rgba(#fff, 0);
 
   .wrap__hasGradients & {
-    box-shadow: 0 0 2rem rgba(#212121, .2),
-                inset 0 0 0 0 currentColor;
-
-    &:hover {
-      box-shadow: 0 0 2rem rgba(#212121, .2),
-                  inset 0 0 0 1px currentColor;
-    }
+    box-shadow: 0 0 2rem rgba(#212121, .2);
   }
 
   & + & {
@@ -370,9 +362,6 @@ button {
   }
 
   &:hover {
-    box-shadow: 0 0 0 1px rgba(#fff, 0),
-                inset 0 0 0 1px currentColor;
-
     svg {
       animation-play-state: running;
     }
@@ -875,7 +864,7 @@ button {
     display: none
   }
 
-  .botton {
+  .button {
     opacity: 0;
   }
 }
@@ -887,7 +876,7 @@ button {
     display: none
   }
 
-  .botton {
+  .button {
     opacity: 0;
   }
 
