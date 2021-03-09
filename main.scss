@@ -591,7 +591,6 @@ button {
   @mixin slider-track {
     width: 100%;
     height: 1rem;
-    cursor: pointer;
     animate: 0.2s;
     background: transparent;
     color: var(--c-black);
@@ -606,7 +605,6 @@ button {
     width: .5rem;
     border-radius: 0;
     background: var(--color-inverted);
-    cursor: pointer;
     -webkit-appearance: none;
     margin-top: 0.25rem;
     transition: 150ms background-color, 200ms clip-path, 200ms -webkit-clip-path;
