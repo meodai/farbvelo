@@ -300,7 +300,8 @@ button {
 
 .botton {
   transform: translateX(0);
-  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms;
+  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms,
+              50ms box-shadow linear;
 
   @for $i from 1 through 5 {
     &:nth-child(#{$i}) {
@@ -334,12 +335,18 @@ button {
 
   border-radius: 50%;
   outline: 0;
-  cursor: pointer;
 
-  box-shadow: 0 0 0 1px rgba(#fff, 0);
+  box-shadow: 0 0 0 1px rgba(#fff, 0),
+              inset 0 0 0 0 currentColor;
 
   .wrap__hasGradients & {
-    box-shadow: 0 0 2rem rgba(#212121, .2);
+    box-shadow: 0 0 2rem rgba(#212121, .2),
+                inset 0 0 0 0 currentColor;
+
+    &:hover {
+      box-shadow: 0 0 2rem rgba(#212121, .2),
+                  inset 0 0 0 1px currentColor;
+    }
   }
 
   & + & {
@@ -363,6 +370,9 @@ button {
   }
 
   &:hover {
+    box-shadow: 0 0 0 1px rgba(#fff, 0),
+                inset 0 0 0 1px currentColor;
+
     svg {
       animation-play-state: running;
     }
@@ -665,11 +675,11 @@ button {
     background-image: conic-gradient(var(--color-inverted) 5%, transparent 0 95%, var(--color-inverted) 0);
     background-repeat: no-repeat;
     background-position: right 0% top 120%;
-    
+
     option {
       color: var(--color-bg);
     }
-    
+
     &:focus {
       outline: none;
       background-color: transparent;
