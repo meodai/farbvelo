@@ -19,7 +19,7 @@ const randomStr = (length = 14) => {
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex'],
-  template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor}">
+  template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor, '--color-best-contrast': bestContrast}">
               <var class="color__value">{{ value }}</var>
               <h3 class="color__name">{{ name && name.name }}</h3>
               <section class="color__info">
@@ -53,6 +53,9 @@ Vue.component('color', {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }
     },
+    bestContrast: function () {
+      return chroma.contrast(this.colorhex, 'black') > chroma.contrast(this.colorhex, 'white') ? 'black' : 'white';
+    }
   }
 });
 
@@ -81,6 +84,7 @@ let colors = new Vue({
       hasGradients: true,
       hasBackground: false,
       hasOutlines: false,
+      highContrast: false,
       hasBleed: false,
       hasGrain: false,
       hideText: false,
@@ -105,6 +109,7 @@ let colors = new Vue({
         {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
         {key:'hb' , prop: 'hasBackground', p: Boolean}, // false
         {key:'ho' , prop: 'hasOutlines', p: Boolean}, // false
+        {key:'hc' , prop: 'highContrast', p: Boolean}, // false
         {key:'ht' , prop: 'hideText', p: Boolean}, // false,
         {key:'b' , prop: 'hasBleed', p: Boolean}, // false,
         {key:'p' , prop: 'padding', p: parseFloat}, // .175

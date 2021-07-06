@@ -68,7 +68,7 @@ button {
       right: 0;
       bottom: 0;
       top: 0;
-      box-shadow: 0 0 10rem currentColor;
+      box-shadow: 0 0 10rem var(--color-text);
     }
   }
 }
@@ -84,6 +84,22 @@ button {
       content: '';
       background-image: linear-gradient(to top, var(--color-next) -50%, var(--color) 80%);
     }
+  }
+}
+
+.wrap__highContrast {
+  .color {
+    color: var(--color-best-contrast);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .color {
+    color: var(--color-best-contrast);
+  }
+
+  .pannel__setting--contrast {
+    display: none;
   }
 }
 
