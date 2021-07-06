@@ -188,7 +188,7 @@ html(lang="en-US")
 
       article.colors(v-on:pointerdown="cancelSwipe")
         h2.colors__title Generated Color Palette
-        color(v-for="(c, i) in colors", :nextcolorhex="colors[i+1] || colors[colors.length - 2]" :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)")
+        color(v-for="(c, i) in colors", :nextcolorhex="colors[i+1] || colors[colors.length - 2]" :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)" :contrastcolors="wcagContrastColors[i]")
 
       .buttons
         button.button.settings(v-on:click="toggleSettings", aria-label="show settngs pannel").
