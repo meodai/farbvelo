@@ -240,17 +240,42 @@ button {
   display: none;
 }
 
-.color__value {
+.color__values {
   flex-grow: 1;
   padding-right: var(--size-gutter);
   font-size: 0.75em;
   font-family: 'Space Mono', monospace;
-  font-style: normal;
+  display: flex;
 
   @media (max-width: 850px) {
     font-size: .6em;
     flex-grow: 0;
   }
+}
+
+.color__contrasts ol {
+  display: flex;
+  list-style-type: none;
+  margin-left: .5em;
+  margin-top: .3em;
+}
+
+.color__contrasts ol li {
+  position: relative;
+  width: .75em;
+  height: .75em;
+  background: var(--paircolor);
+  border-radius: 50%;
+  margin-right: .25em;
+}
+
+.color__contrasts var {
+  position: absolute;
+  display: none;
+}
+
+.color__value {
+  font-style: normal;
 }
 
 .color__name {
@@ -265,7 +290,7 @@ button {
   }
 }
 
-.color__value,
+.color__values,
 .color__name {
   position: relative;
   z-index: 1;
@@ -280,6 +305,8 @@ button {
     white-space: nowrap;
   }
 }
+
+
 
 .color {
   @for $i from 1 through 10 {
