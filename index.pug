@@ -114,6 +114,11 @@ html(lang="en-US")
           i.pannel__checkbox
           h4.pannel__settingtitle Show Contrasting Colors
 
+        label.pannel__setting.pannel__setting--bnw.pannel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
+          input(type="checkbox", v-model="addBWContrast")
+          i.pannel__checkbox
+          h4.pannel__settingtitle Add Black &amp; White
+
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasBackground")
           i.pannel__checkbox

@@ -97,6 +97,7 @@ let colors = new Vue({
       hasGrain: false,
       hideText: false,
       showContrast: false,
+      addBWContrast: true,
       padding: .175,
       colorMode: 'hsluv',
       colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch'],
@@ -126,7 +127,8 @@ let colors = new Vue({
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
         {key:'c', prop: 'colorMode'}, // 'hsluv'
-        {key:'sc', prop: 'showContrast'}, // 'hsluv'
+        {key:'sc', prop: 'showContrast'}, // false
+        {key:'bw', prop: 'addBWContrast'}, // true
       ],
     }
   },
@@ -194,7 +196,7 @@ let colors = new Vue({
     },
     wcagContrastColors: function () {
       return this.colors.map(color =>
-        this.colors.map(
+        (this.addBWContrast ? [...this.colors, '#fff', '#000'] : this.colors).map(
           color2 => (4.5 <= chroma.contrast(color, color2) ? color2 : false)
         )
       )

@@ -788,6 +788,28 @@ button {
   }
 }
 
+.pannel__setting--bnw {
+  max-height: 0;
+  overflow: hidden;
+  transition: 400ms max-height cubic-bezier(0.3, 0.7, 0, 1),
+              400ms margin-bottom cubic-bezier(0.3, 0.7, 0, 1),
+              400ms margin-top cubic-bezier(0.3, 0.7, 0, 1),
+              200ms opacity;
+  opacity: 0;
+  margin-bottom: -2em;
+  transition-delay: 100ms, 0, 0, 0;
+  margin-top: .5em;
+}
+
+.wrap__showcontrast .pannel__setting--bnw {
+  opacity: 1;
+  max-height: 2em;
+  padding-top: .1em;
+  margin-bottom: 0;
+  transition-delay: 0, 0, 0, 100ms;
+  margin-top: .5em;
+}
+
 .colors,
 .pannel {
   transition: 400ms transform cubic-bezier(0.3, 0.7, 0, 1);
