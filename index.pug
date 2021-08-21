@@ -48,7 +48,7 @@ html(lang="en-US")
     #app.wrap(
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast}"
-      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hasDithering': hasGrain}")
+      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hasDithering': hasGrain}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
@@ -109,6 +109,16 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
+        label.pannel__setting.pannel__setting--inline(title="WCAG 2.0 AA Contrasts")
+          input(type="checkbox", v-model="showContrast")
+          i.pannel__checkbox
+          h4.pannel__settingtitle Show Contrasting Colors
+
+        label.pannel__setting.pannel__setting--bnw.pannel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
+          input(type="checkbox", v-model="addBWContrast")
+          i.pannel__checkbox
+          h4.pannel__settingtitle Add Black &amp; White
+
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasBackground")
           i.pannel__checkbox
@@ -149,15 +159,15 @@ html(lang="en-US")
           article.footer__about
             h2 FarbVélo
             p.
-              FarbVélo (Swiss-German for color bicycle) is a playful color picking tool. It follows simple rules and uses lots of gerates random numbers to help you come up with pleasing color combinations or just chill while cycling through color harmonies (I almost find it a bit psychedelic while listening to <a href="https://mynoise.net/NoiseMachines/tropicalRainNoiseGenerator.php">custom made white noise</a>).
+              FarbVélo (Swiss-German for color bicycle) is a playful color picking tool. It follows simple rules and uses lots of random numbers to help you come up with pleasing color combinations or just chill while cycling through color harmonies (I almost a bit psychedelic while listening to <a href="https://mynoise.net/NoiseMachines/tropicalRainNoiseGenerator.php">custom made white noise</a>).
 
             aside
               h2 Usage Tipps
               ol
                 li Clicking and draging or swiping on the backgroud will change the palette padding.
-                li The left and right arrow key will change the padding as well.
+                li So will the left and right arrow keys.
                 li Pressing 'Space' generates a new platte using your current settings.
-                li On mobile phone you can add this page to your home screen for a nicer user experience.
+                li On phones and tablets you can add this page to your home screen for a nicer user experience.
 
             aside
               h2 About
@@ -188,7 +198,7 @@ html(lang="en-US")
 
       article.colors(v-on:pointerdown="cancelSwipe")
         h2.colors__title Generated Color Palette
-        color(v-for="(c, i) in colors", :nextcolorhex="colors[i+1] || colors[colors.length - 2]" :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)")
+        color(v-for="(c, i) in colors", :nextcolorhex="colors[i+1] || colors[colors.length - 2]" :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)" :contrastcolors="wcagContrastColors[i]")
 
       .buttons
         button.button.settings(v-on:click="toggleSettings", aria-label="show settngs pannel").

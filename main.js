@@ -6,8 +6,6 @@ import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
 
-
-
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
   .sort((a, b) => a[0] - b[0])
@@ -18,18 +16,25 @@ const randomStr = (length = 14) => {
 };
 
 Vue.component('color', {
-  props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex'],
+  props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
   template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor, '--color-best-contrast': bestContrast}">
-              <var class="color__value">{{ value }}</var>
+              <div class="color__values">
+                <var class="color__value">{{value}}</var>
+                <section class="color__contrasts" v-if="hasWCAGColorPairs" aria-label="good contrast colors">
+                  <ol>
+                    <li v-for="c in contrastcolors" v-if="c" :key="c" :style="{'--paircolor': c}"><var>{{c}}</var></li>
+                  </ol>
+                </section>
+              </div>
               <h3 class="color__name">{{ name && name.name }}</h3>
-              <section class="color__info">
+              <section class="color__info" v-bind:aria-label="'color values for ' + (name && name.name)">
                 <ol>
                   <li>{{ valueRGB }}</li>
                   <li>{{ valueHSL }}</li>
                   <li>{{ valueCMYK }}</li>
                 </ol>
               </section>
-             </aside>`,
+            </aside>`,
 
   methods: {
     copy: function () {
@@ -52,6 +57,9 @@ Vue.component('color', {
       } else  {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }
+    },
+    hasWCAGColorPairs: function () {
+      return this.contrastcolors.filter(c => c !== false);
     },
     bestContrast: function () {
       return chroma.contrast(this.colorhex, 'black') > chroma.contrast(this.colorhex, 'white') ? 'black' : 'white';
@@ -88,6 +96,8 @@ let colors = new Vue({
       hasBleed: false,
       hasGrain: false,
       hideText: false,
+      showContrast: false,
+      addBWContrast: true,
       padding: .175,
       colorMode: 'hsluv',
       colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch'],
@@ -117,6 +127,8 @@ let colors = new Vue({
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
         {key:'c', prop: 'colorMode'}, // 'hsluv'
+        {key:'sc', prop: 'showContrast'}, // false
+        {key:'bw', prop: 'addBWContrast'}, // true
       ],
     }
   },
@@ -181,6 +193,13 @@ let colors = new Vue({
       this.getNames(colors);
 
       return colors;
+    },
+    wcagContrastColors: function () {
+      return this.colors.map(color =>
+        (this.addBWContrast ? [...this.colors, '#fff', '#000'] : this.colors).map(
+          color2 => (4.5 <= chroma.contrast(color, color2) ? color2 : false)
+        )
+      )
     },
     backgroundGradient: function () {
       let gradient = [...this.colors];

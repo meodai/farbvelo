@@ -238,19 +238,104 @@ button {
 
 .color__info {
   display: none;
+  opacity: 1;
+  position: absolute;
+  top: 5.5rem;
+  font-size: 0.75em;
+
+  ul, ol {
+    list-style: none;
+    font-size: 0.7em;
+  }
+
+  li {
+    margin-top: .5em;
+  }
 }
 
-.color__value {
+.color:hover .color__info {
+  opacity: 1;
+  transition: 300ms opacity;
+}
+
+.color__values {
   flex-grow: 1;
   padding-right: var(--size-gutter);
   font-size: 0.75em;
   font-family: 'Space Mono', monospace;
-  font-style: normal;
+  display: flex;
 
   @media (max-width: 850px) {
     font-size: .6em;
     flex-grow: 0;
   }
+}
+
+.wrap__showcontrast .color:hover .color__contrasts {
+  opacity: 0;
+
+  @media (max-width: 850px) {
+    opacity: 1;
+  }
+}
+
+.color__contrasts {
+  opacity: 0;
+  transition: 200ms opacity;
+  position: absolute;
+  left: 0;
+  top: 50%;
+
+
+  transform: translateY(-50%);
+  height: 10px;
+  transform: 200ms opacity linear;
+
+  .wrap__hidetext & {
+
+  }
+
+  .wrap__showcontrast & {
+    opacity: 1;
+    transition-delay: .3s;
+
+  }
+
+  @media (max-width: 850px) {
+    left: auto;
+    right: var(--size-gutter);
+  }
+}
+
+.color__contrasts ol {
+  display: flex;
+  height: 100%;
+  list-style-type: none;
+}
+
+.color__contrasts ol li {
+  position: relative;
+  height: 8px;
+  width: 8px;
+  border-radius: 5px;
+  background: var(--paircolor);
+
+  .wrap__hasBleed & {
+    box-shadow: 0 0 5px var(--paircolor);
+  }
+}
+
+.color__contrasts ol li + li {
+  margin-left: 5px;
+}
+
+.color__contrasts var {
+  position: absolute;
+  display: none;
+}
+
+.color__value {
+  font-style: normal;
 }
 
 .color__name {
@@ -262,10 +347,11 @@ button {
   @media (max-width: 850px) {
     text-align: left;
     font-weight: 400;
+    overflow: hidden;
   }
 }
 
-.color__value,
+.color__values,
 .color__name {
   position: relative;
   z-index: 1;
@@ -275,7 +361,6 @@ button {
   @media (max-width: 850px) {
     display: block;
     width: 100%;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -297,6 +382,19 @@ button {
   .color__name {
     opacity: 0;
   }
+}
+
+.wrap__showcontrast .color__value {
+  opacity: 0;
+
+  @media (max-width: 850px) {
+    opacity: 1;
+  }
+}
+
+.wrap__showcontrast .color:hover .color__value {
+  opacity: 1;
+  transition-delay: 350ms;
 }
 
 .buttons {
@@ -688,6 +786,28 @@ button {
       background-color: transparent;
     }
   }
+}
+
+.pannel__setting--bnw {
+  max-height: 0;
+  overflow: hidden;
+  transition: 400ms max-height cubic-bezier(0.3, 0.7, 0, 1),
+              400ms margin-bottom cubic-bezier(0.3, 0.7, 0, 1),
+              400ms margin-top cubic-bezier(0.3, 0.7, 0, 1),
+              200ms opacity;
+  opacity: 0;
+  margin-bottom: -2em;
+  transition-delay: 100ms, 0, 0, 0;
+  margin-top: .5em;
+}
+
+.wrap__showcontrast .pannel__setting--bnw {
+  opacity: 1;
+  max-height: 2em;
+  padding-top: .1em;
+  margin-bottom: 0;
+  transition-delay: 0, 0, 0, 100ms;
+  margin-top: .5em;
 }
 
 .colors,
