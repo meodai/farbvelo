@@ -34,8 +34,7 @@ Vue.component('color', {
                   <li>{{ valueCMYK }}</li>
                 </ol>
               </section>
-
-             </aside>`,
+            </aside>`,
 
   methods: {
     copy: function () {
@@ -97,6 +96,7 @@ let colors = new Vue({
       hasBleed: false,
       hasGrain: false,
       hideText: false,
+      showContrast: false,
       padding: .175,
       colorMode: 'hsluv',
       colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch'],
@@ -126,6 +126,7 @@ let colors = new Vue({
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
         {key:'c', prop: 'colorMode'}, // 'hsluv'
+        {key:'sc', prop: 'showContrast'}, // 'hsluv'
       ],
     }
   },

@@ -48,7 +48,7 @@ html(lang="en-US")
     #app.wrap(
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast}"
-      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hasDithering': hasGrain}")
+      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hasDithering': hasGrain}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
@@ -108,6 +108,11 @@ html(lang="en-US")
 
           .pannel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
+
+        label.pannel__setting.pannel__setting--inline(title="WCAG 2.0 AA Contrasts")
+          input(type="checkbox", v-model="showContrast")
+          i.pannel__checkbox
+          h4.pannel__settingtitle Show Contrasting Colors
 
         label.pannel__setting.pannel__setting--inline
           input(type="checkbox", v-model="hasBackground")
