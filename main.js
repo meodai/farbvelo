@@ -91,6 +91,7 @@ let colors = new Vue({
       randomOrder: false,
       hasGradients: true,
       hasBackground: false,
+      animateBackgroundIntro: true,
       hasOutlines: false,
       highContrast: false,
       hasBleed: false,
@@ -496,8 +497,13 @@ let colors = new Vue({
         Object.keys(settings).forEach(settingKey => {
           const setting = this.trackInURL.find(s => (s.key === settingKey));
           //this[setting.prop] = settings[settingKey].prop;
+
           this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
+
         });
+
+        // side effects :(
+        this.animateBackgroundIntro = !!settings.hb;
 
         return true;
       } else {
@@ -611,8 +617,10 @@ let colors = new Vue({
       this.isAnimating = false;
     }, 1600);
 
-    setTimeout(() => {
-      this.hasBackground = true;
-    }, 2000);
+    if( this.animateBackgroundIntro ) {
+      setTimeout(() => {
+        this.hasBackground = true;
+      }, 2000);
+    }
   }
 });
