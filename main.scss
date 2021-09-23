@@ -428,23 +428,11 @@ button {
 
 .button {
   transform: translateX(0);
-  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms, 200ms opacity 200ms;
+  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1) 100ms;
 
   @for $i from 1 through 5 {
     &:nth-child(#{$i}) {
       transition-delay: #{50 + $i * 50}ms;
-    }
-  }
-}
-
-.wrap__hideUI .button {
-  opacity: 0;
-  transform: translateY(10vh);
-  transition: 300ms transform cubic-bezier(0.3, 0.7, 0, 1), 200ms opacity;
-
-  @for $i from 1 through 5 {
-    &:nth-child(#{$i}) {
-      transition-delay: #{50 + (5 - $i) * 50}ms;
     }
   }
 }

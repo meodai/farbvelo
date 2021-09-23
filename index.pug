@@ -48,7 +48,7 @@ html(lang="en-US")
     #app.wrap(
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast}"
-      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__hasDithering': hasGrain}")
+      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hasDithering': hasGrain}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
@@ -148,11 +148,6 @@ html(lang="en-US")
           input(type="checkbox", v-model="highContrast")
           i.pannel__checkbox
           h4.pannel__settingtitle High Contrast
-
-        label.pannel__setting.pannel__setting--inline.pannel__setting--contrast
-          input(type="checkbox", v-model="autoHideUI")
-          i.pannel__checkbox
-          h4.pannel__settingtitle Autohide UI
 
         label.pannel__setting
           h4.pannel__settingtitle Color Values

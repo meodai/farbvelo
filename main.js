@@ -38,7 +38,7 @@ Vue.component('color', {
   methods: {
     copy: function () {
       navigator.clipboard.writeText(`${this.name.name} ・ ${this.value} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
-    },
+    }
   },
   computed: {
     valueCMYK: function () {
@@ -93,7 +93,6 @@ let colors = new Vue({
       animateBackgroundIntro: true,
       hasOutlines: false,
       highContrast: false,
-      autoHideUI: false,
       hasBleed: false,
       hasGrain: false,
       hideText: false,
@@ -113,8 +112,6 @@ let colors = new Vue({
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
-      moveTimer: null,
-      showUI: true,
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
@@ -132,7 +129,6 @@ let colors = new Vue({
         {key:'c', prop: 'colorMode'}, // 'hsluv'
         {key:'sc', prop: 'showContrast'}, // false
         {key:'bw', prop: 'addBWContrast'}, // true
-        {key: 'ah', prop: 'autoHideUI'}, // false
       ],
     }
   },
@@ -577,16 +573,6 @@ let colors = new Vue({
     cancelSwipe: function (e) {
       e.stopPropagation();
     },
-    hideTools: function () {
-      this.showUI = true;
-
-      if (this.autoHideUI) {
-        clearTimeout(this.moveTimer);
-        this.moveTimer = setTimeout(() => {
-          this.showUI = false;
-        }, 3000);
-      }
-    },
     addMagicControls: function () {
       document.addEventListener('keydown', (e) => {
         if ( e.code === 'Space' ) {
@@ -601,17 +587,13 @@ let colors = new Vue({
       let isTouching = false;
       let lastX;
 
-      //clearTimeout(this.moveTimer);
-
       // maybe add swipe controls at some point
-      document.addEventListener('pointerdown', e => {
+      document.addEventListener('pointerdown', (e)  => {
         isTouching = true;
         lastX = e.clientX;
-        this.hideTools();
       });
 
-      document.addEventListener('pointermove', e => {
-        this.hideTools();
+      document.addEventListener('pointermove', (e)=> {
         if(isTouching) {
           e.preventDefault();
           const direction = Math.sign(e.clientX - lastX);
@@ -667,6 +649,5 @@ let colors = new Vue({
         this.hasBackground = true;
       }, 2000);
     }
-
   }
 });
