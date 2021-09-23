@@ -1,3 +1,4 @@
+// import Vue from 'vue';
 import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import rgbtocmyk from './lib/rgb-cymk';
@@ -106,8 +107,8 @@ let colors = new Vue({
       intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
-      generatorFunction: 'FrankForce',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'FrankForce', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
+      generatorFunction: 'Legacy',
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
@@ -406,37 +407,9 @@ let colors = new Vue({
             seed: this.currentSeed + 100,
           })
         ];
-      } else if (this.generatorFunction === 'FrankForce') {
-        /*
-        new Color(rand(cA.r, cB.r), rand(cA.g, cB.g), rand(cA.b, cB.b), rand(cA.a, cB.a))
-        levelColor.mutate(.2).lerp(levelSkyColor, .95 - i * .15)
+      }
 
-        this.r + rand(amount, -amount),
-        this.g + rand(amount, -amount),
-        this.b + rand(amount, -amount),
-
-        mutate(amount = .05, alphaAmount = 0)
-        */
-
-        const baseGL = chroma.gl(
-          this.random(.2, .8),
-          this.random(.2, .8),
-          this.random(.2, .8)
-        );
-
-        colors.push(
-          baseGL
-        );
-
-        for (let i = 0; i < 3; ++i) {
-          let cs = baseGL.set('rgb.r', `${this.random(-.2, .2) * 255}`);
-          cs = cs.set('rgb.g', `${this.random(-.2, .2) * 255}`);
-          cs = cs.set('rgb.b', `${this.random(-.2, .2) * 255}`);
-          colors.push(
-            chroma.mix(baseGL, cs, .95 - i * .15, 'rgb')
-          )
-        }
-      } else if ( randomOrder ) {
+      if ( randomOrder ) {
         colors = shuffleArray(colors);
       }
 

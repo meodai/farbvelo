@@ -83,7 +83,6 @@ button {
       top: 0;
       content: '';
       background-image: linear-gradient(to top, var(--color-next) -50%, var(--color) 80%);
-      //background: pink;
     }
   }
 }
@@ -167,8 +166,6 @@ button {
   .bg {
     opacity: 1;
     transform: scale(1.3);
-    filter: url('#noise');
-    //filter: url('#marble');
   }
 }
 
