@@ -824,6 +824,11 @@ button {
   margin-top: .5em;
 }
 
+.pannel__img img {
+  display: block;
+  max-width: 100%;
+}
+
 .wrap__showcontrast .pannel__setting--bnw {
   opacity: 1;
   max-height: 2em;
