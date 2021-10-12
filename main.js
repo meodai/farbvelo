@@ -76,8 +76,8 @@ const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
   const imageData = ctx.getImageData(0, 0, width, height);
 
   const filterOptions = {
-    saturation: 0.15,
-    lightness: 0.2
+    saturation: 0,
+    lightness: 0
   };
 
   startWorker(image.src, imageData, width, filterOptions, colorsLength);
