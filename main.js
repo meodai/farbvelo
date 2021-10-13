@@ -6,6 +6,95 @@ import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
 
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+const workers = [];
+const CANVAS_SCALE = 0.4;
+
+const unsplashURLtoID = url =>
+url.match(
+  /https:\/\/images\.unsplash\.com\/photo-([\da-f]+-[\da-f]+)/
+)[1];
+
+const startWorker = (
+  imageUrl,
+  imageData,
+  width,
+  filterOptions,
+  colorsLength,
+) => {
+  const worker = new Worker('./worker.js');
+
+  workers.push(worker);
+
+  worker.addEventListener(
+    'message',
+    (e) => {
+      switch (e.data.type) {
+        case 'GENERATE_COLORS_ARRAY':
+          const pixels = e.data.colors;
+          for (let i = 0; i < 1; i++) {
+            worker.postMessage({
+              type: 'GENERATE_CLUSTERS',
+              pixels,
+              k: colorsLength,
+              filterOptions,
+            });
+          }
+          break;
+        case 'GENERATE_CLUSTERS':
+          console.timeEnd('calculating colors');
+          const clusters = e.data.colors;
+          colors.colorsValues = clusters.sort((c1,c2) =>
+            chroma(c1).lch()[0] - chroma(c2).lch()[0]
+          ).map(cluster =>
+            cluster
+          );
+          document.documentElement.classList.remove('is-imagefetching');
+        break;
+      }
+    },
+    false
+  );
+
+  worker.postMessage({
+    type: 'GENERATE_COLORS_ARRAY',
+    imageData,
+    width,
+    k: colorsLength,
+  });
+};
+
+const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
+  console.time('calculating colors');
+  const width = Math.floor(image.naturalWidth * CANVAS_SCALE);
+  const height = Math.floor(image.naturalHeight * CANVAS_SCALE);
+  canvas.width = width;
+  canvas.height = height;
+  ctx.drawImage(image, 0, 0, width, height);
+
+  const imageData = ctx.getImageData(0, 0, width, height);
+
+  const filterOptions = {
+    saturation: 0,
+    lightness: 0
+  };
+
+  startWorker(image.src, imageData, width, filterOptions, colorsLength);
+};
+
+const loadImage = (source, colorsLength) => {
+  workers.forEach(w => w.terminate());
+
+  const image = new Image();
+  image.crossOrigin = 'Anonymous';
+  image.src = source;
+
+  image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength);
+};
+
+
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
   .sort((a, b) => a[0] - b[0])
@@ -79,6 +168,7 @@ function coordsToHex (angle, val1, val2, mode = 'hsluv') {
   }
 }
 
+
 let colors = new Vue({
   el: '#app',
   data: () => {
@@ -109,13 +199,14 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       generatorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
       moveTimer: null,
       showUI: true,
+      imgURL: '',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
@@ -134,6 +225,7 @@ let colors = new Vue({
         {key:'sc', prop: 'showContrast'}, // false
         {key:'bw', prop: 'addBWContrast'}, // true
         {key: 'ah', prop: 'autoHideUI'}, // false
+        {key: 'iu', prop: 'imgURL'}, // ''
       ],
     }
   },
@@ -526,23 +618,51 @@ let colors = new Vue({
       history.replaceState(history.state, document.title, "?s=" + this.constructURL);
     },
     newColors: function (newSeed) {
+      document.documentElement.classList.remove('is-imagefetching');
+
       if (newSeed) {
         this.currentSeed = randomStr();
       }
 
       this.rnd = new Seedrandom(this.currentSeed);
 
-      let colorArr = this.generateRandomColors(
-        this.amount,
-        this.intermpolationColorModel,
-        parseFloat(this.padding),
-        this.colorsInGradient,
-        this.randomOrder,
-        this.minHueDistance
-      )
+      if (this.generatorFunction !== 'ImageExtract') {
+        let colorArr = this.generateRandomColors(
+          this.amount,
+          this.intermpolationColorModel,
+          parseFloat(this.padding),
+          this.colorsInGradient,
+          this.randomOrder,
+          this.minHueDistance
+        );
 
-      this.colorsValues = colorArr;
-      this.updateFavicon();
+        this.colorsValues = colorArr;
+        this.updateFavicon();
+      } else if (this.generatorFunction === 'ImageExtract') {
+        if (!this.imgURL || newSeed) {
+          document.documentElement.classList.add('is-imagefetching');
+
+          fetch('https://source.unsplash.com/random/200x300/').then(data => {
+            const url = data.url;
+            const id = unsplashURLtoID(url)
+            this.imgURL = url;
+
+            loadImage(
+              url,
+              this.colorsInGradient,
+            );
+          });
+        } else {
+          loadImage(
+            this.imgURL,
+            this.colorsInGradient,
+          );
+        }
+
+        this.colorsValues = this.colorsValues;
+        this.updateFavicon();
+      }
+
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
@@ -621,7 +741,6 @@ let colors = new Vue({
     }
 
     this.addMagicControls();
-
 
     document.querySelector('body').classList.remove('is-loading');
 
