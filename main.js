@@ -51,6 +51,7 @@ const startWorker = (
           ).map(cluster =>
             cluster
           );
+          colors.updateFavicon();
           document.documentElement.classList.remove('is-imagefetching');
         break;
       }
@@ -660,7 +661,6 @@ let colors = new Vue({
         }
 
         this.colorsValues = this.colorsValues;
-        this.updateFavicon();
       }
 
     },
