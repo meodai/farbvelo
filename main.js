@@ -746,6 +746,29 @@ let colors = new Vue({
   mounted: function () {
     const hadSettings = this.settingsFromURL();
 
+    if('ondrop' in window) {
+      document.documentElement.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+
+      document.documentElement.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+      });
+
+      document.documentElement.addEventListener('drop', (e) => {
+        const file = e.dataTransfer.files[0];
+        if (e.dataTransfer.files.length && file.type.match(/^image\//)) {
+          e.preventDefault();
+          this.imgURL = ' ';
+          this.generatorFunction = 'ImageExtract';
+          const reader = new FileReader();
+          reader.addEventListener('loadend', this.imageLoaded);
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+
     this.newColors(!hadSettings);
 
     if (hadSettings) {
