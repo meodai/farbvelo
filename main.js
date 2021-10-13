@@ -28,41 +28,42 @@ const startWorker = (
 
   workers.push(worker);
 
-    worker.addEventListener(
-      'message',
-      (e) => {
-        switch (e.data.type) {
-          case 'GENERATE_COLORS_ARRAY':
-            const pixels = e.data.pixels;
-            for (let i = 0; i < 1; i++) {
-              worker.postMessage({
-                type: 'GENERATE_CLUSTERS',
-                pixels,
-                k: colorsLength,
-                filterOptions,
-              });
-            }
-            break;
-          case 'GENERATE_CLUSTERS':
-            console.timeEnd('calculating colors');
-            const clusters = e.data.clusters;
-            colors.colorsValues = clusters.sort((c1,c2) =>
-              chroma(c1.color, 'rgb').lch()[0] - chroma(c2.color, 'rgb').lch()[0]
-            ).map(cluster =>
-              chroma(cluster.color, 'rgb').hex()
-            );
+  worker.addEventListener(
+    'message',
+    (e) => {
+      switch (e.data.type) {
+        case 'GENERATE_COLORS_ARRAY':
+          const pixels = e.data.colors;
+          for (let i = 0; i < 1; i++) {
+            worker.postMessage({
+              type: 'GENERATE_CLUSTERS',
+              pixels,
+              k: colorsLength,
+              filterOptions,
+            });
+          }
           break;
-        }
-      },
-      false
-    );
+        case 'GENERATE_CLUSTERS':
+          console.timeEnd('calculating colors');
+          const clusters = e.data.colors;
+          console.log(clusters)
+          colors.colorsValues = clusters.sort((c1,c2) =>
+            chroma(c1).lch()[0] - chroma(c2).lch()[0]
+          ).map(cluster =>
+            cluster
+          );
+        break;
+      }
+    },
+    false
+  );
 
-    worker.postMessage({
-      type: 'GENERATE_COLORS_ARRAY',
-      imageData,
-      width,
-    });
-
+  worker.postMessage({
+    type: 'GENERATE_COLORS_ARRAY',
+    imageData,
+    width,
+    k: colorsLength,
+  });
 };
 
 const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
