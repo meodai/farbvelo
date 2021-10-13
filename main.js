@@ -129,7 +129,7 @@ Vue.component('color', {
   methods: {
     copy: function () {
       navigator.clipboard.writeText(`${this.name.name} ・ ${this.value} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
-    },
+    }
   },
   computed: {
     valueCMYK: function () {
@@ -662,7 +662,6 @@ let colors = new Vue({
 
         this.colorsValues = this.colorsValues;
       }
-
     },
     toggleSettings: function () {
       this.settingsVisible = !this.settingsVisible;
@@ -729,7 +728,20 @@ let colors = new Vue({
       document.addEventListener('pointerup', (e)  => {
         isTouching = false;
       });
-    }
+    },
+    handlefile: function (e) {
+      const reader = new FileReader();
+      reader.addEventListener('loadend', this.imageLoaded);
+      reader.readAsDataURL(e.target.files[0]);
+    },
+    imageLoaded: function (event) {
+      const srcimg = new Image();
+
+      srcimg.onload = imageLoadCallback.bind(null, srcimg, canvas, ctx, 4);
+      srcimg.src = event.target.result;
+      this.imgURL = event.target.result;
+    },
+
   },
   mounted: function () {
     const hadSettings = this.settingsFromURL();

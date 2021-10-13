@@ -64,9 +64,10 @@ html(lang="en-US")
               option(v-for="functionName in generatorFunctionList", :value=functionName).
                 {{ functionName }}
 
-        div.pannel__setting(v-if="generatorFunction === 'ImageExtract'")
+        label.pannel__setting(v-if="generatorFunction === 'ImageExtract'")
           div.pannel__img(v-if="imgURL")
             img(v-bind:src="imgURL" alt="Image the colors are extracted from")
+            input(type="file" accept="image/*" ref="file" v-on:change="handlefile")
 
         label.pannel__setting
           h4.pannel__settingtitle
