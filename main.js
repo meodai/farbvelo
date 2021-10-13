@@ -283,7 +283,7 @@ let colors = new Vue({
     },
     colors: function () {
       const colors = chroma
-        .scale(this.colorsValues.length ? this.colorsValues : ['#f00', '#0f0', '#00f', '#0ff'])
+        .scale(this.colorsValues.length ? this.colorsValues : ['#202124', '#fff'])
         .padding(parseFloat(this.padding))
         .mode(this.intermpolationColorModel)
         .colors(this.amount);
