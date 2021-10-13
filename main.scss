@@ -832,6 +832,13 @@ button {
     width: fit-content;
   }
 
+  &::after {
+    content: "▲";
+    position: absolute;
+    bottom: .5rem;
+    right: .5rem;
+  }
+
   input {
     position: absolute;
     top: 0;
