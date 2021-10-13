@@ -65,8 +65,9 @@ html(lang="en-US")
                 {{ functionName }}
 
         div.pannel__setting(v-if="generatorFunction === 'ImageExtract'")
-          div.pannel__img
+          div.pannel__img(v-if="imgURL")
             img(v-bind:src="imgURL" alt="Image the colors are extracted from")
+
         label.pannel__setting
           h4.pannel__settingtitle
             span Colors

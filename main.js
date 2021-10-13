@@ -46,12 +46,12 @@ const startWorker = (
         case 'GENERATE_CLUSTERS':
           console.timeEnd('calculating colors');
           const clusters = e.data.colors;
-          console.log(clusters)
           colors.colorsValues = clusters.sort((c1,c2) =>
             chroma(c1).lch()[0] - chroma(c2).lch()[0]
           ).map(cluster =>
             cluster
           );
+          document.documentElement.classList.remove('is-imagefetching');
         break;
       }
     },
@@ -618,6 +618,8 @@ let colors = new Vue({
       history.replaceState(history.state, document.title, "?s=" + this.constructURL);
     },
     newColors: function (newSeed) {
+      document.documentElement.classList.remove('is-imagefetching');
+
       if (newSeed) {
         this.currentSeed = randomStr();
       }
@@ -625,7 +627,6 @@ let colors = new Vue({
       this.rnd = new Seedrandom(this.currentSeed);
 
       if (this.generatorFunction !== 'ImageExtract') {
-        console.log('not image')
         let colorArr = this.generateRandomColors(
           this.amount,
           this.intermpolationColorModel,
@@ -633,15 +634,14 @@ let colors = new Vue({
           this.colorsInGradient,
           this.randomOrder,
           this.minHueDistance
-        )
-
-        console.log(colorArr)
+        );
 
         this.colorsValues = colorArr;
         this.updateFavicon();
       } else if (this.generatorFunction === 'ImageExtract') {
-
         if (!this.imgURL || newSeed) {
+          document.documentElement.classList.add('is-imagefetching');
+
           fetch('https://source.unsplash.com/random/200x300/').then(data => {
             const url = data.url;
             const id = unsplashURLtoID(url)
@@ -741,7 +741,6 @@ let colors = new Vue({
     }
 
     this.addMagicControls();
-
 
     document.querySelector('body').classList.remove('is-loading');
 
