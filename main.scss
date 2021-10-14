@@ -938,6 +938,44 @@ button {
   }
 }
 
+.wrap__expandUI {
+  .pannel,
+  .colors {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .pannel {
+    background: rgba(#212121,.25)
+  }
+
+  .colors {
+    width: 100%;
+    transform: translateX(0%);
+  }
+
+  .buttons {
+    bottom: calc(var(--size-gutter) * 2.5);
+    right: calc(var(--size-gutter) * 2);
+  }
+
+  &.wrap__showSettings {
+    .colors {
+      transform: translateX(calc(25% + var(--size-gutter)));
+    }
+    .pannel {
+      transform: translateX(0%);
+      transition-delay: 50ms;
+    }
+
+    .button {
+      transform: translateX(0);
+    }
+  }
+}
+
 @keyframes rotate {
   from {
     transform: translate(-50%, -50%) rotate(0deg);

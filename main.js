@@ -186,6 +186,7 @@ let colors = new Vue({
       hasOutlines: false,
       highContrast: false,
       autoHideUI: false,
+      expandUI: false,
       hasBleed: false,
       hasGrain: false,
       hideText: false,
