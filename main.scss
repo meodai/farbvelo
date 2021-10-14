@@ -37,7 +37,7 @@ a {
 .icons {
   display: none;
   svg path {
-    stroke-width: 1.75px;
+    stroke-width: 2px;
   }
 }
 
@@ -500,6 +500,7 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    opacity: .8;
 
     width: .6em;
     height: .6em;
@@ -510,6 +511,7 @@ button {
     animation-play-state: paused;
     line-height: 1;
     stroke: var(--color-last-contrast, var(--color-inverted));
+    color: var(--color-last-contrast, var(--color-inverted));
   }
 
   &.refresh svg {
@@ -1033,8 +1035,9 @@ button {
       }
 
       &.copy {
-        transform: translateX(7rem);
-
+        @media (max-width: 850px) {
+          transform: translateX(7rem);
+        }
       }
       &.refresh {
         @media (max-width: 850px) {

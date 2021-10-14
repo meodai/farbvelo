@@ -761,6 +761,7 @@ let colors = new Vue({
 
       document.documentElement.addEventListener('drop', (e) => {
         const file = e.dataTransfer.files[0];
+        console.log(file.type)
         if (e.dataTransfer.files.length && file.type.match(/^image\//)) {
           e.preventDefault();
           this.imgURL = ' ';
