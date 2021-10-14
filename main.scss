@@ -34,6 +34,13 @@ a {
   color: inherit;
 }
 
+.icons {
+  display: none;
+  svg path {
+    stroke-width: 2px;
+  }
+}
+
 button {
   border: none;
   width: auto;
@@ -493,15 +500,23 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation-name: rotate;
-    animation-duration: 3s;
+    opacity: .8;
+
     width: .6em;
     height: .6em;
+    animation-name: rotate;
+    animation-duration: 3s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-play-state: paused;
     line-height: 1;
-    fill: var(--color-last-contrast, var(--color-inverted));
+    stroke: var(--color-last-contrast, var(--color-inverted));
+    color: var(--color-last-contrast, var(--color-inverted));
+  }
+
+  &.refresh svg {
+    width: .55em;
+    height: .55em;
   }
 
   &:hover {
@@ -512,20 +527,15 @@ button {
 }
 
 .settings {
-  svg {
-    animation: none;
-    width: .5em;
-    height: .5em;
-  }
-
   &::after {
     content: '×';
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: -.075em;
+    margin-top: -.05em;
     transform: translate(-50%, -50%) scale(.2);
     opacity: 0;
+    font-weight: 200;
   }
 }
 
@@ -553,9 +563,10 @@ button {
     margin-top: -.01em;
   }
 
-  &::after {
-    content: '✓';
+  .check {
     position: absolute;
+    width: .8em;
+    height: .8em;
     top: 50%;
     left: 50%;
     opacity: 0;
@@ -563,11 +574,11 @@ button {
   }
 
   &:focus {
-    &::after {
+    .check {
       opacity: 1;
       transition: 100ms opacity linear 50ms,
                   300ms transform cubic-bezier(.3, 0, .7, 1.8);
-      transform: translate(-50%, -50%) scale(.75);
+      transform: translate(-50%, -50%) scale(1);
     }
     svg {
       transition: 100ms opacity linear;
@@ -609,9 +620,9 @@ button {
   }
 
   input[type=checkbox]:checked + &__checkbox {
-    &::after {
+    svg {
       opacity: 1;
-      transform: translate(-55%, -50%) scale(.8);
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 
@@ -624,15 +635,16 @@ button {
     margin-top: -0.3em;
     flex: 0 0 0.8rem;
 
-    &::after {
+    svg {
       opacity: 0;
-      content: '✓';
-      transform: translate(-55%, -50%) scale(.1);
+      transform: translate(-50%, -50%) scale(.1);
       transition: 60ms opacity linear,
                   120ms transform cubic-bezier(0.7, 0.3, .8, 2);
       position: absolute;
       top: 50%;
       left: 50%;
+      width: 100%;
+      height: 100%;
     }
   }
 
@@ -706,6 +718,7 @@ button {
   // range sliders
   input[type=range] {
     margin: 0;
+    z-index: 1;
     padding-top: 0.7em;
     margin-top: -0.7em;
   }
@@ -802,10 +815,6 @@ button {
     border-radius: 0;
     padding: 0.25rem 1rem 0.25rem 0rem;
     background-color: transparent;
-    background-size: 1.25em 1.25em;
-    background-image: conic-gradient(var(--color-inverted) 5%, transparent 0 95%, var(--color-inverted) 0);
-    background-repeat: no-repeat;
-    background-position: right 0% top 120%;
 
     option {
       color: var(--color-bg);
@@ -838,7 +847,9 @@ button {
     width: fit-content;
   }
 
-  &::after {
+  .icon {
+    width: 1rem;
+    height: 1rem;
     content: "▲";
     position: absolute;
     bottom: .5rem;
@@ -852,6 +863,32 @@ button {
     bottom: 0;
     right: 0;
     opacity: 0;
+  }
+
+  .icon--up {
+    stroke-dasharray: 100 30;
+    stroke-dashoffset: 0;
+    transition: 3s stroke-dashoffset linear;
+  }
+
+  .icon--re:hover {
+    animation-play-state: running;
+  }
+
+  .icon--re {
+    right: 1.5rem;
+    bottom: 0;
+    animation-name: rotate;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-play-state: paused;
+  }
+
+  &:hover {
+    .icon--up {
+      stroke-dashoffset: -260;
+    }
   }
 }
 .pannel__img img {
@@ -939,6 +976,17 @@ button {
   }
 }
 
+.pannel__inputs--select {
+  position: relative;
+  svg {
+    width: .8em;
+    height: .8em;
+    position: absolute;
+    right: -.25em;
+    bottom: .35em;
+  }
+}
+
 .wrap__expandUI {
   .pannel,
   .colors {
@@ -982,7 +1030,22 @@ button {
 
     .button {
       transform: translateX(0);
+      @media (max-width: 850px) {
+        transform: translateX(5rem);
+      }
+
+      &.copy {
+        @media (max-width: 850px) {
+          transform: translateX(7rem);
+        }
+      }
+      &.refresh {
+        @media (max-width: 850px) {
+          transform: translateX(9rem);
+        }
+      }
     }
+
   }
 }
 
