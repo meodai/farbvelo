@@ -557,6 +557,7 @@ let colors = new Vue({
       });
     },
     updateFavicon: function () {
+      const theme = document.querySelector('[name="theme-color"]');
       const favicons = document.querySelectorAll('[rel="icon"]');
       const faviconSize = 100;
       const innerSize = 80;
@@ -568,6 +569,8 @@ let colors = new Vue({
       const gradient = ctx.createLinearGradient(0, 0, 0, faviconSize);
       ctx.fillStyle = '#212121';
       ctx.fillRect(0, 0, faviconSize, faviconSize);
+
+      theme.setAttribute('content', this.colors[0]);
 
       this.colors.forEach((color, i) => {
         /*ctx.fillStyle = color;
