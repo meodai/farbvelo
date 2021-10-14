@@ -115,6 +115,11 @@ button {
 .wrap__hasOutlines {
   .pannel {
     border: 2px solid var(--color-inverted);
+
+    @media (max-width: 850px) {
+      z-index: 11;
+      border-width: 2px 4px;
+    }
   }
   .refresh,
   .settings,
