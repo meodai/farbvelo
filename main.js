@@ -282,6 +282,9 @@ let colors = new Vue({
     firstColor: function () {
       return this.colors && this.colors.length ? this.colors[0] : '#212121';
     },
+    firstColorContrast: function () {
+      return chroma(this.firstColor).luminance() < .5 ? '#fff' : '#212121';
+    },
     colors: function () {
       const colors = chroma
         .scale(this.colorsValues.length ? this.colorsValues : ['#202124', '#fff'])
@@ -767,6 +770,12 @@ let colors = new Vue({
           reader.readAsDataURL(file);
         }
       });
+    };
+
+    const isPalm = window.matchMedia('(max-width: 850px)');
+
+    if (isPalm.matches) {
+      this.expandUI = true;
     }
 
 

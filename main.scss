@@ -950,7 +950,6 @@ button {
 
   .pannel {
     background: rgba(#212121,.25);
-
   }
 
   .colors {
@@ -962,6 +961,11 @@ button {
     bottom: calc(var(--size-gutter) * 2.5);
     right: calc(var(--size-gutter) * 2);
   }
+
+  /*.button {
+    background: var(--color-first);
+    color: var(--color-first-contrast);
+  }*/
 
   &.wrap__showSettings {
     .colors {
