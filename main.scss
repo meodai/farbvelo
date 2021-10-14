@@ -509,7 +509,7 @@ button {
     animation-timing-function: linear;
     animation-play-state: paused;
     line-height: 1;
-    fill: var(--color-last-contrast, var(--color-inverted));
+    stroke: var(--color-last-contrast, var(--color-inverted));
   }
 
   &.refresh svg {
@@ -885,7 +885,6 @@ button {
 
   &:hover {
     .icon--up {
-      fill:red;
       stroke-dashoffset: -260;
     }
   }
