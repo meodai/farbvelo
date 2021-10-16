@@ -49,7 +49,7 @@ html(lang="en-US")
   body.is-loading
     #app.wrap(
       ref="app",
-      :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast}"
+      :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast, '--colors': colors.length}"
       :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__expandUI': expandUI, 'wrap__hasDithering': hasGrain}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
@@ -69,7 +69,7 @@ html(lang="en-US")
                 {{ functionName }}
 
         .pannel__setting(v-if="generatorFunction === 'ImageExtract'")
-          div.pannel__img(v-if="imgURL")
+          div.pannel__img
             label
               img(v-bind:src="imgURL" alt="Image the colors are extracted from")
               svg.icon.icon--up

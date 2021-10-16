@@ -771,6 +771,9 @@ let colors = new Vue({
           const reader = new FileReader();
           reader.addEventListener('loadend', this.imageLoaded);
           reader.readAsDataURL(file);
+          setTimeout(() => {
+            this.settingsVisible = true;
+          }, 500);
         }
       });
     };
