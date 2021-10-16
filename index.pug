@@ -49,7 +49,7 @@ html(lang="en-US")
   body.is-loading
     #app.wrap(
       ref="app",
-      :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast}"
+      :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast, '--colors': colors.length}"
       :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__expandUI': expandUI, 'wrap__hasDithering': hasGrain}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
@@ -69,7 +69,7 @@ html(lang="en-US")
                 {{ functionName }}
 
         .pannel__setting(v-if="generatorFunction === 'ImageExtract'")
-          div.pannel__img(v-if="imgURL")
+          div.pannel__img
             label
               img(v-bind:src="imgURL" alt="Image the colors are extracted from")
               svg.icon.icon--up
@@ -127,7 +127,7 @@ html(lang="en-US")
           .pannel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
-        label.pannel__setting.pannel__setting--inline(title="WCAG 2.0 AA Contrasts")
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline(title="WCAG 2.0 AA Contrasts")
           input(type="checkbox", v-model="showContrast")
           i.pannel__checkbox
             svg
@@ -135,7 +135,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Show Contrasting Colors
 
-        label.pannel__setting.pannel__setting--bnw.pannel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
+        label.pannel__setting.pannel__setting--bnw.pannel__setting--checkbox.pannel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
           input(type="checkbox", v-model="addBWContrast")
           i.pannel__checkbox
             svg
@@ -143,7 +143,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Add Black &amp; White
 
-        label.pannel__setting.pannel__setting--inline
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
           input(type="checkbox", v-model="hasBackground")
           i.pannel__checkbox
             svg
@@ -151,7 +151,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Show Background
 
-        label.pannel__setting.pannel__setting--inline
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
           input(type="checkbox", v-model="hasGradients")
           i.pannel__checkbox
             svg
@@ -159,7 +159,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Show Glow
 
-        label.pannel__setting.pannel__setting--inline
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
           input(type="checkbox", v-model="hasBleed")
           i.pannel__checkbox
             svg
@@ -167,7 +167,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Color Bleed
 
-        label.pannel__setting.pannel__setting--inline
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
           input(type="checkbox", v-model="hideText")
           i.pannel__checkbox
             svg
@@ -175,7 +175,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Hide Text
 
-        label.pannel__setting.pannel__setting--inline
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
           input(type="checkbox", v-model="hasOutlines")
           i.pannel__checkbox
             svg
@@ -183,7 +183,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Visually Separate Things
 
-        label.pannel__setting.pannel__setting--inline.pannel__setting--contrast
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
           input(type="checkbox", v-model="highContrast")
           i.pannel__checkbox
             svg
@@ -191,7 +191,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle High Contrast
 
-        label.pannel__setting.pannel__setting--inline.pannel__setting--contrast
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
           input(type="checkbox", v-model="expandUI")
           i.pannel__checkbox
             svg
@@ -199,7 +199,7 @@ html(lang="en-US")
 
           h4.pannel__settingtitle Expand UI
 
-        label.pannel__setting.pannel__setting--inline.pannel__setting--contrast
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
           input(type="checkbox", v-model="autoHideUI")
           i.pannel__checkbox
             svg
