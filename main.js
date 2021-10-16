@@ -208,6 +208,7 @@ let colors = new Vue({
       rnd: new Seedrandom(),
       moveTimer: null,
       showUI: true,
+      lightmode: false,
       imgURL: '',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
@@ -228,6 +229,7 @@ let colors = new Vue({
         {key:'bw', prop: 'addBWContrast'}, // true
         {key: 'ah', prop: 'autoHideUI'}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
+        {key: 'lm', prop: 'lightmode'}, // true
       ],
     }
   },
@@ -248,6 +250,13 @@ let colors = new Vue({
     },
     colorMode: function () {
       this.newColors();
+    },
+    lightmode: function(newValue) {
+      if (newValue) {
+        document.querySelector('body').classList.add('lightmode');
+      } else {
+        document.querySelector('body').classList.remove('lightmode');
+      }
     },
     generatorFunction: function () {
       this.newColors();
@@ -789,6 +798,11 @@ let colors = new Vue({
 
     if (hadSettings) {
       window.history.replaceState({}, document.title, location.pathname);
+    } else {
+      const wantLightMode = window.matchMedia('(prefers-color-scheme: light)');
+      if ( wantLightMode ) {
+        this.lightmode = true;
+      }
     }
 
     this.addMagicControls();
