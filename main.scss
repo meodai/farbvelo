@@ -625,6 +625,11 @@ button {
 
   color: var(--color-inverted);
 
+  ::selection {
+    color: var(--color-first-contrast);
+    background: var(--color-first);
+  }
+
   transform: translateX(-50%) scale(.95);
 
   @media (max-width: 850px) {
