@@ -60,7 +60,7 @@ html(lang="en-US")
             |{{paletteTitle}}
 
         label.pannel__setting
-          h4.pannel__settingtitle Randomizer Engine
+          h4.pannel__settingtitle Generation Method
           .pannel__inputs.pannel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
@@ -214,7 +214,9 @@ html(lang="en-US")
 
         label.pannel__setting
           strong.pannel__settingtitle Color Values
-          .pannel__inputs
+          .pannel__inputs.pannel__inputs--select
+            svg
+              use(xlink:href="#icon-dropdown")
             select(v-model="colorValueType")
               option(v-for="valueType in colorValueTypes", :value=valueType).
                 {{ valueType }}
@@ -231,6 +233,7 @@ html(lang="en-US")
                 li So will the left and right arrow keys.
                 li Pressing 'Space' generates a new platte using your current settings.
                 li On phones and tablets you can add this page to your home screen for a nicer user experience.
+                li Dragging an image into FarbVélo will genrate a palette from it.
 
             aside
               h2 About
