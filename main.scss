@@ -240,6 +240,11 @@ button {
   &:hover {
     padding-bottom: #{1.61803 * 4rem};
   }
+
+  ::selection {
+    color: var(--color);
+    background-color: var(--color-text);
+  }
 }
 
 .colors:hover .color {
