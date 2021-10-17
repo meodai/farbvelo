@@ -79,10 +79,7 @@ button {
       opacity: .5;
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
+      inset: 0;
       box-shadow: 0 0 10rem var(--color-text);
     }
   }
@@ -92,10 +89,7 @@ button {
   .color {
     &::before {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
+      inset: 0;
       content: '';
       background-image: linear-gradient(to top, var(--color-next) -50%, var(--color) 80%);
     }
@@ -163,10 +157,7 @@ button {
 .pannel,
 .bg-wrap {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  inset: 0;
 }
 
 .wrap {
@@ -788,6 +779,7 @@ button {
   }
 
   @mixin slider-thumb {
+    position: relative;
     border: 2px solid transparent;
     height: .75rem;
     width: .5rem;
@@ -913,10 +905,7 @@ button {
 
   input {
     position: absolute;
-    top: 0;
-    left: 0;
-    top: 0;
-    right: 0;
+    inset: 0;
     opacity: 0;
   }
 
@@ -1050,10 +1039,7 @@ button {
 .wrap__expandUI {
   .pannel,
   .colors {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    inset: 0;
   }
 
   .pannel {
