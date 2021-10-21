@@ -388,7 +388,7 @@ button {
 }
 
 .color {
-  @for $i from 1 through 10 {
+  @for $i from 1 through 11 {
     &:nth-child(#{$i}) {
       .color__value,
       .color__name {
@@ -1200,7 +1200,7 @@ button {
       animation: pulsate .5s infinite alternate;
     }
 
-    @for $i from 1 through 10 {
+    @for $i from 1 through 11 {
       &:nth-child(#{$i}) .color__values,
       &:nth-child(#{$i}) .color__name {
         animation-delay: ($i/10) * 1s;
@@ -1294,7 +1294,7 @@ button {
       transition: 100ms opacity linear;
     }
 
-    @for $i from 1 through 10 {
+    @for $i from 1 through 11 {
       &:nth-child(#{$i}) {
         transition-delay: #{130 + $i * 60}ms, #{50 + $i * 60}ms;
         transition-duration: #{250ms + $i * $i * 5ms}, #{200ms + $i * $i * 5ms};
