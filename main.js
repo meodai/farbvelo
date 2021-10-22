@@ -51,7 +51,6 @@ const startWorker = (
           ).map(cluster =>
             cluster
           );
-          colors.updateFavicon();
           document.documentElement.classList.remove('is-imagefetching');
         break;
       }
@@ -269,6 +268,12 @@ let colors = new Vue({
       } else if ( this.generatorFunction === 'RandomColor.js' ) {
         console.info('RandomColor.js: https://randomcolor.lllllllllllllllll.com/');
       }
+    },
+    lightmode: function () {
+      this.updateFavicon();
+    },
+    colorsValues: function () {
+      this.updateFavicon();
     }
   },
   computed: {
@@ -576,7 +581,7 @@ let colors = new Vue({
       canvas.height = faviconSize;
       const ctx = canvas.getContext('2d');
       const gradient = ctx.createLinearGradient(0, 0, 0, faviconSize);
-      ctx.fillStyle = '#212121';
+      ctx.fillStyle = this.lightmode ? '#fff' : '#000';
       ctx.fillRect(0, 0, faviconSize, faviconSize);
 
       theme.setAttribute('content', this.colors[0]);
@@ -654,7 +659,6 @@ let colors = new Vue({
         );
 
         this.colorsValues = colorArr;
-        this.updateFavicon();
       } else if (this.generatorFunction === 'ImageExtract') {
         if (!this.imgURL || newSeed) {
           document.documentElement.classList.add('is-imagefetching');
