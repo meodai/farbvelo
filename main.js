@@ -256,6 +256,7 @@ let colors = new Vue({
       } else {
         document.querySelector('body').classList.remove('lightmode');
       }
+      this.updateFavicon();
     },
     generatorFunction: function () {
       this.newColors();
@@ -268,9 +269,6 @@ let colors = new Vue({
       } else if ( this.generatorFunction === 'RandomColor.js' ) {
         console.info('RandomColor.js: https://randomcolor.lllllllllllllllll.com/');
       }
-    },
-    lightmode: function () {
-      this.updateFavicon();
     },
     colorsValues: function () {
       this.updateFavicon();
