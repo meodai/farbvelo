@@ -225,12 +225,12 @@ let colors = new Vue({
         {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
         {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
         {key:'c', prop: 'colorMode'}, // 'hsluv'
-        {key:'sc', prop: 'showContrast'}, // false
-        {key:'bw', prop: 'addBWContrast'}, // true
-        {key: 'ah', prop: 'autoHideUI'}, // false
+        {key:'sc', prop: 'showContrast', p: Boolean}, // false
+        {key:'bw', prop: 'addBWContrast', p: Boolean}, // true
+        {key: 'ah', prop: 'autoHideUI', p: Boolean}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
-        {key: 'lm', prop: 'lightmode'}, // true
-        {key: 'sm', prop: 'sameHeightColors'} // false
+        {key: 'lm', prop: 'lightmode', p: Boolean}, // true
+        {key: 'sm', prop: 'sameHeightColors', p: Boolean} // false
       ],
     }
   },
@@ -317,19 +317,49 @@ let colors = new Vue({
         )
       )
     },
+    gradientStops: function () {
+      const gradient = [...this.colors];
+      gradient[0] += ' 12vh'
+      gradient[gradient.length - 1] += this.sameHeightColors ? ' 80%' : ' 69%'
+      return gradient.join(',');
+    },
     backgroundGradient: function () {
-      let gradient = [...this.colors];
-      gradient[0] += ' 12vmin'
-      gradient[gradient.length - 1] += ' 69%'
-
       /*
       // hard stops
       let col = this.colors.reduce((r,d,i) => (`${r ? r + ',' : ''} ${d} ${((i)/this.colors.length) * 100}%, ${d} ${((i + 1)/this.colors.length) * 100}%`),'');
       return `linear-gradient(to bottom, ${col})`;
       */
 
-      return `linear-gradient(to bottom, ${gradient.join(',')})`;
-    }
+      return `linear-gradient(to bottom, ${this.gradientStops})`;
+    },
+    appStyles: function () {
+      return {
+        '--color-first': this.firstColor,
+        '--color-last': this.lastColor,
+        '--color-last-contrast': this.lastColorContrast,
+        '--color-first-contrast': this.firstColorContrast,
+        '--colors': this.colors.length,
+      }
+    },
+    appClasses: function () {
+      return {
+        'is-loading': this.isLoading,
+        'is-animating': this.isAnimating,
+        'wrap__hidetext': this.hideText,
+        'wrap__showcontrast': this.showContrast,
+        'wrap__hasOutlines': this.hasOutlines,
+        'wrap__highContrast': this.highContrast,
+        'wrap__hasGradients': this.hasGradients,
+        'wrap__showSettings': this.settingsVisible,
+        'wrap__hasBackground': this.hasBackground,
+        'wrap__hasBleed': this.hasBleed,
+        'wrap__hideUI': !this.showUI,
+        'wrap__expandUI': this.expandUI,
+        'wrap__hasDithering': this.hasGrain,
+        'wrap__lightmode': this.lightmode,
+        'wrap__sameHeightColors': this.sameHeightColors,
+      }
+    },
   },
   methods: {
     random: function (min, max) {
@@ -608,7 +638,6 @@ let colors = new Vue({
     settingsFromURL: function () {
       const params = window.location.search;
       const stateString = new URLSearchParams(params).get('s');
-
       if (stateString) {
         let settings = JSON.parse(Buffer.from(stateString, 'base64').toString('ascii'));
 
@@ -636,7 +665,7 @@ let colors = new Vue({
       return serializedState;
     },
     updateURL: function () {
-      history.replaceState(history.state, document.title, "?s=" + this.constructURL);
+      history.pushState(history.state, document.title, "?s=" + this.constructURL());
     },
     newColors: function (newSeed) {
       document.documentElement.classList.remove('is-imagefetching');
@@ -646,6 +675,8 @@ let colors = new Vue({
       }
 
       this.rnd = new Seedrandom(this.currentSeed);
+
+      //this.updateURL();
 
       if (this.generatorFunction !== 'ImageExtract') {
         let colorArr = this.generateRandomColors(
@@ -764,7 +795,12 @@ let colors = new Vue({
   },
   mounted: function () {
     const hadSettings = this.settingsFromURL();
-
+    /*
+    window.addEventListener('popstate', () => {
+      console.log('ok');
+      this.settingsFromURL();
+    });
+    */
     if('ondrop' in window) {
       document.documentElement.addEventListener('dragover', (e) => {
         e.preventDefault();

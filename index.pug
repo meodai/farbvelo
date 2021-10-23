@@ -49,8 +49,8 @@ html(lang="en-US")
   body.is-loading
     #app.wrap(
       ref="app",
-      :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast, '--colors': colors.length}"
-      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__expandUI': expandUI, 'wrap__hasDithering': hasGrain, 'wrap__lightmode': lightmode, 'wrap__sameHeightColors': sameHeightColors}")
+      :style="appStyles"
+      :class="appClasses")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
