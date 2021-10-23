@@ -230,6 +230,7 @@ let colors = new Vue({
         {key: 'ah', prop: 'autoHideUI'}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
         {key: 'lm', prop: 'lightmode'}, // true
+        {key: 'sm', prop: 'sameHeightColors'} // false
       ],
     }
   },

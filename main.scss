@@ -442,7 +442,7 @@ button {
   display: flex;
   z-index: 20;
   transform: translate(1.1em, 1.1em);
-  transition: 500ms transform cubic-bezier(0.3, 0.7, 0, 1.2) 0ms,
+  transition: 500ms transform ease-in 0ms,
               500ms right cubic-bezier(0.3, 0.7, 0, 1) 50ms,
               500ms bottom cubic-bezier(0.3, 0.7, 0, 1) 50ms;
   //transform: translateX(50%) translate(0, 1.1em);
@@ -1091,6 +1091,12 @@ button {
   &.wrap__sameHeightColors .buttons {
     right: 50%;
     transform: translate(50%, 75%);
+
+    @media (max-width: 850px) {
+      bottom: calc(var(--size-gutter) * 2.5);
+      right: calc(var(--size-gutter) * 2);
+      transform: translate(1.1em, 1.9em);
+    }
   }
 
   /*.button {
