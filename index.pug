@@ -50,7 +50,7 @@ html(lang="en-US")
     #app.wrap(
       ref="app",
       :style="{'--color-first': firstColor, '--color-last': lastColor, '--color-last-contrast': lastColorContrast, '--color-first-contrast': firstColorContrast, '--colors': colors.length}"
-      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__expandUI': expandUI, 'wrap__hasDithering': hasGrain, 'wrap__lightmode': lightmode}")
+      :class="{'is-loading': isLoading, 'is-animating': isAnimating, 'wrap__hidetext': hideText, 'wrap__showcontrast': showContrast, 'wrap__hasOutlines': hasOutlines, 'wrap__highContrast': highContrast, 'wrap__hasGradients': hasGradients, 'wrap__showSettings': settingsVisible, 'wrap__hasBackground': hasBackground, 'wrap__hasBleed': hasBleed, 'wrap__hideUI': !showUI, 'wrap__expandUI': expandUI, 'wrap__hasDithering': hasGrain, 'wrap__lightmode': lightmode, 'wrap__sameHeightColors': sameHeightColors}")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
       .pannel(v-on:pointerdown="cancelSwipe")
@@ -197,6 +197,13 @@ html(lang="en-US")
             svg
               use(xlink:href="#icon-check")
           strong.pannel__settingtitle Expand UI
+
+        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+          input(type="checkbox", v-model="sameHeightColors")
+          i.pannel__checkbox
+            svg
+              use(xlink:href="#icon-check")
+          strong.pannel__settingtitle Same Height Colors
 
         label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
           input(type="checkbox", v-model="lightmode")
