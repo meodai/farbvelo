@@ -608,14 +608,13 @@ let colors = new Vue({
       const stateString = new URLSearchParams(params).get('s');
 
       if (stateString) {
-        let settings = JSON.parse(atob(stateString));
+        let settings = JSON.parse(Buffer.from(stateString, 'base64').toString('ascii'));
 
         Object.keys(settings).forEach(settingKey => {
           const setting = this.trackInURL.find(s => (s.key === settingKey));
           //this[setting.prop] = settings[settingKey].prop;
 
           this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
-
         });
 
         // side effects :(
@@ -631,7 +630,7 @@ let colors = new Vue({
     },
     constructURL: function () {
       const state = this.trackInURL.reduce((o,i)=> Object.assign(o, {[i.key]: this[i.prop]}) ,{});
-      const serializedState = btoa(JSON.stringify(state));
+      const serializedState = Buffer.from(JSON.stringify(state)).toString('base64');
       return serializedState;
     },
     updateURL: function () {
