@@ -241,6 +241,10 @@ button {
     padding-bottom: #{1.61803 * 4rem};
   }
 
+  .wrap__sameHeightColors &:last-child {
+    padding-bottom: 0;
+  }
+
   ::selection {
     color: var(--color);
     background-color: var(--color-text);
@@ -438,6 +442,9 @@ button {
   display: flex;
   z-index: 20;
   transform: translate(1.1em, 1.1em);
+  transition: 500ms transform ease-in 0ms,
+              500ms right cubic-bezier(0.3, 0.7, 0, 1) 50ms,
+              500ms bottom cubic-bezier(0.3, 0.7, 0, 1) 50ms;
   //transform: translateX(50%) translate(0, 1.1em);
   /*
   .wrap__hasGradients & {
@@ -447,6 +454,15 @@ button {
   @media (max-width: 850px) {
     right: 10vmin;
     bottom: 12vmin;
+  }
+
+  .wrap__sameHeightColors & {
+    right: 50%;
+    transform: translate(calc(50%), 1.1em);
+    @media (max-width: 850px) {
+      right: 10vmin;
+      transform: translate(1.1em, 1.1em);
+    }
   }
 }
 
@@ -1066,9 +1082,21 @@ button {
     transform: translateX(0%);
   }
 
-  .buttons {
+  & .buttons {
     bottom: calc(var(--size-gutter) * 2.5);
     right: calc(var(--size-gutter) * 2);
+    transform: translate(1.1em, 1.1em);
+  }
+
+  &.wrap__sameHeightColors .buttons {
+    right: 50%;
+    transform: translate(50%, 75%);
+
+    @media (max-width: 850px) {
+      bottom: calc(var(--size-gutter) * 2.5);
+      right: calc(var(--size-gutter) * 2);
+      transform: translate(1.1em, 1.9em);
+    }
   }
 
   /*.button {

@@ -208,6 +208,7 @@ let colors = new Vue({
       moveTimer: null,
       showUI: true,
       lightmode: false,
+      sameHeightColors: false,
       imgURL: '',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
@@ -229,6 +230,7 @@ let colors = new Vue({
         {key: 'ah', prop: 'autoHideUI'}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
         {key: 'lm', prop: 'lightmode'}, // true
+        {key: 'sm', prop: 'sameHeightColors'} // false
       ],
     }
   },
