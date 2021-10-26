@@ -1021,13 +1021,13 @@ button {
 .wrap__showSettings .pannel__setting {
   opacity: 1;
   transform: translateX(0%) scale(1) rotateY(0deg);
-  transition: 450ms transform cubic-bezier(0.3, 0.7, 0, 1) 50ms,
-              375ms opacity linear 50ms;
+  transition: 550ms transform cubic-bezier(0.3, 0.7, 0, 1) 50ms,
+              475ms opacity linear 50ms;
 
   @for $i from 1 through 30 {
     &:nth-child(#{$i}) {
-      transition-delay: #{0 + $i * 25}ms,
-      #{0 + $i * 25}ms;
+      transition-delay: #{0 + $i * 30}ms,
+      #{0 + $i * 35}ms;
     }
   }
 }
