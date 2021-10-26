@@ -77,6 +77,12 @@ messy, let me help you:
         .colors(6);
 ```
 
+## Techstack & Credits
+- Icons: [iconoir](https://iconoir.com/)
+- Vue
+- Chroma.js
+- Inter Font
+- Space Mono Font
 ## Samples
 
 ![sample screenshot of color bingo engine](public/samples/engine-color-bingo-01.png)
