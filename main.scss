@@ -666,8 +666,6 @@ button {
     }
   }
 
-
-
   input[type=checkbox] {
     display: none;
   }
@@ -887,6 +885,56 @@ button {
   }
 }
 
+.pannel__head {
+  z-index: 2;
+  position: sticky;
+  left: 0;
+  top: calc(var(--pannel-top) * -1);
+  right: 0;
+  margin-top: calc(var(--pannel-top) * -1);
+  margin-left: calc(var(--size-gutter) * -2);
+  margin-right: calc(var(--size-gutter) * -2);
+  margin-bottom: calc(var(--size-gutter) * 2);
+  padding-top: calc(var(--size-gutter) * 2);
+  padding-left: calc(var(--size-gutter) * 2);
+  padding-right: calc(var(--size-gutter) * 2);
+
+  padding-bottom: var(--size-gutter);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-inverted);
+
+  /*
+  &::after {
+    pointer-events: none;
+    opacity: .35;
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 0 4rem var(--color-inverted);
+  }*/
+}
+
+.pannel__share {
+  position: absolute;
+  top: calc(var(--size-gutter) * 2 + .25rem);
+  right: calc(var(--size-gutter) * 2);
+  border: 2px solid var(--color-inverted);
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  svg {
+    width: .7rem;
+    height: .7rem;
+  }
+}
+
+.pannel__share-menu {
+  position: sticky;
+  top: 0;
+  background: red;
+}
+
 .pannel__setting--bnw {
   max-height: 0;
   overflow: hidden;
@@ -1007,6 +1055,7 @@ button {
     margin-bottom: 0;
   }
 }
+
 
 .share-url {
   font-size: .7em;
@@ -1213,7 +1262,7 @@ button {
   font-weight: 900;
   color: var(--color-inverted);
   font-size: 1rem;
-  margin-bottom: 1.75em;
+  margin-bottom: 0;
 }
 
 // fetching
