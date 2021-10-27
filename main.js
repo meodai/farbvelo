@@ -714,6 +714,9 @@ let colors = new Vue({
       }
     },
     toggleSettings: function () {
+      if (!this.settingsVisible) {
+        this.$refs.pannel.scrollTo(0, 0);
+      }
       this.settingsVisible = !this.settingsVisible;
     },
     cancelSwipe: function (e) {
