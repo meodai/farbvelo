@@ -553,6 +553,8 @@ button {
     line-height: 1;
     stroke: var(--color-last-contrast, var(--color-inverted));
     color: var(--color-last-contrast, var(--color-inverted));
+
+    //shape-rendering: geometricPrecision;
   }
 
   &.refresh svg {
