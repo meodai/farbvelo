@@ -618,12 +618,19 @@ button {
 .share {
   svg {
     animation: none;
+    stroke-dasharray: 20 20;
+    stroke-dashoffset: 0;
     width: .55em;
     height: .55em;
     stroke: var(--color-last-contrast, var(--color-inverted));
     stroke-width: 1px;
     margin-top: .01em;
     margin-left: -0.03em;
+  }
+  &:hover {
+    svg {
+      animation: 1s outline cubic-bezier(.7,.3,0,1);
+    }
   }
 }
 
@@ -1582,6 +1589,12 @@ button {
 @keyframes pulsate {
   100% {
     opacity: 0.25;
+  }
+}
+
+@keyframes outline {
+  100% {
+    stroke-dashoffset: 40;
   }
 }
 
