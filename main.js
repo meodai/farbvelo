@@ -178,6 +178,7 @@ let colors = new Vue({
       amount: 6,
       colorsInGradient: 4,
       settingsVisible: false,
+      shareVisible: false,
       randomOrder: false,
       hasGradients: true,
       hasBackground: false,
@@ -209,6 +210,7 @@ let colors = new Vue({
       showUI: true,
       lightmode: false,
       sameHeightColors: false,
+      exportAs: 'jsArray',
       imgURL: '',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
@@ -258,7 +260,7 @@ let colors = new Vue({
       } else {
         document.querySelector('body').classList.remove('lightmode');
       }
-      this.updateFavicon();
+      this.updateMeta();
     },
     generatorFunction: function () {
       this.newColors();
@@ -273,11 +275,11 @@ let colors = new Vue({
       }
     },
     colorsValues: function () {
-      this.updateFavicon();
+      this.updateMeta();
     }
   },
   computed: {
-    paletteTitle: function() {
+    paleteTitle: function() {
       if( this.names.length ) {
         const first = this.names[0].name.match(/[^\s-]+-?/g)[0];
         let last = this.names[this.names.length - 1].name.match(/[^\s-]+-?/g);
@@ -351,6 +353,7 @@ let colors = new Vue({
         'wrap__highContrast': this.highContrast,
         'wrap__hasGradients': this.hasGradients,
         'wrap__showSettings': this.settingsVisible,
+        'wrap__showShare': this.shareVisible,
         'wrap__hasBackground': this.hasBackground,
         'wrap__hasBleed': this.hasBleed,
         'wrap__hideUI': !this.showUI,
@@ -359,6 +362,30 @@ let colors = new Vue({
         'wrap__lightmode': this.lightmode,
         'wrap__sameHeightColors': this.sameHeightColors,
       }
+    },
+    namedColorList: function () {
+      return this.names.map(color => ({
+        name: color.name,
+        value: color.requestedHex,
+      }));
+    },
+    colorList: function () {
+      if (this.exportAs === 'list') {
+        return this.colors.join('\n');
+      } else if (this.exportAs === 'csvList') {
+        return `name,value${this.namedColorList.reduce((r,c) => `${r}\n${c.name},${c.value}`,'') }\n`;
+      } else if (this.exportAs === 'jsArray') {
+        return `[\n  "${this.colors.join('", \n  "')}"\n]`;
+      } else if (this.exportAs === 'jsObject') {
+        return `{${this.namedColorList.reduce((r,c) => `${r}\n  "${c.name}": "${c.value}",`,'') }\n}`;
+      } else if (this.exportAs === 'css') {
+        return `${this.namedColorList.reduce((r,c) => `${r}${r ? `\n` : ''}--${CSS.escape(c.name.replace(/ /g,'-')).toLowerCase()}: ${c.value};`,'') }`;
+      } else if (this.exportAs === 'cssGradient') {
+        return `linear-gradient(\n  ${this.colors.join(', \n  ')}\n);`;
+      }
+    },
+    currentURL: function () {
+      return window.location.origin + "/?s=" + this.constructURL();
     },
   },
   methods: {
@@ -560,26 +587,17 @@ let colors = new Vue({
 
       return colors;
     },
-
-    copy: function () {
-      const list = this.names.map(color => ({
-        name: color.name,
-        value: color.requestedHex
-      }));
-
-      let expString = this.paletteTitle + '\n';
-      expString += `⸺\n`;
-      expString = list.reduce((rem, color) => (
-        rem + color.name + ' ' + color.value + '\n'
-      ), expString);
-      expString += `⸺\n`;
-      expString += `${this.colors.join(',')}\n`;
-      expString += `⸺\n`;
-      expString += `URL:\n`;
-      expString += `${window.location.origin + "/?s=" + this.constructURL()}\n`;
-
-
-      navigator.clipboard.writeText(expString);
+    copyExport: function () {
+      if (this.exportAs === 'image') {
+        this.buildImage(1000, .1, true).toBlob((blob) => {
+          const item = new ClipboardItem({
+            "image/png": blob
+          });
+          navigator.clipboard.write([item]);
+        });
+      } else {
+        navigator.clipboard.writeText(this.colorList);
+      }
     },
     getNames: function (colors) {
       const url = new URL('https://api.color.pizza/v1/');
@@ -600,39 +618,56 @@ let colors = new Vue({
         this.names = data.colors;
       });
     },
-    updateFavicon: function () {
-      const theme = document.querySelector('[name="theme-color"]');
-      const favicons = document.querySelectorAll('[rel="icon"]');
-      const faviconSize = 100;
-      const innerSize = 80;
-
+    buildImage: function (
+      size = 100,
+      padding = .1,
+      hardStops = false
+    ) {
       const canvas = document.createElement('canvas');
-      canvas.width = faviconSize;
-      canvas.height = faviconSize;
+      canvas.width = size;
+      canvas.height = size;
+      const innerSize = size * (1 - padding * 2);
       const ctx = canvas.getContext('2d');
-      const gradient = ctx.createLinearGradient(0, 0, 0, faviconSize);
-      ctx.fillStyle = this.lightmode ? '#fff' : '#000';
-      ctx.fillRect(0, 0, faviconSize, faviconSize);
 
-      theme.setAttribute('content', this.colors[0]);
+      const gradient = ctx.createLinearGradient(0, 0, 0, size);
+
+      ctx.fillStyle = this.lightmode ? '#fff' : '#000';
+      ctx.fillRect(0, 0, size, size);
 
       this.colors.forEach((color, i) => {
-        /*ctx.fillStyle = color;
-        ctx.fillRect(
-          (faviconSize - innerSize) / 2,
-          ((faviconSize - innerSize) / 2) + (i/color.length * innerSize),
-          innerSize,
-          (i/color.length) * innerSize
-        )*/
-        gradient.addColorStop(Math.min(1, i/color.length), color);
+        if (hardStops) {
+          ctx.fillStyle = color;
+
+          ctx.fillRect(
+            size * padding,
+            size * padding + (i / this.colors.length * innerSize),
+            innerSize,
+            innerSize / this.colors.length
+          );
+        } else {
+          gradient.addColorStop(Math.min(1, i / this.colors.length), color);
+        }
       });
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(faviconSize * .1, faviconSize * .1, faviconSize * .8, faviconSize * .8);
+      if (!hardStops) {
+        ctx.fillStyle = gradient;
+        ctx.fillRect(
+          size * padding,
+          size * padding,
+          size * (1 - padding * 2),
+          size * (1 - padding * 2)
+        );
+      }
+
+      return canvas;
+    },
+    updateMeta: function () {
+      const theme = document.querySelector('[name="theme-color"]');
+      const favicons = document.querySelectorAll('[rel="icon"]');
+      theme.setAttribute('content', this.colors[0]);
 
       // Replace favicon
-
-      const faviconBase64 = canvas.toDataURL('image/png')
+      const faviconBase64 = this.buildImage(100, 0.1).toDataURL('image/png');
       favicons.forEach($icon => $icon.href = faviconBase64);
     },
     settingsFromURL: function () {
@@ -714,10 +749,18 @@ let colors = new Vue({
       }
     },
     toggleSettings: function () {
+      this.shareVisible = false;
       if (!this.settingsVisible) {
-        this.$refs.pannel.scrollTo(0, 0);
+        this.$refs.panel.scrollTo(0, 0);
       }
       this.settingsVisible = !this.settingsVisible;
+    },
+    toggleShare: function () {
+      this.settingsVisible = false;
+      if (!this.shareVisible) {
+        this.$refs.panel.scrollTo(0, 0);
+      }
+      this.shareVisible = !this.shareVisible;
     },
     cancelSwipe: function (e) {
       e.stopPropagation();

@@ -107,7 +107,7 @@ button {
     color: var(--color-best-contrast);
   }
 
-  .pannel__setting--contrast {
+  .panel__setting--contrast {
     display: none;
   }
 }
@@ -122,7 +122,8 @@ button {
 }
 
 .wrap__hasOutlines {
-  .pannel {
+  .panel,
+  .panel-share {
     border: 2px solid var(--color-bg);
 
     @media (max-width: 850px) {
@@ -132,7 +133,7 @@ button {
   }
   .refresh,
   .settings,
-  .copy {
+  .share {
     box-shadow: 0 0 0 4px var(--color-gb);
   }
   .colors {
@@ -154,7 +155,8 @@ button {
 
 .wrap,
 .bg,
-.pannel,
+.panel,
+.panel-share,
 .bg-wrap {
   position: absolute;
   inset: 0;
@@ -185,7 +187,8 @@ button {
 }
 
 .colors,
-.pannel {
+.panel,
+.panel-share {
   position: absolute;
   left: 50%;
   bottom: 10vmin;
@@ -502,6 +505,20 @@ button {
   }
 }
 
+.wrap__showShare .button {
+  transform: translateX(-13vw);
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      transition-delay: #{50 + $i * 50}ms;
+    }
+  }
+
+  @media (max-width: 850px) {
+    transform: translateX(0);
+  }
+}
+
 .button {
   position: relative;
   margin: 0;
@@ -569,7 +586,8 @@ button {
   }
 }
 
-.settings {
+.settings,
+.share {
   &::after {
     content: '×';
     position: absolute;
@@ -582,7 +600,8 @@ button {
   }
 }
 
-.wrap__showSettings .settings {
+.wrap__showSettings .settings,
+.wrap__showShare .share {
   &::after {
     opacity: 1;
     transition: 100ms opacity linear 50ms,
@@ -596,41 +615,21 @@ button {
   }
 }
 
-.copy {
+.share {
   svg {
     animation: none;
-    width: .6em;
-    height: .6em;
+    width: .55em;
+    height: .55em;
     stroke: var(--color-last-contrast, var(--color-inverted));
     stroke-width: 1px;
-    margin-top: -.01em;
-  }
-
-  .check {
-    position: absolute;
-    width: .8em;
-    height: .8em;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.2);
-  }
-
-  &:focus {
-    .check {
-      opacity: 1;
-      transition: 100ms opacity linear 50ms,
-                  300ms transform cubic-bezier(.3, 0, .7, 1.8);
-      transform: translate(-50%, -50%) scale(1);
-    }
-    svg {
-      transition: 100ms opacity linear;
-      opacity: 0;
-    }
+    margin-top: .01em;
+    margin-left: -0.03em;
   }
 }
 
-.pannel {
+.panel,
+.panel-share {
+  opacity: 0;
   pointer-events: none;
   box-sizing: border-box;
   padding: calc(var(--size-gutter) * 2);
@@ -668,8 +667,6 @@ button {
     }
   }
 
-
-
   input[type=checkbox] {
     display: none;
   }
@@ -703,6 +700,7 @@ button {
     }
   }
 
+  &__section,
   &__setting {
     display: block;
     touch-action: manipulation;
@@ -720,7 +718,7 @@ button {
       display: flex;
       align-items: center;
 
-      .pannel__settingtitle {
+      .panel__settingtitle {
         margin-left: calc(var(--size-gutter) * .5);
       }
     }
@@ -745,16 +743,25 @@ button {
     border: none;
     width: auto;
 
-    &[type=number] {
+    &[type=number],
+    &[type=text] {
       color: var(--color-inverted);
       background: none;
       border: none;
       text-align: right;
       font-size: .8em;
+    }
+
+    &[type=number] {
       flex: 0 0 3rem;
       width: 3rem;
     }
   }
+
+  input[type=url] {
+    text-decoration: underline;
+  }
+
   input {
     background-color: transparent;
   }
@@ -889,7 +896,27 @@ button {
   }
 }
 
-.pannel__setting--bnw {
+.panel__section {
+  font-size: .7em;
+}
+
+.panel__url {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-share {
+  padding: calc(var(--size-gutter) * 2);
+  padding-left: calc(25% + var(--size-gutter) * 2);
+
+  @media (max-width: 850px) {
+    padding: var(--size-gutter);
+  }
+}
+
+.panel__setting--bnw {
   max-height: 0;
   overflow: hidden;
   transition: 400ms max-height cubic-bezier(0.3, 0.7, 0, 1),
@@ -902,7 +929,7 @@ button {
   margin-top: .5em;
 }
 
-.pannel__img {
+.panel__img {
   position: relative;
   border: 1px solid var(--color-inverted);
   padding: 4px;
@@ -916,6 +943,13 @@ button {
     background: var(--color-bg);
     width: 3.5rem;
     height: 1.9rem;
+  }
+
+  &--export {
+    margin-top: 1rem;
+    &::before {
+      display: none;
+    }
   }
 
   @media (max-width: 850px) {
@@ -963,7 +997,7 @@ button {
     }
   }
 }
-.pannel__img img {
+.panel__img img {
   display: block;
   width: 100%;
 
@@ -973,7 +1007,42 @@ button {
   }
 }
 
-.wrap__showcontrast .pannel__setting--bnw {
+.panel__code {
+  margin-top: 1rem;
+  font-size: 0.6em;
+  font-family: 'Space Mono', monospace;
+  background: var(--color-inverted);
+  color: var(--color-bg);
+  padding: 1rem;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel__export {
+  position: relative;
+
+  .minibutton {
+    z-index: 2;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--color-bg);
+    color: var(--color-inverted);
+    line-height: 1;
+    font-size: .6rem;
+    padding: .4em .6em .5em .8em;
+
+    svg {
+      width: 1em;
+      height: 1em;
+      margin-left: .5em;
+      position: relative;
+      top: .12em;
+    }
+  }
+}
+
+.wrap__showcontrast .panel__setting--bnw {
   opacity: 1;
   max-height: 2em;
   padding-top: .1em;
@@ -983,15 +1052,34 @@ button {
 }
 
 .colors,
-.pannel {
+.panel,
+.panel-share {
   transition: 400ms transform cubic-bezier(0.3, 0.7, 0, 1);
+
+  @media (min-width: 850px) {
+    transition: 400ms transform cubic-bezier(0.3, 0.7, 0, 1),
+                1ms opacity linear 400ms;
+  }
 }
 
-.wrap__hasBackground .pannel {
-  box-shadow: none;
+@media (min-width: 850px) {
+  .wrap__showSettings .panel {
+    transition-delay: 0ms, 0ms;
+  }
+
+  .wrap__showShare .panel-share,
+  .wrap__showShare .panel {
+    transition-delay: 0ms, 0ms;
+  }
+
+  .wrap__hasBackground .panel,
+  .wrap__hasBackground .panel-share {
+    box-shadow: none;
+}
 }
 
-.pannel {
+.panel,
+.panel-share {
   //--color-bg: #fff;
   //--color-inverted: #212121;
   perspective: 400px;
@@ -1010,7 +1098,25 @@ button {
   }
 }
 
-.pannel__setting {
+.panel {
+  z-index: 2;
+  @media (max-width: 850px) {
+    z-index: 5;
+  }
+}
+
+.panel-share {
+  z-index: 1;
+  @media (max-width: 850px) {
+    z-index: 4;
+  }
+}
+
+.colors {
+  z-index: 3;
+}
+
+.panel__setting {
   opacity: 0;
   transform: translateX(2rem) scale(1) rotateY(-5deg);
   transform-origin: 150% 50%;
@@ -1020,7 +1126,17 @@ button {
   }
 }
 
-.wrap__showSettings .pannel__setting {
+.panel-share .panel__setting {
+  transform: translateX(-2rem) scale(1) rotateY(-5deg);
+  transform-origin: -50% 50%;
+
+  @media (max-width: 850px) {
+    transform: translateY(120%) scaleY(.5) rotateX(30deg);
+  }
+}
+
+.wrap__showSettings .panel .panel__setting,
+.wrap__showShare .panel-share .panel__setting {
   opacity: 1;
   transform: translateX(0%) scale(1) rotateY(0deg);
   transition: 550ms transform cubic-bezier(0.3, 0.7, 0, 1) 50ms,
@@ -1038,7 +1154,8 @@ button {
   font-size: .7em;
 }
 
-.wrap__showSettings .pannel {
+.wrap__showSettings .panel {
+  opacity: 1;
   pointer-events: all;
   transform: translateX(-75%);
 
@@ -1046,6 +1163,25 @@ button {
     transform: none;
     opacity: 1;
   }
+}
+
+.wrap__showSettings .panel-share {
+  opacity: 0;
+}
+
+.wrap__showShare .panel-share {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-25%);
+
+  @media (max-width: 850px) {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.wrap__showShare .panel {
+  opacity: 0;
 }
 
 .wrap__showSettings .colors {
@@ -1056,7 +1192,16 @@ button {
   }
 }
 
-.pannel__settingtitle {
+.wrap__showShare .colors {
+  transform: translateX(-75%);
+
+  @media (max-width: 850px) {
+    transform: none;
+  }
+}
+
+
+.panel__settingtitle {
   font-size: 0.7rem;
   font-weight: normal;
   line-height: 1;
@@ -1069,15 +1214,15 @@ button {
   }
 }
 
-.pannel__inputs,
-.pannel__settingtitle {
+.panel__inputs,
+.panel__settingtitle {
   display: flex;
   > *:first-child {
     flex: 1 0 auto;
   }
 }
 
-.pannel__inputs--select {
+.panel__inputs--select {
   position: relative;
   svg {
     width: .8em;
@@ -1089,12 +1234,14 @@ button {
 }
 
 .wrap__expandUI {
-  .pannel,
+  .panel,
+  .panel-share,
   .colors {
     inset: 0;
   }
 
-  .pannel {
+  .panel,
+  .panel-share {
     background: rgba(#212121,.25);
     box-shadow: none;
 
@@ -1138,7 +1285,7 @@ button {
       }
     }
 
-    .pannel {
+    .panel {
       transform: translateX(0%);
       transition-delay: 50ms;
     }
@@ -1149,7 +1296,7 @@ button {
         transform: translateX(5rem);
       }
 
-      &.copy {
+      &.share {
         @media (max-width: 850px) {
           transform: translateX(7rem);
         }
@@ -1160,7 +1307,47 @@ button {
         }
       }
     }
+  }
 
+  .panel-share {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  &.wrap__showShare {
+    .colors {
+      transform: translateX(calc(-25% - var(--size-gutter)));
+
+      @media (max-width: 850px) {
+        transform: translateX(0%);
+      }
+    }
+
+    .panel-share {
+      transform: translateX(0);
+      transition-delay: 50ms;
+    }
+
+    .button {
+      transform: translateX(0);
+
+      @media (max-width: 850px) {
+        transform: translateX(2rem);
+      }
+
+      &.share {
+        @media (max-width: 850px) {
+          transform: translateX(2rem);
+        }
+      }
+
+      &.refresh {
+        @media (max-width: 850px) {
+          transform: translateX(9rem);
+        }
+      }
+    }
   }
 }
 
@@ -1269,7 +1456,8 @@ button {
   .bg {
     opacity: 0;
   }
-  .pannel {
+  .panel,
+  .panel-share {
     opacity: 0;
   }
 }
@@ -1305,7 +1493,8 @@ button {
     padding-bottom: 0rem;
   }
 
-  .pannel {
+  .panel,
+  .panel-share {
     display: none
   }
 
@@ -1317,7 +1506,8 @@ button {
 .is-animating {
   pointer-events: none;
 
-  .pannel {
+  .panel,
+  .panel-share {
     display: none
   }
 

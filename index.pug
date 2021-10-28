@@ -53,23 +53,23 @@ html(lang="en-US")
       :class="appClasses")
       .bg-wrap
         .bg(:style="{'background-image': backgroundGradient}")
-      .pannel(ref="pannel" v-on:pointerdown="cancelSwipe")
-        .pannel__title
-          h4.pannel__settingtitle Palette Name
+      .panel(ref="panel" v-on:pointerdown="cancelSwipe")
+        .panel__title
+          h4.panel__settingtitle Palette Name
           h1.title
-            |{{paletteTitle}}
+            |{{paleteTitle}}
 
-        label.pannel__setting
-          h4.pannel__settingtitle Generation Method
-          .pannel__inputs.pannel__inputs--select
+        label.panel__setting
+          h4.panel__settingtitle Generation Method
+          .panel__inputs.panel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model.number="generatorFunction")
               option(v-for="functionName in generatorFunctionList", :value=functionName).
                 {{ functionName }}
 
-        .pannel__setting(v-if="generatorFunction === 'ImageExtract'")
-          div.pannel__img
+        .panel__setting(v-if="generatorFunction === 'ImageExtract'")
+          div.panel__img
             label
               img(v-bind:src="imgURL" alt="Image the colors are extracted from")
               svg.icon.icon--up
@@ -78,150 +78,149 @@ html(lang="en-US")
             svg.icon.icon--re(v-on:click="newColors(true)")
               use(xlink:href="#icon-refresh")
 
-        label.pannel__setting
-          h4.pannel__settingtitle
+        label.panel__setting
+          h4.panel__settingtitle
             span Colors
             input(type="number", v-model.number="amount", min="3", max="10")
 
-          .pannel__inputs
+          .panel__inputs
             input(type="range", v-model.number="amount", , min="3", max="10")
 
-        label.pannel__setting(title="Or use arrow keys ↔")
-          h4.pannel__settingtitle
+        label.panel__setting(title="Or use arrow keys ↔")
+          h4.panel__settingtitle
             span Mix Padding
             input(type="number", v-model.number="padding", min="0", max="1", step=".001")
 
-          .pannel__inputs
+          .panel__inputs
             input(type="range", v-model.number="padding", min="0", max="1", step=".001")
 
-        label.pannel__setting(v-if="generatorFunction !== 'RandomColor.js' && generatorFunction !== 'ImageExtract'")
-          h4.pannel__settingtitle Color Mode
-          .pannel__inputs.pannel__inputs--select
+        label.panel__setting(v-if="generatorFunction !== 'RandomColor.js' && generatorFunction !== 'ImageExtract'")
+          h4.panel__settingtitle Color Mode
+          .panel__inputs.panel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="colorMode")
               option(v-for="mode in colorModeList", :value=mode).
                 {{ mode }}
 
-        label.pannel__setting
-          h4.pannel__settingtitle Interpolation Model
-          .pannel__inputs.pannel__inputs--select
+        label.panel__setting
+          h4.panel__settingtitle Interpolation Model
+          .panel__inputs.panel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="intermpolationColorModel")
               each mode in ['lab', 'rgb', 'lrgb', 'hsl', 'hsv', 'hsi', 'lch']
                 option(value=mode)=mode
 
-        label.pannel__setting
-          h4.pannel__settingtitle
+        label.panel__setting
+          h4.panel__settingtitle
             span Color Stops
             input(type="number", v-model.number="colorsInGradient", min="2", :max="amount")
-          .pannel__inputs
+          .panel__inputs
             input(type="range", v-model.number="colorsInGradient", min="2", :max="amount")
 
-        label.pannel__setting(v-if="generatorFunction !== 'Full Random' && generatorFunction !== 'RandomColor.js' && generatorFunction !== 'ImageExtract'")
-          h4.pannel__settingtitle
+        label.panel__setting(v-if="generatorFunction !== 'Full Random' && generatorFunction !== 'RandomColor.js' && generatorFunction !== 'ImageExtract'")
+          h4.panel__settingtitle
             span Min. Hue angle difference
             input(type="number", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
-
-          .pannel__inputs
+          .panel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline(title="WCAG 2.0 AA Contrasts")
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline(title="WCAG 2.0 AA Contrasts")
           input(type="checkbox", v-model="showContrast")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Show Contrasting Colors
+          strong.panel__settingtitle Show Contrasting Colors
 
-        label.pannel__setting.pannel__setting--bnw.pannel__setting--checkbox.pannel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
+        label.panel__setting.panel__setting--bnw.panel__setting--checkbox.panel__setting--inline(title="Toggles Black/White contrst to contrasting colors")
           input(type="checkbox", v-model="addBWContrast")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Add Black &amp; White
+          strong.panel__settingtitle Add Black &amp; White
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline
           input(type="checkbox", v-model="hasBackground")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Show Background
+          strong.panel__settingtitle Show Background
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline
           input(type="checkbox", v-model="hasGradients")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Show Glow
+          strong.panel__settingtitle Show Glow
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline
           input(type="checkbox", v-model="hasBleed")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Color Bleed
+          strong.panel__settingtitle Color Bleed
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline
           input(type="checkbox", v-model="hideText")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Hide Text
+          strong.panel__settingtitle Hide Text
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline
           input(type="checkbox", v-model="hasOutlines")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle Visually Separate Things
+          strong.panel__settingtitle Visually Separate Things
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
           input(type="checkbox", v-model="highContrast")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
 
-          strong.pannel__settingtitle High Contrast
+          strong.panel__settingtitle High Contrast
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
           input(type="checkbox", v-model="expandUI")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
-          strong.pannel__settingtitle Expand UI
+          strong.panel__settingtitle Expand UI
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
           input(type="checkbox", v-model="sameHeightColors")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
-          strong.pannel__settingtitle Same Height Colors
+          strong.panel__settingtitle Same Height Colors
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
           input(type="checkbox", v-model="lightmode")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
-          strong.pannel__settingtitle Lightmode
+          strong.panel__settingtitle Lightmode
 
-        label.pannel__setting.pannel__setting--checkbox.pannel__setting--inline.pannel__setting--contrast
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
           input(type="checkbox", v-model="autoHideUI")
-          i.pannel__checkbox
+          i.panel__checkbox
             svg
               use(xlink:href="#icon-check")
-          strong.pannel__settingtitle Autohide UI
+          strong.panel__settingtitle Autohide UI
 
-        label.pannel__setting
-          strong.pannel__settingtitle Color Values
-          .pannel__inputs.pannel__inputs--select
+        label.panel__setting
+          strong.panel__settingtitle Color Values
+          .panel__inputs.panel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="colorValueType")
@@ -259,20 +258,66 @@ html(lang="en-US")
                   path(:stroke='colors[colors.length - 1]' stroke-linecap='round' stroke-linejoin='round' stroke-width='11.38' d='M96.45 70.41c25.89-7.67 59 2.55 80.49-31.66 25.23-40.1 60.94-44.68 85.27-31.62 34.2 18.36 31.67 68.27 7.58 90.7-27.42 25.53-29.58 52.91-13.68 67.24 22.95 20.68 47.1-2.67 35.85-19.93-8.94-13.73-31.93-25.89-98.1 6.9-65.32 32.36-129.62 19-133.91-32.42-1.03-12.53 2.88-39.25 36.5-49.21h0z')
                   path(:fill='colors[0]' fill-rule='nonzero' d='M.3 104.52l12.41-58.55h35.31v10.72H21.65l-2.94 13.62h23.06v10.72H16.46l-2.89 13.78h25.14v10.71H.3v-1zm77.08 1.69a12.69 12.69 0 01-3.49.51 10.08 10.08 0 01-3.57-.64 9.25 9.25 0 01-3-1.79 8 8 0 01-2-2.81 9.16 9.16 0 01-.72-3.7 12.93 12.93 0 01.34-3l9.27-38.71-.85-.6-11.4 7.83-5.36-8 12.34-8.34a11.68 11.68 0 013.49-1.7 12.67 12.67 0 013.49-.51 10.09 10.09 0 013.57.64 9.26 9.26 0 013 1.79 8.05 8.05 0 012 2.81 9.17 9.17 0 01.72 3.7 14.62 14.62 0 01-.34 3L75.6 95.4l.85.6 11.4-7.83 5.36 8-12.34 8.35a11.68 11.68 0 01-3.49 1.69zm62.88-10.8l.85.6 4.08-2.89 5.36 8-5 3.4a12.39 12.39 0 01-7 2.21 9.85 9.85 0 01-5.79-1.79 7.85 7.85 0 01-3.23-5H128a15.69 15.69 0 01-1.79 2.68 9.7 9.7 0 01-2.5 2.1 14.05 14.05 0 01-3.49 1.45 17.83 17.83 0 01-4.72.55 14.23 14.23 0 01-6.13-1.32 15.05 15.05 0 01-4.89-3.66 17.4 17.4 0 01-3.28-5.49 19.3 19.3 0 01-1.19-6.89 35.69 35.69 0 011.53-10.63 26.73 26.73 0 014.42-8.64 20.46 20.46 0 0116.59-8 12.9 12.9 0 017.4 1.87 9.08 9.08 0 013.66 4.94h1.53l1.19-5.62h10.72l-6.79 32.13zm-20.55 1.11a11.54 11.54 0 009.4-4.51 15.06 15.06 0 002.42-4.81c.574-1.89.86-3.855.85-5.83a9.27 9.27 0 00-2.3-6.51 7.91 7.91 0 00-6.13-2.51 11.68 11.68 0 00-5.45 1.23 12.16 12.16 0 00-4 3.28 14.54 14.54 0 00-2.47 4.81 19.7 19.7 0 00-.85 5.83 10.06 10.06 0 002.08 6.3c1.38 1.813 3.53 2.72 6.45 2.72z')
 
+      .panel-share(ref="panel--share" v-on:pointerdown="cancelSwipe")
+        div.panel-share__inner(v-if="shareVisible")
+          .panel__title
+            h4.panel__settingtitle Save &amp; Share Palette
+            h1.title
+              |{{paleteTitle}}
+
+          label.panel__setting
+            h4.panel__settingtitle
+              |Link to palette
+            .panel__inputs
+              input(type="url" :value="currentURL").input--url
+
+          label.panel__setting
+            h4.panel__settingtitle Export as
+            .panel__inputs.panel__inputs--select
+              svg
+                use(xlink:href="#icon-dropdown")
+              select(v-model="exportAs")
+                each exp in [{n: 'Simple List', v:'list'}, {n: 'CSV List', v:'csvList'}, {n: 'JS Array', v:'jsArray'}, {n: 'JS Object', v:'jsObject'}, {n: 'CSS Custom Properies', v:'css'}, {n: 'CSS Gradient', v:'cssGradient'}, {n: 'Image', v:'image'}]
+                  option(value=exp.v)=exp.n
+
+          div.panel__export
+            button.minibutton(aria-label="copy to clipboard" v-on:click="copyExport")
+              span.minibutton__label copy
+              svg.minibutton__icon
+                use(xlink:href="#icon-copy")
+            pre.panel__code(v-if="exportAs !== 'image'")
+              code {{colorList}}
+            div.panel__img.panel__img--export(v-if="exportAs === 'image'")
+              img(:src="buildImage(600, 0, true).toDataURL('image/png')" style="max-width: 100%;")
+
+        .footer
+          article.footer__about
+            h2 Support FarbVélo
+            p.
+              FarbVélo does not track you and has no ads.
+              But hosting and maintaining this project is not free.
+              Please consider a <a href="https://ko-fi.com/meodai">one time</a>
+              or <a href="https://github.com/sponsors/meodai">recurring</a> donation
+              to help me maintin FarbVélo and build more color tools that you
+              might find useful.
+
+            aside.footer__about
+              h2 Sponsors
+              ol
+                li: a(href="https://neverything.me/") Silvan Hagen (25USD/month)
+                li: a(href="https://dy.github.io/") Dmitry Iv. (10USD/month)
 
       article.colors(v-on:pointerdown="cancelSwipe")
         h2.colors__title Generated Color Palette
         color(v-for="(c, i) in colors", :nextcolorhex="colors[i+1] || colors[colors.length - 2]" :name="names.length ? names[i] : 'rainbow'", :colorvaluetype="colorValueType", :colorhex="c", :contrastcolor="getContrastColor(c)" :contrastcolors="wcagContrastColors[i]")
 
       .buttons
-        button.button.settings(v-on:click="toggleSettings", aria-label="show settngs pannel")
+        button.button.settings(v-on:click="toggleSettings", aria-label="show settngs panel")
           svg
             use(xlink:href="#icon-cog")
-        button.button.copy(v-on:click="copy", aria-label="copy all colors to clipboard")
+        button.button.share(v-on:click="toggleShare", aria-label="share or save palette")
           svg
-            use(xlink:href="#icon-copy")
-          svg.check
-            use(xlink:href="#icon-check")
+            use(xlink:href="#icon-share")
         button.button.refresh(title="Or hit the Space bar", v-on:click="newColors(true)", aria-label="generate new palette")
           svg
             use(xlink:href="#icon-refresh")
@@ -289,7 +334,9 @@ html(lang="en-US")
             <path vector-effect="non-scaling-stroke" d="M6 13.6V21H18V13.6C18 13.2686 17.7314 13 17.4 13H6.6C6.26863 13 6 13.2686 6 13.6Z" stroke="currentColor" stroke-width="1.5"></path>
           </symbol>
           <symbol stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="icon-copy">
-            <path vector-effect="non-scaling-stroke" d="M5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L13.0815 17.1953C12.4227 16.7717 11.5773 16.7717 10.9185 17.1953L5 21Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19.4 20H9.6C9.26863 20 9 19.7314 9 19.4V9.6C9 9.26863 9.26863 9 9.6 9H19.4C19.7314 9 20 9.26863 20 9.6V19.4C20 19.7314 19.7314 20 19.4 20Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 9V4.6C15 4.26863 14.7314 4 14.4 4H4.6C4.26863 4 4 4.26863 4 4.6V14.4C4 14.7314 4.26863 15 4.6 15H9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </symbol>
           </symbol>
           <symbol stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="icon-upload">
             <path vector-effect="non-scaling-stroke" d="M12 22V13M12 13L15.5 16.5M12 13L8.5 16.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
@@ -306,6 +353,14 @@ html(lang="en-US")
             <path vector-effect="non-scaling-stroke" d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
             <path vector-effect="non-scaling-stroke" d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H10.981L10.3491 4.40113L7.70441 5.51596L6 4L4 6L5.45337 7.78885L4.3725 10.4463L2 11V13L4.40111 13.6555L5.51575 16.2997L4 18L6 20L7.79116 18.5403L10.397 19.6123L11 22H13L13.6045 19.6132L16.2551 18.5155C16.6969 18.8313 18 20 18 20L20 18L18.5159 16.2494L19.6139 13.598L21.9999 12.9772L22 11L19.6224 10.3954Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
           </symbol>
+          <symbol stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-share">
+            <path vector-effect="non-scaling-stroke" d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path vector-effect="non-scaling-stroke" d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path vector-effect="non-scaling-stroke" d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path vector-effect="non-scaling-stroke" d="M15.5 6.5L8.5 10.5" stroke="currentColor" stroke-width="1.5"/>
+            <path vector-effect="non-scaling-stroke" d="M8.5 13.5L15.5 17.5" stroke="currentColor" stroke-width="1.5"/>
+          </symbol>
+
         </svg>
     script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js")
     script(src="main.js")
