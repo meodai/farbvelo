@@ -893,7 +893,7 @@ button {
     background-color: transparent;
 
     option {
-      color: var(--color-bg);
+      color: var(--color-inverted);
     }
 
     &:focus {
@@ -1113,10 +1113,16 @@ button {
 }
 
 .panel-share {
+  direction: rtl;
   z-index: 1;
   @media (max-width: 850px) {
     z-index: 4;
+    direction: ltr;
   }
+}
+
+.panel-share__inner {
+  direction: ltr;
 }
 
 .colors {
