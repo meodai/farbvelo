@@ -398,7 +398,6 @@ let colors = new Vue({
   },
   methods: {
     convretedColor: function (value) {
-      console.log(this.colorValueType)
       return this.colorValueType === 'hex' ? value : chroma(value).css(this.colorValueType);
     },
     random: function (min, max) {
@@ -599,7 +598,7 @@ let colors = new Vue({
 
       return colors;
     },
-    copyExport: function () {
+    copyExport: function (e) {
       if (this.exportAs === 'image') {
         this.buildImage(1000, .1, true).toBlob((blob) => {
           const item = new ClipboardItem({
