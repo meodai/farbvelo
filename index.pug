@@ -289,7 +289,14 @@ html(lang="en-US")
               code {{colorList}}
             div.panel__img.panel__img--export(v-if="exportAs === 'image'")
               img(:src="buildImage(600, 0, true).toDataURL('image/png')" style="max-width: 100%;")
-
+          label.panel__setting
+            strong.panel__settingtitle Color Values
+            .panel__inputs.panel__inputs--select
+              svg
+                use(xlink:href="#icon-dropdown")
+              select(v-model="colorValueType")
+                option(v-for="valueType in colorValueTypes", :value=valueType).
+                  {{ valueType }}
         .footer
           article.footer__about
             h2 Support FarbVélo

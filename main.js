@@ -369,19 +369,27 @@ let colors = new Vue({
         value: color.requestedHex,
       }));
     },
+
     colorList: function () {
+      const namedColors = this.namedColorList.map(color => {
+        return {
+          name: color.name,
+          value: this.convretedColor(color.value),
+        }
+      });
+
       if (this.exportAs === 'list') {
-        return this.colors.join('\n');
+        return namedColors.map(c => c.value).join('\n');
       } else if (this.exportAs === 'csvList') {
-        return `name,value${this.namedColorList.reduce((r,c) => `${r}\n${c.name},${c.value}`,'') }\n`;
+        return `name,value${namedColors.reduce((r,c) => `${r}\n${c.name},${c.value}`,'') }\n`;
       } else if (this.exportAs === 'jsArray') {
-        return `[\n  "${this.colors.join('", \n  "')}"\n]`;
+        return `[\n  "${namedColors.map(c => c.value).join('", \n  "')}"\n]`;
       } else if (this.exportAs === 'jsObject') {
-        return `{${this.namedColorList.reduce((r,c) => `${r}\n  "${c.name}": "${c.value}",`,'') }\n}`;
+        return `{${namedColors.reduce((r,c) => `${r}\n  "${c.name}": "${c.value}",`,'') }\n}`;
       } else if (this.exportAs === 'css') {
-        return `${this.namedColorList.reduce((r,c) => `${r}${r ? `\n` : ''}--${CSS.escape(c.name.replace(/ /g,'-')).toLowerCase()}: ${c.value};`,'') }`;
+        return `${namedColors.reduce((r,c) => `${r}${r ? `\n` : ''}--${CSS.escape(c.name.replace(/ /g,'-')).toLowerCase()}: ${c.value};`,'') }`;
       } else if (this.exportAs === 'cssGradient') {
-        return `linear-gradient(\n  ${this.colors.join(', \n  ')}\n);`;
+        return `linear-gradient(\n  ${namedColors.map(c => c.value).join(', \n  ')}\n);`;
       }
     },
     currentURL: function () {
@@ -389,6 +397,10 @@ let colors = new Vue({
     },
   },
   methods: {
+    convretedColor: function (value) {
+      console.log(this.colorValueType)
+      return this.colorValueType === 'hex' ? value : chroma(value).css(this.colorValueType);
+    },
     random: function (min, max) {
       return Math.floor(this.rnd()  * (max - min + 1)) + min;
     },
