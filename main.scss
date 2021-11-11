@@ -1040,6 +1040,27 @@ button {
     font-size: .6rem;
     padding: .4em .6em .5em .8em;
 
+    .minibutton__icon--check {
+      display: none;
+    }
+
+    &--copy {
+      .minibutton__label {
+        display: none;
+      }
+      &::before {
+        content: 'jeah!';
+      }
+      .minibutton__icon {
+        display: none;
+      }
+      .minibutton__icon--check {
+        display: inline-block;
+      }
+    }
+
+
+
     svg {
       width: 1em;
       height: 1em;

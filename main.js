@@ -211,6 +211,7 @@ let colors = new Vue({
       lightmode: false,
       sameHeightColors: false,
       exportAs: 'jsArray',
+      isCopiying: false,
       imgURL: '',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
@@ -599,6 +600,11 @@ let colors = new Vue({
       return colors;
     },
     copyExport: function (e) {
+      clearTimeout(this.copyTimer);
+      this.isCopiying = true;
+      this.copyTimer = setTimeout(() => {
+        this.isCopiying = false;
+      }, 1000);
       if (this.exportAs === 'image') {
         this.buildImage(1000, .1, true).toBlob((blob) => {
           const item = new ClipboardItem({
