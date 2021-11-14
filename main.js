@@ -68,6 +68,7 @@ const startWorker = (
 
 const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
   console.time('calculating colors');
+
   const width = Math.floor(image.naturalWidth * CANVAS_SCALE);
   const height = Math.floor(image.naturalHeight * CANVAS_SCALE);
   canvas.width = width;
@@ -282,12 +283,18 @@ let colors = new Vue({
   computed: {
     paleteTitle: function() {
       if( this.names.length ) {
-        const first = this.names[0].name.match(/[^\s-]+-?/g)[0];
-        let last = this.names[this.names.length - 1].name.match(/[^\s-]+-?/g);
+        const names = this.names.map(n => n.name);;
+
+        const indexFirst = this.random(0, names.length - 1);
+        const firstName = names.splice(indexFirst, 1);
+        const lastIndex = this.random(0, names.length - 1);
+
+        const first = firstName[0].match(/[^\s-]+-?/g)[0];
+        let last = names[lastIndex].match(/[^\s-]+-?/g);
         last = last[last.length - 1];
         return `${first} ${last}`;
       } else {
-        return 'Doubble Rainbow'
+        return 'Doubble Rainbow';
       }
     },
     lastColor: function () {
