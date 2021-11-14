@@ -5,6 +5,7 @@ import rgbtocmyk from './lib/rgb-cymk';
 import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
+import getShareLink from './lib/share-strings';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
@@ -364,12 +365,7 @@ let colors = new Vue({
     },
 
     colorList: function () {
-      const namedColors = this.namedColorList.map(color => {
-        return {
-          name: color.name,
-          value: this.convretedColor(color.value),
-        }
-      });
+      const namedColors = this.namedColorList;
 
       if (this.exportAs === 'list') {
         return namedColors.map(c => c.value).join('\n');
@@ -863,7 +859,9 @@ let colors = new Vue({
       srcimg.src = event.target.result;
       this.imgURL = event.target.result;
     },
-
+    getShareLink: function (provider) {
+      return getShareLink(provider, this.currentURL, this.paleteTitle);
+    }
   },
   mounted: function () {
     const hadSettings = this.settingsFromURL();

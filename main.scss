@@ -914,6 +914,23 @@ button {
   white-space: nowrap;
 }
 
+.panel__share {
+  font-size: .6em;
+  h4 {
+    margin-bottom: 1em;
+  }
+  a {
+    display: inline-block;
+    margin-right: .3em;
+    text-transform: capitalize;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+
 .panel-share {
   padding: calc(var(--size-gutter) * 2);
   padding-left: calc(25% + var(--size-gutter) * 2);

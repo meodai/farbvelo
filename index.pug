@@ -271,6 +271,7 @@ html(lang="en-US")
             .panel__inputs
               input(type="url" :value="currentURL").input--url
 
+
           label.panel__setting
             h4.panel__settingtitle Export as
             .panel__inputs.panel__inputs--select
@@ -300,6 +301,12 @@ html(lang="en-US")
               select(v-model="colorValueType")
                 option(v-for="valueType in colorValueTypes", :value=valueType).
                   {{ valueType }}
+
+          div.panel__setting.panel__share
+            h4.panel__settingtitle Share This Palette
+            each provider in ['facebook', 'twitter', 'telegram', 'pocket', 'reddit', 'evernote', 'linkedin', 'pinterest', 'whatsapp', 'email']
+              a(:href="getShareLink('" + provider + "')" target="_blank")= provider
+
         .footer
           article.footer__about
             h2 Support FarbVélo
@@ -374,3 +381,4 @@ html(lang="en-US")
         </svg>
     script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js")
     script(src="main.js")
+
