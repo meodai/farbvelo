@@ -214,6 +214,7 @@ let colors = new Vue({
       exportAs: 'jsArray',
       isCopiying: false,
       imgURL: '',
+      paleteTitle: 'Double Rainbow',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
@@ -281,22 +282,6 @@ let colors = new Vue({
     }
   },
   computed: {
-    paleteTitle: function() {
-      if( this.names.length ) {
-        const names = this.names.map(n => n.name);;
-
-        const indexFirst = this.random(0, names.length - 1);
-        const firstName = names.splice(indexFirst, 1);
-        const lastIndex = this.random(0, names.length - 1);
-
-        const first = firstName[0].match(/[^\s-]+-?/g)[0];
-        let last = names[lastIndex].match(/[^\s-]+-?/g);
-        last = last[last.length - 1];
-        return `${first} ${last}`;
-      } else {
-        return 'Doubble Rainbow';
-      }
-    },
     lastColor: function () {
       return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#212121';
     },
@@ -405,6 +390,22 @@ let colors = new Vue({
     },
   },
   methods: {
+    getPaleteTitle: function () {
+      if (this.names.length) {
+        const names = this.names.map(n => n.name);;
+
+        const indexFirst = this.random(0, names.length - 1);
+        const firstName = names.splice(indexFirst, 1);
+        const lastIndex = this.random(0, names.length - 1);
+
+        const first = firstName[0].match(/[^\s-]+-?/g)[0];
+        let last = names[lastIndex].match(/[^\s-]+-?/g);
+        last = last[last.length - 1];
+        return `${first} ${last}`;
+      } else {
+        return 'Doubble Rainbow';
+      }
+    },
     convretedColor: function (value) {
       return this.colorValueType === 'hex' ? value : chroma(value).css(this.colorValueType);
     },
@@ -640,6 +641,7 @@ let colors = new Vue({
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
+        this.paleteTitle = this.getPaleteTitle();
       });
     },
     buildImage: function (
