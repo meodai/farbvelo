@@ -305,7 +305,7 @@ html(lang="en-US")
           div.panel__setting.panel__share
             h4.panel__settingtitle Share This Palette
             each provider in ['facebook', 'twitter', 'telegram', 'pocket', 'reddit', 'evernote', 'linkedin', 'pinterest', 'whatsapp', 'email']
-              a(:href="getShareLink('" + provider + "')" target="_blank")= provider
+              a(:href="getShareLink('" + provider + "')" rel="noopener" target="_blank")= provider
 
         .footer
           article.footer__about
