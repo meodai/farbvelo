@@ -662,9 +662,9 @@ let colors = new Vue({
 
           ctx.fillRect(
             size * padding,
-            size * padding + (i / this.colors.length * innerSize),
+            size * padding + (i / this.colors.length * innerSize) - 1,
             innerSize,
-            innerSize / this.colors.length
+            innerSize / this.colors.length + 1
           );
         } else {
           gradient.addColorStop(Math.min(1, i / this.colors.length), color);
