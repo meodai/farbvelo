@@ -208,7 +208,8 @@ let colors = new Vue({
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
-      nameRnd: [],
+      nameRnd1: 0,
+      nameRnd2: 0,
       moveTimer: null,
       showUI: true,
       lightmode: false,
@@ -219,7 +220,8 @@ let colors = new Vue({
       paletteTitle: 'Double Rainbow',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
-        {key:'nr', prop: 'nameRnd'},
+        {key:'nr1', prop: 'nameRnd1', p: parseFloat},
+        {key:'nr2', prop: 'nameRnd2', p: parseFloat},
         {key:'a' , prop: 'amount', p: parseInt}, //6
         {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
         {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
@@ -642,7 +644,7 @@ let colors = new Vue({
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
-        this.paletteTitle = this.getPaletteTitle(this.nameRnd[0], this.nameRnd[1]);
+        this.paletteTitle = this.getPaletteTitle(this.nameRnd1, this.nameRnd2);
       });
     },
     buildImage: function (
@@ -775,7 +777,8 @@ let colors = new Vue({
       }
 
       if (newSeed) {
-        this.nameRnd = [this.random(), this.random()];
+        this.nameRnd1 = this.random();
+        this.nameRnd2 = this.random();
       }
     },
     toggleSettings: function () {
