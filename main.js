@@ -388,11 +388,11 @@ let colors = new Vue({
   methods: {
     getPaletteTitle: function (rnd1, rnd2) {
       if (this.names.length) {
-        const names = this.names.map(n => n.name);;
+        const names = this.names.map(n => n.name);
 
-        const indexFirst = Math.round((names.length - 1) * (rnd1 / 1000));
+        const indexFirst = Math.round(rnd1 * (names.length - 1));
         const firstName = names.splice(indexFirst, 1);
-        const lastIndex = Math.round((names.length - 1) * (rnd2 / 1000));
+        const lastIndex = Math.round(rnd2 * (names.length - 1));
 
         const first = firstName[0].match(/[^\s-]+-?/g)[0];
         let last = names[lastIndex].match(/[^\s-]+-?/g);
@@ -405,7 +405,10 @@ let colors = new Vue({
     convretedColor: function (value) {
       return this.colorValueType === 'hex' ? value : chroma(value).css(this.colorValueType);
     },
-    random: function (min, max) {
+    random: function (min = 1, max) {
+      if (!max) {
+        return this.rnd() * min;
+      }
       return Math.floor(this.rnd()  * (max - min + 1)) + min;
     },
     getContrastColor: function (color) {
@@ -632,7 +635,8 @@ let colors = new Vue({
       url.pathname += colors.join().replace(/#/g, '');
 
       url.search = new URLSearchParams(params).toString();
-      const rnd = [this.random(0, 1000), this.random(0, 1000)];
+
+      const rnd = [this.random(), this.random()];
       return fetch(url)
       .then(data => data.json())
       .then(data => {
