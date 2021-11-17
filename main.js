@@ -208,6 +208,7 @@ let colors = new Vue({
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
+      nameRnd: [],
       moveTimer: null,
       showUI: true,
       lightmode: false,
@@ -636,12 +637,11 @@ let colors = new Vue({
 
       url.search = new URLSearchParams(params).toString();
 
-      const rnd = [this.random(), this.random()];
       return fetch(url)
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
-        this.paletteTitle = this.getPaletteTitle(rnd[0], rnd[1]);
+        this.paletteTitle = this.getPaletteTitle(this.nameRnd[0], this.nameRnd[1]);
       });
     },
     buildImage: function (
@@ -771,6 +771,10 @@ let colors = new Vue({
         }
 
         this.colorsValues = this.colorsValues;
+      }
+
+      if (newSeed) {
+        this.nameRnd = [this.random(), this.random()];
       }
     },
     toggleSettings: function () {
