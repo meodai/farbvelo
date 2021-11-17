@@ -749,7 +749,6 @@ let colors = new Vue({
       } else if (this.generatorFunction === 'ImageExtract') {
         if (!this.imgURL || newSeed) {
           document.documentElement.classList.add('is-imagefetching');
-          https://source.unsplash.com/random
           fetch('https://source.unsplash.com/random/').then(data => {
             const url = data.url;
             const id = unsplashURLtoID(url)
