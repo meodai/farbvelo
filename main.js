@@ -215,7 +215,7 @@ let colors = new Vue({
       exportAs: 'jsArray',
       isCopiying: false,
       imgURL: '',
-      paleteTitle: 'Double Rainbow',
+      paletteTitle: 'Double Rainbow',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
@@ -386,13 +386,13 @@ let colors = new Vue({
     },
   },
   methods: {
-    getPaleteTitle: function () {
+    getPaletteTitle: function (rnd1, rnd2) {
       if (this.names.length) {
         const names = this.names.map(n => n.name);;
 
-        const indexFirst = this.random(0, names.length - 1);
+        const indexFirst = Math.round((names.length - 1) * (rnd1 / 1000));
         const firstName = names.splice(indexFirst, 1);
-        const lastIndex = this.random(0, names.length - 1);
+        const lastIndex = Math.round((names.length - 1) * (rnd2 / 1000));
 
         const first = firstName[0].match(/[^\s-]+-?/g)[0];
         let last = names[lastIndex].match(/[^\s-]+-?/g);
@@ -632,12 +632,12 @@ let colors = new Vue({
       url.pathname += colors.join().replace(/#/g, '');
 
       url.search = new URLSearchParams(params).toString();
-      //console.log(url)
+      const rnd = [this.random(0, 1000), this.random(0, 1000)];
       return fetch(url)
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
-        this.paleteTitle = this.getPaleteTitle();
+        this.paletteTitle = this.getPaletteTitle(rnd[0], rnd[1]);
       });
     },
     buildImage: function (
@@ -717,7 +717,7 @@ let colors = new Vue({
       navigator.clipboard.writeText(`${window.location.origin + "/?s=" + this.constructURL()}`);
     },
     constructURL: function () {
-      const state = this.trackInURL.reduce((o,i)=> Object.assign(o, {[i.key]: this[i.prop]}) ,{});
+      const state = this.trackInURL.reduce((o,i) => Object.assign(o, {[i.key]: this[i.prop]}) ,{});
       const serializedState = Buffer.from(JSON.stringify(state)).toString('base64');
       return serializedState;
     },
@@ -751,7 +751,7 @@ let colors = new Vue({
           document.documentElement.classList.add('is-imagefetching');
           fetch('https://source.unsplash.com/random/').then(data => {
             const url = data.url;
-            const id = unsplashURLtoID(url)
+            //const id = unsplashURLtoID(url)
             this.imgURL = url;
 
             loadImage(
@@ -859,7 +859,7 @@ let colors = new Vue({
       this.imgURL = event.target.result;
     },
     getShareLink: function (provider) {
-      return getShareLink(provider, this.currentURL, this.paleteTitle);
+      return getShareLink(provider, this.currentURL, this.paletteTitle);
     }
   },
   mounted: function () {
