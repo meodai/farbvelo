@@ -220,8 +220,6 @@ let colors = new Vue({
       paletteTitle: 'Double Rainbow',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
-        {key:'nr1', prop: 'nameRnd1', p: parseFloat},
-        {key:'nr2', prop: 'nameRnd2', p: parseFloat},
         {key:'a' , prop: 'amount', p: parseInt}, //6
         {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
         {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
@@ -240,7 +238,9 @@ let colors = new Vue({
         {key: 'ah', prop: 'autoHideUI', p: Boolean}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
         {key: 'lm', prop: 'lightmode', p: Boolean}, // true
-        {key: 'sm', prop: 'sameHeightColors', p: Boolean} // false
+        {key: 'sm', prop: 'sameHeightColors', p: Boolean}, // false
+        {key: 'n1', prop: 'nameRnd1', p: parseFloat},
+        {key: 'n2', prop: 'nameRnd2', p: parseFloat},
       ],
     }
   },
