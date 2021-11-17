@@ -219,6 +219,7 @@ let colors = new Vue({
       paletteTitle: 'Double Rainbow',
       trackInURL: [
         {key:'s' , prop: 'currentSeed'},
+        {key:'nr', prop: 'nameRnd'},
         {key:'a' , prop: 'amount', p: parseInt}, //6
         {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
         {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
