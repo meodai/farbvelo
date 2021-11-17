@@ -219,22 +219,22 @@ let colors = new Vue({
       imgURL: '',
       paletteTitle: 'Double Rainbow',
       trackInURL: [
-        {key:'s' , prop: 'currentSeed'},
-        {key:'a' , prop: 'amount', p: parseInt}, //6
-        {key:'cg' , prop: 'colorsInGradient', p: parseInt}, //4
-        {key:'hg' , prop: 'hasGradients', p: Boolean}, // true
-        {key:'hb' , prop: 'hasBackground', p: Boolean}, // false
-        {key:'ho' , prop: 'hasOutlines', p: Boolean}, // false
-        {key:'hc' , prop: 'highContrast', p: Boolean}, // false
-        {key:'ht' , prop: 'hideText', p: Boolean}, // false,
-        {key:'b' , prop: 'hasBleed', p: Boolean}, // false,
-        {key:'p' , prop: 'padding', p: parseFloat}, // .175
-        {key:'md' , prop: 'minHueDistance', p: parseInt}, // 60,
-        {key:'cm' , prop: 'intermpolationColorModel'}, // 'lab'
-        {key:'f' , prop: 'generatorFunction'}, // 'Legacy'
-        {key:'c', prop: 'colorMode'}, // 'hsluv'
-        {key:'sc', prop: 'showContrast', p: Boolean}, // false
-        {key:'bw', prop: 'addBWContrast', p: Boolean}, // true
+        {key: 's', prop: 'currentSeed'},
+        {key: 'a', prop: 'amount', p: parseInt}, //6
+        {key: 'cg', prop: 'colorsInGradient', p: parseInt}, //4
+        {key: 'hg', prop: 'hasGradients', p: Boolean}, // true
+        {key: 'hb', prop: 'hasBackground', p: Boolean}, // false
+        {key: 'ho', prop: 'hasOutlines', p: Boolean}, // false
+        {key: 'hc', prop: 'highContrast', p: Boolean}, // false
+        {key: 'ht', prop: 'hideText', p: Boolean}, // false,
+        {key: 'b', prop: 'hasBleed', p: Boolean}, // false,
+        {key: 'p', prop: 'padding', p: parseFloat}, // .175
+        {key: 'md', prop: 'minHueDistance', p: parseInt}, // 60,
+        {key: 'cm', prop: 'intermpolationColorModel'}, // 'lab'
+        {key: 'f', prop: 'generatorFunction'}, // 'Legacy'
+        {key: 'c', prop: 'colorMode'}, // 'hsluv'
+        {key: 'sc', prop: 'showContrast', p: Boolean}, // false
+        {key: 'bw', prop: 'addBWContrast', p: Boolean}, // true
         {key: 'ah', prop: 'autoHideUI', p: Boolean}, // false
         {key: 'iu', prop: 'imgURL'}, // ''
         {key: 'lm', prop: 'lightmode', p: Boolean}, // true
