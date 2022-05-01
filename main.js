@@ -21,9 +21,11 @@ url.match(
 const logColors = colors => {
   let c, o = "",
     s = [];
-  for (c of colors)
-    o += "%c      ",
-    s.push("background:" + c);
+  for (c of colors) {
+    o += `%c ${c} `,
+    s.push("background:" + c + "; color:" + c);
+  }
+  //console.log(' ' + colors.join('  '));
   console.log(o, ...s);
 };
 
