@@ -109,7 +109,7 @@ html(lang="en-US")
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="intermpolationColorModel")
-              each mode in ['lab', 'rgb', 'lrgb', 'hsl', 'hsv', 'hsi', 'lch']
+              each mode in ['lab', 'oklab', 'rgb', 'lrgb', 'hsl', 'hsv', 'hsi', 'lch']
                 option(value=mode)=mode
 
         label.panel__setting
@@ -315,8 +315,7 @@ html(lang="en-US")
               But hosting and maintaining this project is not free.
               Please consider a <a href="https://ko-fi.com/meodai">one time</a>
               or <a href="https://github.com/sponsors/meodai">recurring</a> donation
-              to help me maintin FarbVélo and build more color tools that you
-              might find useful.
+              to help me maintain FarbVélo and build more color tools.
 
             aside.footer__about
               h2 Sponsors

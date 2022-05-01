@@ -18,6 +18,15 @@ url.match(
   /https:\/\/images\.unsplash\.com\/photo-([\da-f]+-[\da-f]+)/
 )[1];
 
+const logColors = colors => {
+  let c, o = "",
+    s = [];
+  for (c of colors)
+    o += "%c      ",
+    s.push("background:" + c);
+  console.log(o, ...s);
+};
+
 const startWorker = (
   imageUrl,
   imageData,
@@ -165,6 +174,8 @@ function coordsToHex (angle, val1, val2, mode = 'hsluv') {
     return chroma(angle, val1, val2, 'hcl').hex();
   } else if (mode === 'lch') {
     return chroma(val1, val2, angle, 'lch').hex();
+  } else if (mode === 'oklch') {
+    return chroma(val1 / 100 * 0.999, val2 / 100 * 0.322, angle, 'oklch').hex();
   } else if (mode === 'hsl' || mode === 'hsv' || mode === 'hcg') {
     return chroma(angle, val1/100, val2/100, mode).hex();
   }
@@ -196,10 +207,10 @@ let colors = new Vue({
       addBWContrast: true,
       padding: .175,
       colorMode: 'hsluv',
-      colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch'],
+      colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch', 'oklch'],
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
-      intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb'],
+      intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb', 'oklab'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl'],
       generatorFunction: 'Legacy',
@@ -307,6 +318,8 @@ let colors = new Vue({
         .colors(this.amount);
 
       this.getNames(colors);
+
+      logColors(colors);
 
       return colors;
     },
