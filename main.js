@@ -120,7 +120,7 @@ Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
   template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor, '--color-best-contrast': bestContrast}">
               <div class="color__values">
-                <var class="color__value">{{value}}</var>
+                <var class="color__value" v-html="value"></var>
                 <section class="color__contrasts" v-if="hasWCAGColorPairs" aria-label="good contrast colors">
                   <ol>
                     <li v-for="c in contrastcolors" v-if="c" :key="c" :style="{'--paircolor': c}"><var>{{c}}</var></li>
@@ -139,12 +139,15 @@ Vue.component('color', {
 
   methods: {
     copy: function () {
-      navigator.clipboard.writeText(`${this.name.name} ・ ${this.value} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
+      navigator.clipboard.writeText(`${this.name.name} ・ ${this.valueHEX} ・ ${this.valueRGB} ・ ${this.valueHSL} ・ ${this.valueCMYK} `);
     }
   },
   computed: {
+    valueHEX: function () {
+      return this.colorhex;
+    },
     valueCMYK: function () {
-      return `${chroma(this.colorhex).cmyk().map(d => Math.round(d * 100) + `°`).join(',')}`;
+      return chroma(this.colorhex).css('cmyk');
     },
     valueRGB: function () {
       return chroma(this.colorhex).css('rgb');
@@ -154,7 +157,22 @@ Vue.component('color', {
     },
     value: function () {
       if(this.colorvaluetype === 'hex') {
-        return this.colorhex;
+        return `<span>${this.colorhex}</span>`;
+      } else if (this.colorvaluetype === 'cmyk') {
+        const letters = 'CMYK'.split('');
+        return `${chroma(this.colorhex).cmyk().map((d,i) => `${letters[i]} <sup>${Math.round(d * 100)}%</sup>`).join(' ')}`
+      } else if (this.colorvaluetype === 'rgb') {
+        const rgb = chroma(this.colorhex).rgb();
+        const letters = 'RGB'.split('');
+
+        return `${rgb.map((d,i) => `${letters[i]} <sup>${d}</sup>`).join(' ')}`
+      } else if (this.colorvaluetype === 'hsl') {
+        const hsl = chroma(this.colorhex).hsl();
+        hsl.pop()
+        const letters = 'HSL'.split('');
+        return `${hsl.map(
+          (d, i) => `${letters[i]} <sup>${Math.round(d * 1000) / (i ? 10 : 1000)}${i ? '%' : '°'}</sup>`
+        ).join(' ')}`
       } else {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }

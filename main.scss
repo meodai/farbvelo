@@ -364,6 +364,10 @@ button {
 
 .color__value {
   font-style: normal;
+  font-family: 'Inter UI', sans-serif;
+  sup, span {
+    font-family: 'Space Mono', monospace;
+  }
 }
 
 .color__name {
