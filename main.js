@@ -1,7 +1,6 @@
 // import Vue from 'vue';
 import {hsluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
-import rgbtocmyk from './lib/rgb-cymk';
 import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
@@ -145,7 +144,7 @@ Vue.component('color', {
   },
   computed: {
     valueCMYK: function () {
-      return `cmyk(${rgbtocmyk(chroma(this.colorhex).rgb()).map(d => Math.round(d * 100) + `°`).join(',')})`;
+      return `${chroma(this.colorhex).cmyk().map(d => Math.round(d * 100) + `°`).join(',')}`;
     },
     valueRGB: function () {
       return chroma(this.colorhex).css('rgb');
@@ -156,7 +155,7 @@ Vue.component('color', {
     value: function () {
       if(this.colorvaluetype === 'hex') {
         return this.colorhex;
-      } else  {
+      } else {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }
     },
@@ -214,7 +213,7 @@ let colors = new Vue({
       intermpolationColorModel: 'lab',
       intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb', 'oklab'],
       colorValueType: 'hex',
-      colorValueTypes: ['hex', 'rgb', 'hsl'],
+      colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
       generatorFunction: 'Legacy',
       generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
       isLoading: true,
@@ -377,14 +376,27 @@ let colors = new Vue({
       }
     },
     namedColorList: function () {
-      return this.names.map(color => ({
-        name: color.name,
-        value: color.requestedHex,
-      }));
+      return this.names.map(color => {
+        const c = chroma(color.requestedHex);
+
+        return {
+          name: color.name,
+          value: color.requestedHex,
+          values: {
+            hex: color.requestedHex,
+            rgb: c.css('rgb'),
+            hsl: c.css('hsl'),
+            cmyk: c.css('cymk'),
+          },
+        }
+      });
     },
 
     colorList: function () {
-      const namedColors = this.namedColorList;
+      const namedColors = this.namedColorList.map(color => ({
+        ...color,
+        value: color.values[this.colorValueType]
+      }));
 
       if (this.exportAs === 'list') {
         return namedColors.map(c => c.value).join('\n');
@@ -420,9 +432,6 @@ let colors = new Vue({
       } else {
         return 'Doubble Rainbow';
       }
-    },
-    convretedColor: function (value) {
-      return this.colorValueType === 'hex' ? value : chroma(value).css(this.colorValueType);
     },
     random: function (min = 1, max) {
       if (!max) {
