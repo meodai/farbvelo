@@ -175,9 +175,9 @@ function coordsToHex (angle, val1, val2, mode = 'hsluv') {
   } else if (mode === 'hcl') {
     return chroma(angle, val1, val2, 'hcl').hex();
   } else if (mode === 'lch') {
-    return chroma(val1, val2, angle, 'lch').hex();
+    return chroma(val2, val1, angle, 'lch').hex();
   } else if (mode === 'oklch') {
-    return chroma(val1 / 100 * 0.999, val2 / 100 * 0.322, angle, 'oklch').hex();
+    return chroma(val2 / 100 * 0.999, val1 / 100 * 0.322, angle, 'oklch').hex();
   } else if (mode === 'hsl' || mode === 'hsv' || mode === 'hcg') {
     return chroma(angle, val1/100, val2/100, mode).hex();
   }
