@@ -271,7 +271,6 @@ let colors = new Vue({
         {key: 'n1', prop: 'nameRnd1', p: parseFloat},
         {key: 'n2', prop: 'nameRnd2', p: parseFloat},
         {key: 'cv', prop: 'colorValueType'}, // hex
-
       ],
     }
   },
@@ -745,6 +744,9 @@ let colors = new Vue({
     settingsFromURL: function () {
       const params = window.location.search;
       const stateString = new URLSearchParams(params).get('s');
+
+      const colorString = new URLSearchParams(params).get('c');
+
       if (stateString) {
         let settings = JSON.parse(Buffer.from(stateString, 'base64').toString('ascii'));
 
