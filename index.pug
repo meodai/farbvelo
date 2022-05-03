@@ -103,6 +103,9 @@ html(lang="en-US")
               option(v-for="mode in colorModeList", :value=mode).
                 {{ mode }}
 
+        .panel__setting
+          dog(v-bind:colors="colors", v-bind:colormodel="colorMode")
+
         label.panel__setting
           h4.panel__settingtitle Interpolation Model
           .panel__inputs.panel__inputs--select
