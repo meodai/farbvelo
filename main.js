@@ -200,7 +200,6 @@ function coordsToHex (angle, val1, val2, mode = 'hsluv') {
   }
 }
 
-
 let colors = new Vue({
   el: '#app',
   data: () => {
@@ -271,6 +270,8 @@ let colors = new Vue({
         {key: 'sm', prop: 'sameHeightColors', p: Boolean}, // false
         {key: 'n1', prop: 'nameRnd1', p: parseFloat},
         {key: 'n2', prop: 'nameRnd2', p: parseFloat},
+        {key: 'cv', prop: 'colorValueType'}, // hex
+
       ],
     }
   },
