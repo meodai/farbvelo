@@ -1182,11 +1182,17 @@ button {
 }
 
 .panel__canvas--wrap {
+  position: relative;
   width: 100%;
+  aspect-ratio: 1;
 }
 
 .panel__canvas {
-  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 120%;
   display: block;
 }
 

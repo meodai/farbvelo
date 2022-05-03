@@ -46,6 +46,12 @@ const colorModes = {
     y: [1, 1],
     z: [2, 1]
   },
+  hcg: {
+    func: 'hcg',
+    x: [0, 360],
+    y: [1, 1],
+    z: [2, 1]
+  },
   hsluv: {
     func: 'hsl',
     x: [0, 360],
@@ -120,7 +126,7 @@ Vue.component('dog', {
       const w = this.z.illu.width;
       const h = this.z.illu.height;
       const s = Math.min(w, h) * .5;
-      const stroke = 10;
+      const stroke = 2.5;
 
       new Shape({
         addTo: illo,
@@ -281,7 +287,7 @@ Vue.component('dog', {
       const w = this.z.illu.width;
       const h = this.z.illu.height;
       const s = Math.min(w, h) * .5;
-      const stroke = 2;
+      const stroke = 30;
 
       this.colors.forEach(color => {
         const c = chroma(color);
@@ -328,7 +334,7 @@ Vue.component('dog', {
 
         const shape = new Shape({
           addTo: this.z.space,
-          stroke: 40,
+          stroke: stroke,
           color: color,
           translate: {
             x: pX,
@@ -546,8 +552,6 @@ Vue.component('color', {
 function coordsToHex (angle, val1, val2, mode = 'hsluv') {
   if (mode === 'hsluv') {
     return hsluvToHex([ angle, val1, val2, ]);
-  } else if (mode === 'hcl') {
-    return chroma(angle, val1, val2, 'hcl').hex();
   } else if (mode === 'lch') {
     return chroma(val2, val1, angle, 'lch').hex();
   } else if (mode === 'oklch') {
@@ -582,10 +586,10 @@ let colors = new Vue({
       addBWContrast: true,
       padding: .175,
       colorMode: 'hsluv',
-      colorModeList: ['hsluv', 'hcl', 'hsl', 'hcg', 'hsv', 'lch', 'oklch'],
+      colorModeList: ['hsluv', 'lch', 'oklch','hsl', 'hcg', 'hsv'],
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
-      intermpolationColorModels: ['lab', 'hsl', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb', 'oklab'],
+      intermpolationColorModels: ['lab', 'hsv', 'hsi', 'lch', 'rgb', 'lrgb', 'oklab'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
       generatorFunction: 'Legacy',
@@ -633,7 +637,7 @@ let colors = new Vue({
   },
   watch: {
     amount: function () {
-      this.amount = Math.min(Math.max(this.amount, 3),10);
+      this.amount = Math.min(Math.max(this.amount, 3), 10);
       this.colorsInGradient = Math.min(this.colorsInGradient, this.amount);
     },
     colorsInGradient: function () {
