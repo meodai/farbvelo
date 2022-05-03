@@ -1,5 +1,5 @@
 // import Vue from 'vue';
-import {hsluvToHex} from 'hsluv';
+import {hsluvToHex, hpluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
@@ -188,7 +188,9 @@ Vue.component('color', {
 
 function coordsToHex (angle, val1, val2, mode = 'hsluv') {
   if (mode === 'hsluv') {
-    return hsluvToHex([ angle, val1, val2, ]);
+    return hsluvToHex([ angle, val1, val2 ]);
+  } else if (mode === 'hpluv') {
+    return hpluvToHex([angle, val1, val2 ]);
   } else if (mode === 'hcl') {
     return chroma(angle, val1, val2, 'hcl').hex();
   } else if (mode === 'lch') {
@@ -225,7 +227,7 @@ let colors = new Vue({
       addBWContrast: true,
       padding: .175,
       colorMode: 'hsluv',
-      colorModeList: ['hsluv', 'oklch', 'hcl', 'hsl', 'hcg', 'hsv'],
+      colorModeList: ['hsluv', 'oklch', 'hcl', 'hsl', 'hcg', 'hsv', 'hpluv'],
       minHueDistance: 60,
       intermpolationColorModel: 'lab',
       intermpolationColorModels: ['lab', 'oklab', 'rgb', 'lrgb', 'hcl', 'hsl', 'hsv', 'hsi', 'oklch'],
