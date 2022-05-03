@@ -1181,6 +1181,15 @@ button {
   }
 }
 
+.panel__canvas--wrap {
+  width: 100%;
+}
+
+.panel__canvas {
+  width: 100%;
+  display: block;
+}
+
 .panel-share .panel__setting {
   transform: translateX(-2rem) scale(1) rotateY(-5deg);
   transform-origin: -50% 50%;
