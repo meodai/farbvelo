@@ -109,8 +109,7 @@ html(lang="en-US")
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="intermpolationColorModel")
-              each mode in ['lab', 'oklab', 'rgb', 'lrgb', 'hsl', 'hsv', 'hsi', 'lch']
-                option(value=mode)=mode
+              option(v-for="mode in intermpolationColorModels" v-bind:value='mode') {{ mode }}
 
         label.panel__setting
           h4.panel__settingtitle
