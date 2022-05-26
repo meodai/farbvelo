@@ -106,6 +106,33 @@ const loadImage = (source, colorsLength) => {
   image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength);
 };
 
+function getPaletteTitle(
+  namesArr, // array of names
+  rnd1 = Math.random(),
+  rnd2 = Math.random(),
+  separatorRegex = /\p{L}+(\W+)?$/gu // regex to find last separator
+) {
+  let localnames = [...namesArr];
+
+  // select a random name from the list for the first word in the palette title
+  const indexFirst = Math.round(rnd1 * (localnames.length - 1));
+
+  // remove the selected name from the list
+  const firstName = localnames.splice(indexFirst, 1);
+
+  // select a random name from the list as a last word in the palette title
+  const lastIndex = Math.round(rnd2 * (localnames.length - 1));
+  let firstPart = firstName[0].trim().split(separatorRegex)[0];
+
+  if (!firstPart) { // usually means there is only one word in the name
+    firstPart = firstName[0] + ' ';
+  }
+
+  const lastPartParts = localnames[lastIndex].match(separatorRegex);
+  const lastPart = lastPartParts[lastPartParts.length - 1].trim();
+
+  return `${firstPart}${lastPart}`;
+}
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -234,7 +261,8 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
       generatorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'
+      ],
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
@@ -441,14 +469,12 @@ let colors = new Vue({
       if (this.names.length) {
         const names = this.names.map(n => n.name);
 
-        const indexFirst = Math.round(rnd1 * (names.length - 1));
-        const firstName = names.splice(indexFirst, 1);
-        const lastIndex = Math.round(rnd2 * (names.length - 1));
+        return getPaletteTitle(
+          names, // array of names
+          rnd1,
+          rnd2,
+        );
 
-        const first = firstName[0].match(/[^\s-]+-?/g)[0];
-        let last = names[lastIndex].match(/[^\s-]+-?/g);
-        last = last[last.length - 1];
-        return `${first} ${last}`;
       } else {
         return 'Doubble Rainbow';
       }
@@ -717,6 +743,17 @@ let colors = new Vue({
             innerSize,
             innerSize / this.colors.length + 1
           );
+          /*
+          ctx.fillStyle = '#000';
+          ctx.font = '20px "Inter UI"';
+          ctx.fillText(
+            color,
+            size * padding * 4,
+            size * padding + (i / this.colors.length * innerSize) - 1
+            + (innerSize / this.colors.length) * .5 + 10
+          );
+          */
+
         } else {
           gradient.addColorStop(Math.min(1, i / this.colors.length), color);
         }
