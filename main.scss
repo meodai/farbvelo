@@ -1175,6 +1175,7 @@ button {
   opacity: 0;
   transform: translateX(2rem) scale(1) rotateY(-5deg);
   transform-origin: 150% 50%;
+  user-select: none;
 
   @media (max-width: 850px) {
     transform: translateY(120%) scaleY(.5) rotateX(30deg);
@@ -1272,9 +1273,15 @@ button {
 .panel__inputs,
 .panel__settingtitle {
   display: flex;
+
   > *:first-child {
     flex: 1 0 auto;
   }
+}
+
+.panel__inputs {
+  position: relative;
+  z-index: 1;
 }
 
 .panel__inputs--select {
