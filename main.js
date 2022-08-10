@@ -1032,6 +1032,11 @@ let colors = new Vue({
       this.expandUI = true;
     }
 
+    const moreContrast = window.matchMedia('(prefers-contrast: more)');
+
+    if (moreContrast.matches) {
+      this.highContrast = true;
+    }
 
     this.newColors(!hadSettings);
 
