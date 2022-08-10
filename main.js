@@ -1036,6 +1036,7 @@ let colors = new Vue({
 
     if (moreContrast.matches) {
       this.highContrast = true;
+      this.hasGradients = false;
     }
 
     this.newColors(!hadSettings);
