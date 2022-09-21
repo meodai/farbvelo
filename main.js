@@ -105,65 +105,6 @@ const loadImage = (source, colorsLength) => {
 
   image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength);
 };
-/*
-function getPaletteTitle(
-  namesArr, // array of names
-  rnd1 = Math.random(),
-  rnd2 = Math.random(),
-  separatorRegex = /\p{L}+(\W+)?$/gu // regex to find last separator
-) {
-  let localnames = [...namesArr];
-
-  // select a random name from the list for the first word in the palette title
-  const indexFirst = Math.round(rnd1 * (localnames.length - 1));
-
-  // remove the selected name from the list
-  const firstName = localnames.splice(indexFirst, 1);
-
-  // select a random name from the list as a last word in the palette title
-  const lastIndex = Math.round(rnd2 * (localnames.length - 1));
-  let firstPart = firstName[0].trim().split(separatorRegex)[0];
-
-  if (!firstPart) { // usually means there is only one word in the name
-    firstPart = firstName[0] + ' ';
-  }
-
-  const lastPartParts = localnames[lastIndex].match(separatorRegex);
-  const lastPart = lastPartParts[lastPartParts.length - 1].trim();
-
-  return `${firstPart}${lastPart}`;
-}
-*/
-function getPaletteTitle(
-  namesArr, // array of names
-  rnd1 = Math.random(),
-  rnd2 = Math.random(),
-  longPartFirst = Math.random() < .5,
-  separatorRegex = /(\s|-)+/g
-) {
-  let localnames = [...namesArr];
-
-  // select a random name from the list for the first word in the palette title
-  const indexFirst = Math.round(rnd1 * (localnames.length - 1));
-
-  // remove the selected name from the list
-  const firstName = localnames.splice(indexFirst, 1)[0];
-
-  // select a random name from the list as a last word in the palette title
-  const lastIndex = Math.round(rnd2 * (localnames.length - 1));
-  const lastName = localnames[lastIndex]
-
-  const partsFirst = firstName.split(separatorRegex);
-  const partsLast = lastName.split(separatorRegex);
-
-  if (longPartFirst) {
-    partsFirst.length > 1 ? partsFirst.pop() : partsFirst[0] = `${partsFirst[0]} `;
-    return partsFirst.join('') + partsLast.pop();
-  } else {
-    partsLast.length > 1 ? partsLast.shift() : partsLast[0] = ` ${partsLast[0]}`;
-    return partsFirst.shift() + partsLast.join('');
-  }
-}
 
 const shuffleArray = arr => arr
   .map(a => [Math.random(), a])
@@ -292,8 +233,11 @@ let colors = new Vue({
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
       generatorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'
+      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
+      nameLists: [
+        'default', 'bestOf', 'wikipedia', 'basic', 'html', 'japaneseTraditional', 'leCorbusier', 'ntc', 'osxcrayons', 'ral', 'ridgway', 'sanzoWadaI', 'thesaurus', 'werner', 'windows', 'x11', 'xkcd'
       ],
+      nameList: 'bestOf',
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
@@ -333,7 +277,8 @@ let colors = new Vue({
         {key: 'n1', prop: 'nameRnd1', p: parseFloat},
         {key: 'n2', prop: 'nameRnd2', p: parseFloat},
         {key: 'n3', prop: 'nameRnd3', p: parseFloat},
-        {key: 'cv', prop: 'colorValueType'}, // hex
+        {key: 'cv', prop: 'colorValueType'}, // hex,
+        {key: 'nl', prop: 'nameList'}, // nameList,
       ],
     }
   },
@@ -377,6 +322,9 @@ let colors = new Vue({
     },
     colorsValues: function () {
       this.updateMeta();
+    },
+    nameList: function () {
+      this.getNames(this.colorsValues);
     }
   },
   computed: {
@@ -498,21 +446,6 @@ let colors = new Vue({
     },
   },
   methods: {
-    getPaletteTitle: function (rnd1, rnd2, rnd3) {
-      if (this.names.length) {
-        const names = this.names.map(n => n.name);
-
-        return getPaletteTitle(
-          names, // array of names
-          rnd1,
-          rnd2,
-          rnd3 < .5
-        );
-
-      } else {
-        return 'Doubble Rainbow';
-      }
-    },
     random: function (min = 1, max) {
       if (!max) {
         return this.rnd() * min;
@@ -736,11 +669,12 @@ let colors = new Vue({
 
       const params = {
         noduplicates: true,
-        goodnamesonly: true,
-        colors: ['f0f0f0', 'f00'],
+        //goodnamesonly: true,
+        list: this.nameList,
+        values: colors.map(c => c.replace('#', '')),
       };
 
-      url.pathname += colors.join().replace(/#/g, '');
+      //url.pathname += colors.join().replace(/#/g, '');
 
       url.search = new URLSearchParams(params).toString();
 
@@ -748,7 +682,7 @@ let colors = new Vue({
       .then(data => data.json())
       .then(data => {
         this.names = data.colors;
-        this.paletteTitle = this.getPaletteTitle(this.nameRnd1, this.nameRnd2, this.nameRnd3);
+        this.paletteTitle = data.paletteTitle;
       });
     },
     buildImage: function (
