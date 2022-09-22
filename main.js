@@ -238,13 +238,11 @@ let colors = new Vue({
         'default', 'bestOf', 'wikipedia', 'basic', 'html', 'japaneseTraditional', 'leCorbusier', 'ntc', 'osxcrayons', 'ral', 'ridgway', 'sanzoWadaI', 'thesaurus', 'werner', 'windows', 'x11', 'xkcd'
       ],
       nameList: 'bestOf',
+      changedNamesOnly: false,
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
-      nameRnd1: 0,
-      nameRnd2: 0,
-      nameRnd3: 0,
       moveTimer: null,
       showUI: true,
       lightmode: false,
@@ -274,9 +272,6 @@ let colors = new Vue({
         {key: 'iu', prop: 'imgURL'}, // ''
         {key: 'lm', prop: 'lightmode', p: Boolean}, // true
         {key: 'sm', prop: 'sameHeightColors', p: Boolean}, // false
-        {key: 'n1', prop: 'nameRnd1', p: parseFloat},
-        {key: 'n2', prop: 'nameRnd2', p: parseFloat},
-        {key: 'n3', prop: 'nameRnd3', p: parseFloat},
         {key: 'cv', prop: 'colorValueType'}, // hex,
         {key: 'nl', prop: 'nameList'}, // nameList,
       ],
@@ -324,7 +319,7 @@ let colors = new Vue({
       this.updateMeta();
     },
     nameList: function () {
-      this.getNames(this.colorsValues);
+      this.getNames(this.colorsValues, true);
     }
   },
   computed: {
@@ -664,7 +659,8 @@ let colors = new Vue({
         navigator.clipboard.writeText(this.colorList);
       }
     },
-    getNames: function (colors) {
+    getNames: function (colors, onlyNames) {
+      console.log('onlyNames', onlyNames)
       const url = new URL('https://api.color.pizza/v1/');
 
       const params = {
@@ -681,7 +677,12 @@ let colors = new Vue({
       return fetch(url)
       .then(data => data.json())
       .then(data => {
+
         this.names = data.colors;
+        /*console.log(
+          this.names,
+          colors.map(c => c.replace('#', ''))
+        )*/
         this.paletteTitle = data.paletteTitle;
       });
     },
@@ -826,12 +827,6 @@ let colors = new Vue({
         }
 
         this.colorsValues = this.colorsValues;
-      }
-
-      if (newSeed) {
-        this.nameRnd1 = this.random();
-        this.nameRnd2 = this.random();
-        this.nameRnd3 = this.random();
       }
     },
     toggleSettings: function () {

@@ -225,15 +225,15 @@ html(lang="en-US")
             select(v-model="colorValueType")
               option(v-for="valueType in colorValueTypes", :value=valueType).
                 {{ valueType }}
-
-        label.panel__setting
-          strong.panel__settingtitle Color Name List
-          .panel__inputs.panel__inputs--select
-            svg
-              use(xlink:href="#icon-dropdown")
-            select(v-model="nameList")
-              option(v-for="listKey in nameLists", :value=listKey).
-                {{ listKey }}
+        //
+          label.panel__setting
+            strong.panel__settingtitle Color Name List
+            .panel__inputs.panel__inputs--select
+              svg
+                use(xlink:href="#icon-dropdown")
+              select(v-model="nameList")
+                option(v-for="listKey in nameLists", :value=listKey).
+                  {{ listKey }}
 
         .footer
           article.footer__about
