@@ -291,6 +291,7 @@ let colors = new Vue({
         {key: 'lm', prop: 'lightmode', p: Boolean}, // true
         {key: 'sm', prop: 'sameHeightColors', p: Boolean}, // false
         {key: 'cv', prop: 'colorValueType'}, // hex,
+        {key: 'qm', prop: 'quantizationMethod'}, // art-palette,
         {key: 'nl', prop: 'nameList'}, // nameList,
       ],
     }
