@@ -5,6 +5,9 @@ import Seedrandom from 'seedrandom';
 import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
 import getShareLink from './lib/share-strings';
+import {
+  quantize
+} from "gifenc";
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
@@ -27,6 +30,7 @@ const logColors = colors => {
   //console.log(' ' + colors.join('  '));
   console.log(o, ...s);
 };
+
 
 const startWorker = (
   imageUrl,
@@ -62,6 +66,7 @@ const startWorker = (
           ).map(cluster =>
             cluster
           );
+
           document.documentElement.classList.remove('is-imagefetching');
         break;
       }
@@ -77,7 +82,7 @@ const startWorker = (
   });
 };
 
-const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
+const imageLoadCallback = (image, canvas, ctx, colorsLength, quantizationMethod) => {
   console.time('calculating colors');
 
   const width = Math.floor(image.naturalWidth * CANVAS_SCALE);
@@ -88,22 +93,33 @@ const imageLoadCallback = (image, canvas, ctx, colorsLength) => {
 
   const imageData = ctx.getImageData(0, 0, width, height);
 
+
   const filterOptions = {
     saturation: 0,
     lightness: 0
   };
 
-  startWorker(image.src, imageData, width, filterOptions, colorsLength);
+  if (quantizationMethod === 'gifenc') {
+    const rgbColors = quantize(imageData.data, colorsLength);
+    const hexColors = rgbColors.map(rgb => chroma(rgb[0], rgb[1], rgb[2]).hex());
+
+    colors.colorsValues = hexColors;
+  } /*else if (quantizationMethod === 'pigmnts') {
+    window.runPigments(canvas, colorsLength, colors);
+
+  } */else {
+    //art-palette
+    startWorker(image.src, imageData, width, filterOptions, colorsLength);
+  }
 };
 
-const loadImage = (source, colorsLength) => {
+const loadImage = (source, colorsLength, quantizationMethod) => {
   workers.forEach(w => w.terminate());
 
   const image = new Image();
   image.crossOrigin = 'Anonymous';
   image.src = source;
-
-  image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength);
+  image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength, quantizationMethod);
 };
 
 const shuffleArray = arr => arr
@@ -237,6 +253,8 @@ let colors = new Vue({
       nameLists: [
         'default', 'bestOf', 'wikipedia', 'basic', 'html', 'japaneseTraditional', 'leCorbusier', 'ntc', 'osxcrayons', 'ral', 'ridgway', 'sanzoWadaI', 'thesaurus', 'werner', 'windows', 'x11', 'xkcd'
       ],
+      quantizationMethod: 'art-palette',
+      quantizationMethods: ['art-palette', 'gifenc', /*'pigmnts'*/],
       nameList: 'bestOf',
       changedNamesOnly: false,
       isLoading: true,
@@ -279,11 +297,14 @@ let colors = new Vue({
   },
   watch: {
     amount: function () {
-      this.amount = Math.min(Math.max(this.amount, 3),10);
+      this.amount = Math.min(Math.max(this.amount, 3), 10);
       this.colorsInGradient = Math.min(this.colorsInGradient, this.amount);
     },
     colorsInGradient: function () {
       this.colorsInGradient = Math.min(Math.max(this.colorsInGradient, 2), this.amount);
+      this.newColors();
+    },
+    quantizationMethod: function () {
       this.newColors();
     },
     randomOrder: function () {
@@ -660,7 +681,6 @@ let colors = new Vue({
       }
     },
     getNames: function (colors, onlyNames) {
-      console.log('onlyNames', onlyNames)
       const url = new URL('https://api.color.pizza/v1/');
 
       const params = {
@@ -817,12 +837,14 @@ let colors = new Vue({
             loadImage(
               url,
               this.colorsInGradient,
+              this.quantizationMethod,
             );
           });
         } else {
           loadImage(
             this.imgURL,
             this.colorsInGradient,
+            this.quantizationMethod,
           );
         }
 
@@ -914,7 +936,7 @@ let colors = new Vue({
     imageLoaded: function (event) {
       const srcimg = new Image();
 
-      srcimg.onload = imageLoadCallback.bind(null, srcimg, canvas, ctx, 4);
+      srcimg.onload = imageLoadCallback.bind(null, srcimg, canvas, ctx, this.colorsInGradient, this.quantizationMethod);
       srcimg.src = event.target.result;
       this.imgURL = event.target.result;
     },

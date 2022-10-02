@@ -1,4 +1,3 @@
-import chroma from 'chroma-js';
 import PaletteExtractor from './lib/palette-extractor';
 
 let paletteExtractor = new PaletteExtractor();

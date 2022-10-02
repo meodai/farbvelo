@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "chroma-js": "^2.4.2",
+    "gifenc": "^1.0.3",
     "hsluv": "^0.1.0",
     "randomcolor": "^0.6.2",
     "seedrandom": "^3.0.5",

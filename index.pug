@@ -78,6 +78,15 @@ html(lang="en-US")
             svg.icon.icon--re(v-on:click="newColors(true)")
               use(xlink:href="#icon-refresh")
 
+        label.panel__setting(v-if="generatorFunction === 'ImageExtract'")
+          h4.panel__settingtitle Quantization Method
+          .panel__inputs.panel__inputs--select
+            svg
+              use(xlink:href="#icon-dropdown")
+            select(v-model="quantizationMethod")
+              option(v-for="method in quantizationMethods", :value=method).
+                {{ method }}
+
         label.panel__setting
           h4.panel__settingtitle
             span Colors
