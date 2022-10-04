@@ -6,7 +6,7 @@ import SimplexNoise from 'simplex-noise';
 import randomColor from 'randomcolor';
 import getShareLink from './lib/share-strings';
 import {
-  quantize
+  quantize as quantizeGifenc
 } from "gifenc";
 
 const canvas = document.createElement('canvas');
@@ -99,15 +99,18 @@ const imageLoadCallback = (image, canvas, ctx, colorsLength, quantizationMethod)
     lightness: 0
   };
 
+  //console.log(quantizationMethod === 'pigmnts' && window.runPigments)
+
   if (quantizationMethod === 'gifenc') {
-    const rgbColors = quantize(imageData.data, colorsLength);
+    const rgbColors = quantizeGifenc(imageData.data, colorsLength);
     const hexColors = rgbColors.map(rgb => chroma(rgb[0], rgb[1], rgb[2]).hex());
 
     colors.colorsValues = hexColors;
-  } /*else if (quantizationMethod === 'pigmnts') {
+    document.documentElement.classList.remove('is-imagefetching');
+  /*} else if (quantizationMethod === 'pigmnts' && window.runPigments) {
     window.runPigments(canvas, colorsLength, colors);
-
-  } */else {
+  */
+  } else {
     //art-palette
     startWorker(image.src, imageData, width, filterOptions, colorsLength);
   }
@@ -254,7 +257,7 @@ let colors = new Vue({
         'default', 'bestOf', 'wikipedia', 'basic', 'html', 'japaneseTraditional', 'leCorbusier', 'ntc', 'osxcrayons', 'ral', 'ridgway', 'sanzoWadaI', 'thesaurus', 'werner', 'windows', 'x11', 'xkcd'
       ],
       quantizationMethod: 'art-palette',
-      quantizationMethods: ['art-palette', 'gifenc', /*'pigmnts'*/],
+      quantizationMethods: ['art-palette', 'gifenc'/*, 'pigmnts'*/],
       nameList: 'bestOf',
       changedNamesOnly: false,
       isLoading: true,
