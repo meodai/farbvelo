@@ -701,7 +701,6 @@ let colors = new Vue({
       return fetch(url)
       .then(data => data.json())
       .then(data => {
-
         this.names = data.colors;
         /*console.log(
           this.names,
