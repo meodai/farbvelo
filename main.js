@@ -8,6 +8,7 @@ import getShareLink from './lib/share-strings';
 import {
   quantize as quantizeGifenc
 } from "gifenc";
+import spectral from 'spectral.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
@@ -247,8 +248,8 @@ let colors = new Vue({
       colorMode: 'hsluv',
       colorModeList: ['hsluv', 'oklch', 'hcl', 'hsl', 'hcg', 'hsv', 'hpluv'],
       minHueDistance: 60,
-      intermpolationColorModel: 'lab',
-      intermpolationColorModels: ['lab', 'oklab', 'rgb', 'lrgb', 'hcl', 'hsl', 'hsv', 'hsi', 'oklch'],
+      interpolationColorModel: 'lab',
+      interpolationColorModels: ['lab', 'oklab', 'spectral', 'rgb', 'lrgb', 'hcl', 'hsl', 'hsv', 'hsi', 'oklch'],
       colorValueType: 'hex',
       colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
       generatorFunction: 'Legacy',
@@ -284,7 +285,7 @@ let colors = new Vue({
         {key: 'b', prop: 'hasBleed', p: Boolean}, // false,
         {key: 'p', prop: 'padding', p: parseFloat}, // .175
         {key: 'md', prop: 'minHueDistance', p: parseInt}, // 60,
-        {key: 'cm', prop: 'intermpolationColorModel'}, // 'lab'
+        {key: 'cm', prop: 'interpolationColorModel'}, // 'lab'
         {key: 'f', prop: 'generatorFunction'}, // 'Legacy'
         {key: 'c', prop: 'colorMode'}, // 'hsluv'
         {key: 'sc', prop: 'showContrast', p: Boolean}, // false
@@ -361,11 +362,52 @@ let colors = new Vue({
       return chroma(this.firstColor).luminance() < .5 ? '#fff' : '#212121';
     },
     colors: function () {
-      const colors = chroma
-        .scale(this.colorsValues.length ? this.colorsValues : ['#202124', '#fff'])
-        .padding(parseFloat(this.padding))
-        .mode(this.intermpolationColorModel)
-        .colors(this.amount);
+      let colors;
+
+      if (this.interpolationColorModel === 'spectral' && this.colorsValues.length < this.amount) {
+        // define the original array of X colors
+        const xColors = [...this.colorsValues];
+
+        // define the desired length of the new array
+        const yLength = this.amount;
+
+        // calculate the number of gaps between colors
+        const numGaps = xColors.length - 1;
+
+        // calculate the spacing between intermediate colors
+        const spacing = numGaps > 0 ? (yLength - 2) / numGaps : 0;
+
+        // create the new array of Y colors
+        const yColors = new Array(yLength);
+
+        // set the first color in the new array to match X
+        yColors[0] = xColors[0];
+
+        // compute the intermediate colors using spectral mixing
+        let yIndex = 1;
+        for (let i = 0; i < numGaps; i++) {
+          const color1 = xColors[i];
+          const color2 = xColors[i + 1];
+          const gapLength = spacing + 1;
+          for (let j = 1; j <= gapLength; j++) {
+            const mixRatio = j / gapLength;
+            const mixedColor = spectral.mix(color1, color2, mixRatio);
+            yColors[yIndex] = mixedColor;
+            yIndex++;
+          }
+        }
+
+        // set the last color in the new array to match X
+        yColors[yLength - 1] = xColors[xColors.length - 1];
+        colors = chroma.scale(yColors).padding(parseFloat(this.padding)).colors(this.amount);
+
+      } else {
+        colors = chroma
+          .scale(this.colorsValues.length ? this.colorsValues : ['#202124', '#fff'])
+          .padding(parseFloat(this.padding))
+          .mode(this.interpolationColorModel !== 'spectral' ? this.interpolationColorModel : 'lch')
+          .colors(this.amount);
+      }
 
       this.getNames(colors);
 
@@ -821,7 +863,7 @@ let colors = new Vue({
       if (this.generatorFunction !== 'ImageExtract') {
         let colorArr = this.generateRandomColors(
           this.amount,
-          this.intermpolationColorModel,
+          this.interpolationColorModel,
           parseFloat(this.padding),
           this.colorsInGradient,
           this.randomOrder,

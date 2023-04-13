@@ -117,8 +117,8 @@ html(lang="en-US")
           .panel__inputs.panel__inputs--select
             svg
               use(xlink:href="#icon-dropdown")
-            select(v-model="intermpolationColorModel")
-              option(v-for="mode in intermpolationColorModels" v-bind:value='mode') {{ mode }}
+            select(v-model="interpolationColorModel")
+              option(v-for="mode in interpolationColorModels" v-bind:value='mode') {{ mode }}
 
         label.panel__setting
           h4.panel__settingtitle
@@ -264,6 +264,7 @@ html(lang="en-US")
               ol
                 li Picking ℕ0 hue's (color stops) using <a href="https://www.hsluv.org/" hreflang="en">HSLuv<a> at a user defined minimum angle ∠.
                 li Interpolating between color stops in CIE L*a*b* by default, using <a href="https://gka.github.io/chroma.js/">chroma.js</a>.
+                li Spectral interpolation using <a href="https://github.com/rvanwijnen/spectral.js">spectral.js</a>.
                 li Finding pleasing <a href="https://github.com/meodai/color-names">color names</a> using the color name <a href="https://github.com/meodai/color-names#api-">API</a>
                 li Originally released as a <a href="https://codepen.io/meodai/pen/RerqjG" hreflang="en">Codepen</a>.
                 li Source is on <a href="https://github.com/meodai/farbvelo">github</a> and licensed under a <a href="https://github.com/meodai/farbvelo/blob/main/LICENSE.md">Creative Commons Attribution Share Alike 4.0</a> license.
