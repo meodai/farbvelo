@@ -234,7 +234,7 @@ let colors = new Vue({
       randomOrder: false,
       hasGradients: true,
       hasBackground: false,
-      animateBackgroundIntro: true,
+      animateBackgroundIntro: false,
       hasOutlines: false,
       highContrast: false,
       autoHideUI: false,
