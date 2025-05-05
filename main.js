@@ -9,29 +9,13 @@ import {
   quantize as quantizeGifenc
 } from "gifenc";
 import spectral from 'spectral.js';
+import { logColors, shuffleArray, randomStr, coordsToHex, unsplashURLtoID } from './utils.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
 const workers = [];
 const CANVAS_SCALE = 0.4;
-
-const unsplashURLtoID = url =>
-url.match(
-  /https:\/\/images\.unsplash\.com\/photo-([\da-f]+-[\da-f]+)/
-)[1];
-
-const logColors = colors => {
-  let c, o = "",
-    s = [];
-  for (c of colors) {
-    o += `%c ${c} `,
-    s.push("background:" + c + "; color:" + c);
-  }
-  //console.log(' ' + colors.join('  '));
-  console.log(o, ...s);
-};
-
 
 const startWorker = (
   imageUrl,
@@ -126,15 +110,6 @@ const loadImage = (source, colorsLength, quantizationMethod) => {
   image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength, quantizationMethod);
 };
 
-const shuffleArray = arr => arr
-  .map(a => [Math.random(), a])
-  .sort((a, b) => a[0] - b[0])
-  .map(a => a[1]);
-
-const randomStr = (length = 14) => {
-    return Math.random().toString(16).substr(2, length);
-};
-
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
   template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor, '--color-best-contrast': bestContrast}">
@@ -162,19 +137,19 @@ Vue.component('color', {
     }
   },
   computed: {
-    valueHEX: function () {
+    valueHEX() {
       return this.colorhex;
     },
-    valueCMYK: function () {
+    valueCMYK() {
       return chroma(this.colorhex).css('cmyk');
     },
-    valueRGB: function () {
+    valueRGB() {
       return chroma(this.colorhex).css('rgb');
     },
-    valueHSL: function () {
+    valueHSL() {
       return chroma(this.colorhex).css('hsl');
     },
-    value: function () {
+    value() {
       if(this.colorvaluetype === 'hex') {
         return `<span>${this.colorhex}</span>`;
       } else if (this.colorvaluetype === 'cmyk') {
@@ -196,30 +171,14 @@ Vue.component('color', {
         return chroma(this.colorhex).css(this.colorvaluetype);
       }
     },
-    hasWCAGColorPairs: function () {
+    hasWCAGColorPairs() {
       return this.contrastcolors.filter(c => c !== false);
     },
-    bestContrast: function () {
+    bestContrast() {
       return chroma.contrast(this.colorhex, 'black') > chroma.contrast(this.colorhex, 'white') ? 'black' : 'white';
     }
   }
 });
-
-function coordsToHex (angle, val1, val2, mode = 'hsluv') {
-  if (mode === 'hsluv') {
-    return hsluvToHex([ angle, val1, val2 ]);
-  } else if (mode === 'hpluv') {
-    return hpluvToHex([angle, val1, val2 ]);
-  } else if (mode === 'hcl') {
-    return chroma(angle, val1, val2, 'hcl').hex();
-  } else if (mode === 'lch') {
-    return chroma(val2, val1, angle, 'lch').hex();
-  } else if (mode === 'oklch') {
-    return chroma(val2 / 100 * 0.999, val1 / 100 * 0.322, angle, 'oklch').hex();
-  } else if (mode === 'hsl' || mode === 'hsv' || mode === 'hcg') {
-    return chroma(angle, val1/100, val2/100, mode).hex();
-  }
-}
 
 let colors = new Vue({
   el: '#app',
@@ -349,19 +308,19 @@ let colors = new Vue({
     }
   },
   computed: {
-    lastColor: function () {
+    lastColor() {
       return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#212121';
     },
-    lastColorContrast: function () {
+    lastColorContrast() {
       return chroma(this.lastColor).luminance() < .5 ? '#fff' : '#212121';
     },
-    firstColor: function () {
+    firstColor() {
       return this.colors && this.colors.length ? this.colors[0] : '#212121';
     },
-    firstColorContrast: function () {
+    firstColorContrast() {
       return chroma(this.firstColor).luminance() < .5 ? '#fff' : '#212121';
     },
-    colors: function () {
+    colors() {
       let colors;
 
       if (this.interpolationColorModel === 'spectral' && this.colorsValues.length < this.amount) {
@@ -415,20 +374,20 @@ let colors = new Vue({
 
       return colors;
     },
-    wcagContrastColors: function () {
+    wcagContrastColors() {
       return this.colors.map(color =>
         (this.addBWContrast ? [...this.colors, '#fff', '#000'] : this.colors).map(
           color2 => (4.5 <= chroma.contrast(color, color2) ? color2 : false)
         )
       )
     },
-    gradientStops: function () {
+    gradientStops() {
       const gradient = [...this.colors];
       gradient[0] += ' 12vh'
       gradient[gradient.length - 1] += this.sameHeightColors ? ' 80%' : ' 69%'
       return gradient.join(',');
     },
-    backgroundGradient: function () {
+    backgroundGradient() {
       /*
       // hard stops
       let col = this.colors.reduce((r,d,i) => (`${r ? r + ',' : ''} ${d} ${((i)/this.colors.length) * 100}%, ${d} ${((i + 1)/this.colors.length) * 100}%`),'');
@@ -437,7 +396,7 @@ let colors = new Vue({
 
       return `linear-gradient(to bottom, ${this.gradientStops})`;
     },
-    appStyles: function () {
+    appStyles() {
       return {
         '--color-first': this.firstColor,
         '--color-last': this.lastColor,
@@ -446,7 +405,7 @@ let colors = new Vue({
         '--colors': this.colors.length,
       }
     },
-    appClasses: function () {
+    appClasses() {
       return {
         'is-loading': this.isLoading,
         'is-animating': this.isAnimating,
@@ -466,7 +425,7 @@ let colors = new Vue({
         'wrap__sameHeightColors': this.sameHeightColors,
       }
     },
-    namedColorList: function () {
+    namedColorList() {
       return this.names.map(color => {
         const c = chroma(color.requestedHex);
 
@@ -483,7 +442,7 @@ let colors = new Vue({
       });
     },
 
-    colorList: function () {
+    colorList() {
       const namedColors = this.namedColorList.map(color => ({
         ...color,
         value: color.values[this.colorValueType]
@@ -503,34 +462,26 @@ let colors = new Vue({
         return `linear-gradient(\n  ${namedColors.map(c => c.value).join(', \n  ')}\n);`;
       }
     },
-    currentURL: function () {
+    currentURL() {
       return window.location.origin + "/?s=" + this.constructURL();
     },
   },
   methods: {
-    random: function (min = 1, max) {
-      if (!max) {
-        return this.rnd() * min;
-      }
-      return Math.floor(this.rnd()  * (max - min + 1)) + min;
+    random(min = 1, max) {
+      if (!max) return this.rnd() * min;
+      return Math.floor(this.rnd() * (max - min + 1)) + min;
     },
-    getContrastColor: function (color) {
-      let currentColor = chroma( color );
-      let lum = currentColor.luminance();
-      let contrastColor;
-
-      if ( lum < 0.15 ) {
-        contrastColor = currentColor.set('hsl.l', '+.25');
-      } else {
-        contrastColor = currentColor.set('hsl.l', '-.35');
-      }
-
-      return contrastColor.hex();
+    getContrastColor(color) {
+      const currentColor = chroma(color);
+      const lum = currentColor.luminance();
+      return lum < 0.15
+        ? currentColor.set('hsl.l', '+.25').hex()
+        : currentColor.set('hsl.l', '-.35').hex();
     },
-    generateRandomColors: function (
+    generateRandomColors(
       total,
       mode = 'lab',
-      padding = .175,
+      padding = .1,
       parts = 4,
       randomOrder = false,
       minHueDiffAngle = 60,
@@ -709,7 +660,7 @@ let colors = new Vue({
 
       return colors;
     },
-    copyExport: function (e) {
+    copyExport(e) {
       clearTimeout(this.copyTimer);
       this.isCopiying = true;
       this.copyTimer = setTimeout(() => {
@@ -726,7 +677,7 @@ let colors = new Vue({
         navigator.clipboard.writeText(this.colorList);
       }
     },
-    getNames: function (colors, onlyNames) {
+    getNames(colors, onlyNames) {
       const url = new URL('https://api.color.pizza/v1/');
 
       const params = {
@@ -751,7 +702,7 @@ let colors = new Vue({
         this.paletteTitle = data.paletteTitle;
       });
     },
-    buildImage: function (
+    buildImage(
       size = 100,
       padding = .1,
       hardStops = false
@@ -805,7 +756,7 @@ let colors = new Vue({
 
       return canvas;
     },
-    updateMeta: function () {
+    updateMeta() {
       const theme = document.querySelector('[name="theme-color"]');
       const favicons = document.querySelectorAll('[rel="icon"]');
       theme.setAttribute('content', this.colors[0]);
@@ -814,7 +765,7 @@ let colors = new Vue({
       const faviconBase64 = this.buildImage(100, 0.1).toDataURL('image/png');
       favicons.forEach($icon => $icon.href = faviconBase64);
     },
-    settingsFromURL: function () {
+    settingsFromURL() {
       const params = window.location.search;
       const stateString = new URLSearchParams(params).get('s');
 
@@ -838,18 +789,18 @@ let colors = new Vue({
         return false;
       }
     },
-    shareURL: function () {
+    shareURL() {
       navigator.clipboard.writeText(`${window.location.origin + "/?s=" + this.constructURL()}`);
     },
-    constructURL: function () {
+    constructURL() {
       const state = this.trackInURL.reduce((o,i) => Object.assign(o, {[i.key]: this[i.prop]}) ,{});
       const serializedState = Buffer.from(JSON.stringify(state)).toString('base64');
       return serializedState;
     },
-    updateURL: function () {
+    updateURL() {
       history.pushState(history.state, document.title, "?s=" + this.constructURL());
     },
-    newColors: function (newSeed) {
+    newColors(newSeed) {
       document.documentElement.classList.remove('is-imagefetching');
 
       if (newSeed) {
@@ -896,24 +847,24 @@ let colors = new Vue({
         this.colorsValues = this.colorsValues;
       }
     },
-    toggleSettings: function () {
+    toggleSettings() {
       this.shareVisible = false;
       if (!this.settingsVisible) {
         this.$refs.panel.scrollTo(0, 0);
       }
       this.settingsVisible = !this.settingsVisible;
     },
-    toggleShare: function () {
+    toggleShare() {
       this.settingsVisible = false;
       if (!this.shareVisible) {
         this.$refs.panel.scrollTo(0, 0);
       }
       this.shareVisible = !this.shareVisible;
     },
-    cancelSwipe: function (e) {
+    cancelSwipe(e) {
       e.stopPropagation();
     },
-    hideTools: function () {
+    hideTools() {
       this.showUI = true;
 
       if (this.autoHideUI) {
@@ -923,7 +874,7 @@ let colors = new Vue({
         }, 3000);
       }
     },
-    addMagicControls: function () {
+    addMagicControls() {
       document.addEventListener('keydown', (e) => {
         if ( e.code === 'Space' ) {
           this.newColors(true);
@@ -973,23 +924,23 @@ let colors = new Vue({
         isTouching = false;
       });
     },
-    handlefile: function (e) {
+    handlefile(e) {
       const reader = new FileReader();
       reader.addEventListener('loadend', this.imageLoaded);
       reader.readAsDataURL(e.target.files[0]);
     },
-    imageLoaded: function (event) {
+    imageLoaded(event) {
       const srcimg = new Image();
 
       srcimg.onload = imageLoadCallback.bind(null, srcimg, canvas, ctx, this.colorsInGradient, this.quantizationMethod);
       srcimg.src = event.target.result;
       this.imgURL = event.target.result;
     },
-    getShareLink: function (provider) {
+    getShareLink(provider) {
       return getShareLink(provider, this.currentURL, this.paletteTitle);
     }
   },
-  mounted: function () {
+  mounted() {
     const hadSettings = this.settingsFromURL();
     /*
     window.addEventListener('popstate', () => {
