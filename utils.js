@@ -29,6 +29,7 @@ export const unsplashURLtoID = url => {
 // Convert color coordinates to hex string based on mode
 import { hsluvToHex, hpluvToHex } from 'hsluv';
 import chroma from 'chroma-js';
+
 export function coordsToHex(angle, val1, val2, mode = 'hsluv') {
   if (mode === 'hsluv') {
     return hsluvToHex([angle, val1, val2]);

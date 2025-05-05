@@ -7,7 +7,7 @@ import {
   quantize as quantizeGifenc
 } from "gifenc";
 import spectral from 'spectral.js';
-import { logColors, shuffleArray, randomStr, coordsToHex, unsplashURLtoID } from './utils.js';
+import { logColors, randomStr } from './utils.js';
 import generateRandomColors from './lib/generate-random-colors.js';
 
 const canvas = document.createElement('canvas');
@@ -230,6 +230,7 @@ let colors = new Vue({
       exportAs: 'jsArray',
       isCopiying: false,
       imgURL: '',
+      imgID: '',
       paletteTitle: 'Double Rainbow',
       trackInURL: [
         {key: 's', prop: 'currentSeed'},
@@ -659,27 +660,23 @@ let colors = new Vue({
 
         this.colorsValues = colorArr;
       } else if (this.generatorFunction === 'ImageExtract') {
-        if (!this.imgURL || newSeed) {
-          document.documentElement.classList.add('is-imagefetching');
-          fetch('https://source.unsplash.com/random/').then(data => {
-            const url = data.url;
-            //const id = unsplashURLtoID(url)
-            this.imgURL = url;
-
-            loadImage(
-              url,
-              this.colorsInGradient,
-              this.quantizationMethod,
-            );
-          });
-        } else {
+        if (this.imgURL && this.imgURL.startsWith('data:image/')) {
+          // Backward compatibility: load base64 image URL directly
           loadImage(
             this.imgURL,
             this.colorsInGradient,
             this.quantizationMethod,
           );
+        } else {
+          // Use the current seed for deterministic Picsum images
+          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${325 * 2}/${483 * 2}`;
+          this.imgURL = imgSrc; // Ensure imgURL is set for UI and persistence
+          loadImage(
+            imgSrc,
+            this.colorsInGradient,
+            this.quantizationMethod,
+          );
         }
-
         this.colorsValues = this.colorsValues;
       }
     },
