@@ -180,7 +180,7 @@ Vue.component('color', {
 });
 
 let colors = new Vue({
-  el: '#app',
+  el: "#app",
   data: () => {
     return {
       colorsValues: [],
@@ -202,22 +202,56 @@ let colors = new Vue({
       hideText: false,
       showContrast: false,
       addBWContrast: true,
-      padding: .175,
-      colorMode: 'hsluv',
-      colorModeList: ['hsluv', 'oklch', 'hcl', 'hsl', 'hcg', 'hsv', 'hpluv'],
+      padding: 0.175,
+      colorMode: "hsluv",
+      colorModeList: ["hsluv", "oklch", "hcl", "hsl", "hcg", "hsv", "hpluv"],
       minHueDistance: 60,
-      interpolationColorModel: 'lab',
-      interpolationColorModels: ['lab', 'oklab', 'spectral', 'rgb', 'lrgb', 'hcl', 'hsl', 'hsv', 'hsi', 'oklch'],
-      colorValueType: 'hex',
-      colorValueTypes: ['hex', 'rgb', 'hsl', 'cmyk'],
-      generatorFunction: 'Legacy',
-      generatorFunctionList: ['Hue Bingo', 'Legacy', 'ImageExtract', 'RandomColor.js', 'Simplex Noise', 'Full Random'],
-      nameLists: [
-        'default', 'bestOf', 'wikipedia', 'basic', 'html', 'japaneseTraditional', 'leCorbusier', 'ntc', 'osxcrayons', 'ral', 'ridgway', 'sanzoWadaI', 'thesaurus', 'werner', 'windows', 'x11', 'xkcd'
+      interpolationColorModel: "lab",
+      interpolationColorModels: [
+        "lab",
+        "oklab",
+        "spectral",
+        "rgb",
+        "lrgb",
+        "hcl",
+        "hsl",
+        "hsv",
+        "hsi",
+        "oklch",
       ],
-      quantizationMethod: 'art-palette',
-      quantizationMethods: ['art-palette', 'gifenc'/*, 'pigmnts'*/],
-      nameList: 'bestOf',
+      colorValueType: "hex",
+      colorValueTypes: ["hex", "rgb", "hsl", "cmyk"],
+      generatorFunction: "Legacy",
+      generatorFunctionList: [
+        "Hue Bingo",
+        "Legacy",
+        "ImageExtract",
+        "RandomColor.js",
+        "Simplex Noise",
+        "Full Random",
+      ],
+      nameLists: [
+        "default",
+        "bestOf",
+        "wikipedia",
+        "basic",
+        "html",
+        "japaneseTraditional",
+        "leCorbusier",
+        "ntc",
+        "osxcrayons",
+        "ral",
+        "ridgway",
+        "sanzoWadaI",
+        "thesaurus",
+        "werner",
+        "windows",
+        "x11",
+        "xkcd",
+      ],
+      quantizationMethod: "art-palette",
+      quantizationMethods: ["art-palette", "gifenc" /*, 'pigmnts'*/],
+      nameList: "bestOf",
       changedNamesOnly: false,
       isLoading: true,
       isAnimating: true,
@@ -227,37 +261,37 @@ let colors = new Vue({
       showUI: true,
       lightmode: false,
       sameHeightColors: false,
-      exportAs: 'jsArray',
+      exportAs: "jsArray",
       isCopiying: false,
-      imgURL: '',
-      imgID: '',
-      paletteTitle: 'Double Rainbow',
+      imgURL: "",
+      imgID: "",
+      paletteTitle: "Double Rainbow",
       trackInURL: [
-        {key: 's', prop: 'currentSeed'},
-        {key: 'a', prop: 'amount', p: parseInt}, //6
-        {key: 'cg', prop: 'colorsInGradient', p: parseInt}, //4
-        {key: 'hg', prop: 'hasGradients', p: Boolean}, // true
-        {key: 'hb', prop: 'hasBackground', p: Boolean}, // false
-        {key: 'ho', prop: 'hasOutlines', p: Boolean}, // false
-        {key: 'hc', prop: 'highContrast', p: Boolean}, // false
-        {key: 'ht', prop: 'hideText', p: Boolean}, // false,
-        {key: 'b', prop: 'hasBleed', p: Boolean}, // false,
-        {key: 'p', prop: 'padding', p: parseFloat}, // .175
-        {key: 'md', prop: 'minHueDistance', p: parseInt}, // 60,
-        {key: 'cm', prop: 'interpolationColorModel'}, // 'lab'
-        {key: 'f', prop: 'generatorFunction'}, // 'Legacy'
-        {key: 'c', prop: 'colorMode'}, // 'hsluv'
-        {key: 'sc', prop: 'showContrast', p: Boolean}, // false
-        {key: 'bw', prop: 'addBWContrast', p: Boolean}, // true
-        {key: 'ah', prop: 'autoHideUI', p: Boolean}, // false
-        {key: 'iu', prop: 'imgURL'}, // ''
-        {key: 'lm', prop: 'lightmode', p: Boolean}, // true
-        {key: 'sm', prop: 'sameHeightColors', p: Boolean}, // false
-        {key: 'cv', prop: 'colorValueType'}, // hex,
-        {key: 'qm', prop: 'quantizationMethod'}, // art-palette,
-        {key: 'nl', prop: 'nameList'}, // nameList,
+        { key: "s", prop: "currentSeed" },
+        { key: "a", prop: "amount", p: parseInt }, //6
+        { key: "cg", prop: "colorsInGradient", p: parseInt }, //4
+        { key: "hg", prop: "hasGradients", p: Boolean }, // true
+        { key: "hb", prop: "hasBackground", p: Boolean }, // false
+        { key: "ho", prop: "hasOutlines", p: Boolean }, // false
+        { key: "hc", prop: "highContrast", p: Boolean }, // false
+        { key: "ht", prop: "hideText", p: Boolean }, // false,
+        { key: "b", prop: "hasBleed", p: Boolean }, // false,
+        { key: "p", prop: "padding", p: parseFloat }, // .175
+        { key: "md", prop: "minHueDistance", p: parseInt }, // 60,
+        { key: "cm", prop: "interpolationColorModel" }, // 'lab'
+        { key: "f", prop: "generatorFunction" }, // 'Legacy'
+        { key: "c", prop: "colorMode" }, // 'hsluv'
+        { key: "sc", prop: "showContrast", p: Boolean }, // false
+        { key: "bw", prop: "addBWContrast", p: Boolean }, // true
+        { key: "ah", prop: "autoHideUI", p: Boolean }, // false
+        { key: "iu", prop: "imgURL" }, // ''
+        { key: "lm", prop: "lightmode", p: Boolean }, // true
+        { key: "sm", prop: "sameHeightColors", p: Boolean }, // false
+        { key: "cv", prop: "colorValueType" }, // hex,
+        { key: "qm", prop: "quantizationMethod" }, // art-palette,
+        { key: "nl", prop: "nameList" }, // nameList,
       ],
-    }
+    };
   },
   watch: {
     amount: function () {
@@ -265,7 +299,10 @@ let colors = new Vue({
       this.colorsInGradient = Math.min(this.colorsInGradient, this.amount);
     },
     colorsInGradient: function () {
-      this.colorsInGradient = Math.min(Math.max(this.colorsInGradient, 2), this.amount);
+      this.colorsInGradient = Math.min(
+        Math.max(this.colorsInGradient, 2),
+        this.amount
+      );
       this.newColors();
     },
     quantizationMethod: function () {
@@ -280,24 +317,32 @@ let colors = new Vue({
     colorMode: function () {
       this.newColors();
     },
-    lightmode: function(newValue) {
+    lightmode: function (newValue) {
       if (newValue) {
-        document.querySelector('body').classList.add('lightmode');
+        document.querySelector("body").classList.add("lightmode");
       } else {
-        document.querySelector('body').classList.remove('lightmode');
+        document.querySelector("body").classList.remove("lightmode");
       }
       this.updateMeta();
     },
     generatorFunction: function () {
       this.newColors();
-      if ( this.generatorFunction == 'Legacy' ) {
-        console.info('Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100.');
-      } else if ( this.generatorFunction == 'Hue Bingo' ) {
-        console.info('Hue Bingo: Selects ℕ0 hue`s (color stops) at a user defined minimum angle ∠, using a controlled random lightness ramp.');
-      } else if ( this.generatorFunction == 'Full Random' ) {
-        console.info('Random: Picks ℕ0 random hsl colors. Make sure to use "Mix Padding" with this one.');
-      } else if ( this.generatorFunction === 'RandomColor.js' ) {
-        console.info('RandomColor.js: https://randomcolor.lllllllllllllllll.com/');
+      if (this.generatorFunction == "Legacy") {
+        console.info(
+          "Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100."
+        );
+      } else if (this.generatorFunction == "Hue Bingo") {
+        console.info(
+          "Hue Bingo: Selects ℕ0 hue`s (color stops) at a user defined minimum angle ∠, using a controlled random lightness ramp."
+        );
+      } else if (this.generatorFunction == "Full Random") {
+        console.info(
+          'Random: Picks ℕ0 random hsl colors. Make sure to use "Mix Padding" with this one.'
+        );
+      } else if (this.generatorFunction === "RandomColor.js") {
+        console.info(
+          "RandomColor.js: https://randomcolor.lllllllllllllllll.com/"
+        );
       }
     },
     colorsValues: function () {
@@ -305,25 +350,30 @@ let colors = new Vue({
     },
     nameList: function () {
       this.getNames(this.colorsValues, true);
-    }
+    },
   },
   computed: {
     lastColor() {
-      return this.colors && this.colors.length ? this.colors[this.colors.length - 1] : '#212121';
+      return this.colors && this.colors.length
+        ? this.colors[this.colors.length - 1]
+        : "#212121";
     },
     lastColorContrast() {
-      return chroma(this.lastColor).luminance() < .5 ? '#fff' : '#212121';
+      return chroma(this.lastColor).luminance() < 0.5 ? "#fff" : "#212121";
     },
     firstColor() {
-      return this.colors && this.colors.length ? this.colors[0] : '#212121';
+      return this.colors && this.colors.length ? this.colors[0] : "#212121";
     },
     firstColorContrast() {
-      return chroma(this.firstColor).luminance() < .5 ? '#fff' : '#212121';
+      return chroma(this.firstColor).luminance() < 0.5 ? "#fff" : "#212121";
     },
     colors() {
       let colors;
 
-      if (this.interpolationColorModel === 'spectral' && this.colorsValues.length < this.amount) {
+      if (
+        this.interpolationColorModel === "spectral" &&
+        this.colorsValues.length < this.amount
+      ) {
         // define the original array of X colors
         const xColors = [...this.colorsValues];
 
@@ -358,13 +408,21 @@ let colors = new Vue({
 
         // set the last color in the new array to match X
         yColors[yLength - 1] = xColors[xColors.length - 1];
-        colors = chroma.scale(yColors).padding(parseFloat(this.padding)).colors(this.amount);
-
+        colors = chroma
+          .scale(yColors)
+          .padding(parseFloat(this.padding))
+          .colors(this.amount);
       } else {
         colors = chroma
-          .scale(this.colorsValues.length ? this.colorsValues : ['#202124', '#fff'])
+          .scale(
+            this.colorsValues.length ? this.colorsValues : ["#202124", "#fff"]
+          )
           .padding(parseFloat(this.padding))
-          .mode(this.interpolationColorModel !== 'spectral' ? this.interpolationColorModel : 'lch')
+          .mode(
+            this.interpolationColorModel !== "spectral"
+              ? this.interpolationColorModel
+              : "lch"
+          )
           .colors(this.amount);
       }
 
@@ -375,17 +433,20 @@ let colors = new Vue({
       return colors;
     },
     wcagContrastColors() {
-      return this.colors.map(color =>
-        (this.addBWContrast ? [...this.colors, '#fff', '#000'] : this.colors).map(
-          color2 => (4.5 <= chroma.contrast(color, color2) ? color2 : false)
+      return this.colors.map((color) =>
+        (this.addBWContrast
+          ? [...this.colors, "#fff", "#000"]
+          : this.colors
+        ).map((color2) =>
+          4.5 <= chroma.contrast(color, color2) ? color2 : false
         )
-      )
+      );
     },
     gradientStops() {
       const gradient = [...this.colors];
-      gradient[0] += ' 12vh'
-      gradient[gradient.length - 1] += this.sameHeightColors ? ' 80%' : ' 69%'
-      return gradient.join(',');
+      gradient[0] += " 12vh";
+      gradient[gradient.length - 1] += this.sameHeightColors ? " 80%" : " 69%";
+      return gradient.join(",");
     },
     backgroundGradient() {
       /*
@@ -398,35 +459,35 @@ let colors = new Vue({
     },
     appStyles() {
       return {
-        '--color-first': this.firstColor,
-        '--color-last': this.lastColor,
-        '--color-last-contrast': this.lastColorContrast,
-        '--color-first-contrast': this.firstColorContrast,
-        '--colors': this.colors.length,
-      }
+        "--color-first": this.firstColor,
+        "--color-last": this.lastColor,
+        "--color-last-contrast": this.lastColorContrast,
+        "--color-first-contrast": this.firstColorContrast,
+        "--colors": this.colors.length,
+      };
     },
     appClasses() {
       return {
-        'is-loading': this.isLoading,
-        'is-animating': this.isAnimating,
-        'wrap__hidetext': this.hideText,
-        'wrap__showcontrast': this.showContrast,
-        'wrap__hasOutlines': this.hasOutlines,
-        'wrap__highContrast': this.highContrast,
-        'wrap__hasGradients': this.hasGradients,
-        'wrap__showSettings': this.settingsVisible,
-        'wrap__showShare': this.shareVisible,
-        'wrap__hasBackground': this.hasBackground,
-        'wrap__hasBleed': this.hasBleed,
-        'wrap__hideUI': !this.showUI,
-        'wrap__expandUI': this.expandUI,
-        'wrap__hasDithering': this.hasGrain,
-        'wrap__lightmode': this.lightmode,
-        'wrap__sameHeightColors': this.sameHeightColors,
-      }
+        "is-loading": this.isLoading,
+        "is-animating": this.isAnimating,
+        wrap__hidetext: this.hideText,
+        wrap__showcontrast: this.showContrast,
+        wrap__hasOutlines: this.hasOutlines,
+        wrap__highContrast: this.highContrast,
+        wrap__hasGradients: this.hasGradients,
+        wrap__showSettings: this.settingsVisible,
+        wrap__showShare: this.shareVisible,
+        wrap__hasBackground: this.hasBackground,
+        wrap__hasBleed: this.hasBleed,
+        wrap__hideUI: !this.showUI,
+        wrap__expandUI: this.expandUI,
+        wrap__hasDithering: this.hasGrain,
+        wrap__lightmode: this.lightmode,
+        wrap__sameHeightColors: this.sameHeightColors,
+      };
     },
     namedColorList() {
-      return this.names.map(color => {
+      return this.names.map((color) => {
         const c = chroma(color.requestedHex);
 
         return {
@@ -434,32 +495,46 @@ let colors = new Vue({
           value: color.requestedHex,
           values: {
             hex: color.requestedHex,
-            rgb: c.css('rgb'),
-            hsl: c.css('hsl'),
-            cmyk: c.css('cymk'),
+            rgb: c.css("rgb"),
+            hsl: c.css("hsl"),
+            cmyk: c.css("cymk"),
           },
-        }
+        };
       });
     },
 
     colorList() {
-      const namedColors = this.namedColorList.map(color => ({
+      const namedColors = this.namedColorList.map((color) => ({
         ...color,
-        value: color.values[this.colorValueType]
+        value: color.values[this.colorValueType],
       }));
 
-      if (this.exportAs === 'list') {
-        return namedColors.map(c => c.value).join('\n');
-      } else if (this.exportAs === 'csvList') {
-        return `name,value${namedColors.reduce((r,c) => `${r}\n${c.name},${c.value}`,'') }\n`;
-      } else if (this.exportAs === 'jsArray') {
-        return `[\n  "${namedColors.map(c => c.value).join('", \n  "')}"\n]`;
-      } else if (this.exportAs === 'jsObject') {
-        return `{${namedColors.reduce((r,c) => `${r}\n  "${c.name}": "${c.value}",`,'') }\n}`;
-      } else if (this.exportAs === 'css') {
-        return `${namedColors.reduce((r,c) => `${r}${r ? `\n` : ''}--${CSS.escape(c.name.replace(/ /g,'-')).toLowerCase()}: ${c.value};`,'') }`;
-      } else if (this.exportAs === 'cssGradient') {
-        return `linear-gradient(\n  ${namedColors.map(c => c.value).join(', \n  ')}\n);`;
+      if (this.exportAs === "list") {
+        return namedColors.map((c) => c.value).join("\n");
+      } else if (this.exportAs === "csvList") {
+        return `name,value${namedColors.reduce(
+          (r, c) => `${r}\n${c.name},${c.value}`,
+          ""
+        )}\n`;
+      } else if (this.exportAs === "jsArray") {
+        return `[\n  "${namedColors.map((c) => c.value).join('", \n  "')}"\n]`;
+      } else if (this.exportAs === "jsObject") {
+        return `{${namedColors.reduce(
+          (r, c) => `${r}\n  "${c.name}": "${c.value}",`,
+          ""
+        )}\n}`;
+      } else if (this.exportAs === "css") {
+        return `${namedColors.reduce(
+          (r, c) =>
+            `${r}${r ? `\n` : ""}--${CSS.escape(
+              c.name.replace(/ /g, "-")
+            ).toLowerCase()}: ${c.value};`,
+          ""
+        )}`;
+      } else if (this.exportAs === "cssGradient") {
+        return `linear-gradient(\n  ${namedColors
+          .map((c) => c.value)
+          .join(", \n  ")}\n);`;
       }
     },
     currentURL() {
@@ -475,16 +550,16 @@ let colors = new Vue({
       const currentColor = chroma(color);
       const lum = currentColor.luminance();
       return lum < 0.15
-        ? currentColor.set('hsl.l', '+.25').hex()
-        : currentColor.set('hsl.l', '-.35').hex();
+        ? currentColor.set("hsl.l", "+.25").hex()
+        : currentColor.set("hsl.l", "-.35").hex();
     },
     generateRandomColors(
       total,
-      mode = 'lab',
-      padding = .1,
+      mode = "lab",
+      padding = 0.1,
       parts = 4,
       randomOrder = false,
-      minHueDiffAngle = 60,
+      minHueDiffAngle = 60
     ) {
       return generateRandomColors({
         generatorFunction: this.generatorFunction,
@@ -494,7 +569,7 @@ let colors = new Vue({
         amount: total,
         parts,
         randomOrder,
-        minHueDiffAngle
+        minHueDiffAngle,
       });
     },
     copyExport(e) {
@@ -503,25 +578,31 @@ let colors = new Vue({
       this.copyTimer = setTimeout(() => {
         this.isCopiying = false;
       }, 1000);
-      if (this.exportAs === 'image') {
-        this.buildImage(1000, .1, true).toBlob((blob) => {
+      if (this.exportAs === "image") {
+        this.buildImage(1000, 0.1, true).toBlob((blob) => {
           const item = new ClipboardItem({
-            "image/png": blob
+            "image/png": blob,
           });
           navigator.clipboard.write([item]);
         });
+      } else if (
+        this.exportAs === "SVG" ||
+        this.exportAs === "svg"
+      ) {
+        const svg = this.buildSVG(1000, 0.1, true);
+        navigator.clipboard.writeText(svg);
       } else {
         navigator.clipboard.writeText(this.colorList);
       }
     },
     getNames(colors, onlyNames) {
-      const url = new URL('https://api.color.pizza/v1/');
+      const url = new URL("https://api.color.pizza/v1/");
 
       const params = {
         noduplicates: true,
         //goodnamesonly: true,
         list: this.nameList,
-        values: colors.map(c => c.replace('#', '')),
+        values: colors.map((c) => c.replace("#", "")),
       };
 
       //url.pathname += colors.join().replace(/#/g, '');
@@ -529,30 +610,26 @@ let colors = new Vue({
       url.search = new URLSearchParams(params).toString();
 
       return fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.names = data.colors;
-        /*console.log(
+        .then((data) => data.json())
+        .then((data) => {
+          this.names = data.colors;
+          /*console.log(
           this.names,
           colors.map(c => c.replace('#', ''))
         )*/
-        this.paletteTitle = data.paletteTitle;
-      });
+          this.paletteTitle = data.paletteTitle;
+        });
     },
-    buildImage(
-      size = 100,
-      padding = .1,
-      hardStops = false
-    ) {
-      const canvas = document.createElement('canvas');
+    buildImage(size = 100, padding = 0.1, hardStops = false) {
+      const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
       const innerSize = size * (1 - padding * 2);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       const gradient = ctx.createLinearGradient(0, 0, 0, size);
 
-      ctx.fillStyle = this.lightmode ? '#fff' : '#000';
+      ctx.fillStyle = this.lightmode ? "#fff" : "#000";
       ctx.fillRect(0, 0, size, size);
 
       this.colors.forEach((color, i) => {
@@ -561,7 +638,7 @@ let colors = new Vue({
 
           ctx.fillRect(
             size * padding,
-            size * padding + (i / this.colors.length * innerSize) - 1,
+            size * padding + (i / this.colors.length) * innerSize - 1,
             innerSize,
             innerSize / this.colors.length + 1
           );
@@ -575,7 +652,6 @@ let colors = new Vue({
             + (innerSize / this.colors.length) * .5 + 10
           );
           */
-
         } else {
           gradient.addColorStop(Math.min(1, i / this.colors.length), color);
         }
@@ -593,29 +669,48 @@ let colors = new Vue({
 
       return canvas;
     },
+    buildSVG(size = 100, padding = 0.1, hardStops = false) {
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">
+        <defs>
+          <linearGradient id="gradient" x1="50%" y1="0%" x2="50%" y2="100%">
+            ${this.colors
+              .map((color, i) => {
+                return `<stop offset="${(i / this.colors.length) * 100}%" stop-color="${color}" />`;
+              })
+              .join("")}
+          </linearGradient>
+        </defs>
+        <rect width="${size}" height="${size}" fill="url(#gradient)" />
+      </svg>`;
+
+    },
     updateMeta() {
       const theme = document.querySelector('[name="theme-color"]');
       const favicons = document.querySelectorAll('[rel="icon"]');
-      theme.setAttribute('content', this.colors[0]);
+      theme.setAttribute("content", this.colors[0]);
 
       // Replace favicon
-      const faviconBase64 = this.buildImage(100, 0.1).toDataURL('image/png');
-      favicons.forEach($icon => $icon.href = faviconBase64);
+      const faviconBase64 = this.buildImage(100, 0.1).toDataURL("image/png");
+      favicons.forEach(($icon) => ($icon.href = faviconBase64));
     },
     settingsFromURL() {
       const params = window.location.search;
-      const stateString = new URLSearchParams(params).get('s');
+      const stateString = new URLSearchParams(params).get("s");
 
-      const colorString = new URLSearchParams(params).get('c');
+      const colorString = new URLSearchParams(params).get("c");
 
       if (stateString) {
-        let settings = JSON.parse(Buffer.from(stateString, 'base64').toString('ascii'));
+        let settings = JSON.parse(
+          Buffer.from(stateString, "base64").toString("ascii")
+        );
 
-        Object.keys(settings).forEach(settingKey => {
-          const setting = this.trackInURL.find(s => (s.key === settingKey));
+        Object.keys(settings).forEach((settingKey) => {
+          const setting = this.trackInURL.find((s) => s.key === settingKey);
           //this[setting.prop] = settings[settingKey].prop;
 
-          this[setting.prop] = setting.p ? setting.p(settings[settingKey]) : settings[settingKey];
+          this[setting.prop] = setting.p
+            ? setting.p(settings[settingKey])
+            : settings[settingKey];
         });
 
         // side effects :(
@@ -627,18 +722,29 @@ let colors = new Vue({
       }
     },
     shareURL() {
-      navigator.clipboard.writeText(`${window.location.origin + "/?s=" + this.constructURL()}`);
+      navigator.clipboard.writeText(
+        `${window.location.origin + "/?s=" + this.constructURL()}`
+      );
     },
     constructURL() {
-      const state = this.trackInURL.reduce((o,i) => Object.assign(o, {[i.key]: this[i.prop]}) ,{});
-      const serializedState = Buffer.from(JSON.stringify(state)).toString('base64');
+      const state = this.trackInURL.reduce(
+        (o, i) => Object.assign(o, { [i.key]: this[i.prop] }),
+        {}
+      );
+      const serializedState = Buffer.from(JSON.stringify(state)).toString(
+        "base64"
+      );
       return serializedState;
     },
     updateURL() {
-      history.pushState(history.state, document.title, "?s=" + this.constructURL());
+      history.pushState(
+        history.state,
+        document.title,
+        "?s=" + this.constructURL()
+      );
     },
     newColors(newSeed) {
-      document.documentElement.classList.remove('is-imagefetching');
+      document.documentElement.classList.remove("is-imagefetching");
 
       if (newSeed) {
         this.currentSeed = randomStr();
@@ -648,7 +754,7 @@ let colors = new Vue({
 
       //this.updateURL();
 
-      if (this.generatorFunction !== 'ImageExtract') {
+      if (this.generatorFunction !== "ImageExtract") {
         let colorArr = this.generateRandomColors(
           this.amount,
           this.interpolationColorModel,
@@ -659,23 +765,21 @@ let colors = new Vue({
         );
 
         this.colorsValues = colorArr;
-      } else if (this.generatorFunction === 'ImageExtract') {
-        if (this.imgURL && this.imgURL.startsWith('data:image/')) {
+      } else if (this.generatorFunction === "ImageExtract") {
+        if (this.imgURL && this.imgURL.startsWith("data:image/")) {
           // Backward compatibility: load base64 image URL directly
           loadImage(
             this.imgURL,
             this.colorsInGradient,
-            this.quantizationMethod,
+            this.quantizationMethod
           );
         } else {
           // Use the current seed for deterministic Picsum images
-          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${325 * 2}/${483 * 2}`;
+          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${
+            325 * 2
+          }/${483 * 2}`;
           this.imgURL = imgSrc; // Ensure imgURL is set for UI and persistence
-          loadImage(
-            imgSrc,
-            this.colorsInGradient,
-            this.quantizationMethod,
-          );
+          loadImage(imgSrc, this.colorsInGradient, this.quantizationMethod);
         }
         this.colorsValues = this.colorsValues;
       }
@@ -708,13 +812,13 @@ let colors = new Vue({
       }
     },
     addMagicControls() {
-      document.addEventListener('keydown', (e) => {
-        if ( e.code === 'Space' ) {
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
           this.newColors(true);
-        } else if ( e.code === 'ArrowRight' ) {
-          this.padding = Math.min(1, this.padding + .01);
-        } else if ( e.code === 'ArrowLeft' ) {
-          this.padding = Math.max(0, this.padding - .01);
+        } else if (e.code === "ArrowRight") {
+          this.padding = Math.min(1, this.padding + 0.01);
+        } else if (e.code === "ArrowLeft") {
+          this.padding = Math.max(0, this.padding - 0.01);
         }
       });
 
@@ -722,56 +826,59 @@ let colors = new Vue({
       let lastX;
 
       // maybe add swipe controls at some point
-      document.addEventListener('pointerdown', (e)  => {
+      document.addEventListener("pointerdown", (e) => {
         isTouching = true;
         lastX = e.clientX;
         this.hideTools();
       });
 
-      document.addEventListener('pointermove', (e)=> {
+      document.addEventListener("pointermove", (e) => {
         this.hideTools();
-        if(isTouching) {
+        if (isTouching) {
           e.preventDefault();
           const direction = Math.sign(e.clientX - lastX);
           let lastPadd = this.padding;
           if (direction == -1) {
             this.padding = Math.max(
               0,
-              this.padding - (
-                Math.abs(e.clientX - lastX) / window.innerWidth
-              )
+              this.padding - Math.abs(e.clientX - lastX) / window.innerWidth
             );
           } else {
             this.padding = Math.min(
               1,
-              this.padding + (
-                Math.abs(e.clientX - lastX) / window.innerWidth
-              )
+              this.padding + Math.abs(e.clientX - lastX) / window.innerWidth
             );
           }
           lastX = e.clientX;
         }
       });
 
-      document.addEventListener('pointerup', (e)  => {
+      document.addEventListener("pointerup", (e) => {
         isTouching = false;
       });
     },
     handlefile(e) {
       const reader = new FileReader();
-      reader.addEventListener('loadend', this.imageLoaded);
+      reader.addEventListener("loadend", this.imageLoaded);
       reader.readAsDataURL(e.target.files[0]);
     },
     imageLoaded(event) {
       const srcimg = new Image();
 
-      srcimg.onload = imageLoadCallback.bind(null, srcimg, canvas, ctx, this.colorsInGradient, this.quantizationMethod);
+      srcimg.onload = imageLoadCallback.bind(
+        null,
+        srcimg,
+        canvas,
+        ctx,
+        this.colorsInGradient,
+        this.quantizationMethod
+      );
       srcimg.src = event.target.result;
       this.imgURL = event.target.result;
     },
     getShareLink(provider) {
       return getShareLink(provider, this.currentURL, this.paletteTitle);
-    }
+    },
   },
   mounted() {
     const hadSettings = this.settingsFromURL();
@@ -781,38 +888,38 @@ let colors = new Vue({
       this.settingsFromURL();
     });
     */
-    if('ondrop' in window) {
-      document.documentElement.addEventListener('dragover', (e) => {
+    if ("ondrop" in window) {
+      document.documentElement.addEventListener("dragover", (e) => {
         e.preventDefault();
       });
 
-      document.documentElement.addEventListener('dragleave', (e) => {
+      document.documentElement.addEventListener("dragleave", (e) => {
         e.preventDefault();
       });
 
-      document.documentElement.addEventListener('drop', (e) => {
+      document.documentElement.addEventListener("drop", (e) => {
         const file = e.dataTransfer.files[0];
         if (e.dataTransfer.files.length && file.type.match(/^image\//)) {
           e.preventDefault();
-          this.imgURL = ' ';
-          this.generatorFunction = 'ImageExtract';
+          this.imgURL = " ";
+          this.generatorFunction = "ImageExtract";
           const reader = new FileReader();
-          reader.addEventListener('loadend', this.imageLoaded);
+          reader.addEventListener("loadend", this.imageLoaded);
           reader.readAsDataURL(file);
           setTimeout(() => {
             this.settingsVisible = true;
           }, 500);
         }
       });
-    };
+    }
 
-    const isPalm = window.matchMedia('(max-width: 850px)');
+    const isPalm = window.matchMedia("(max-width: 850px)");
 
     if (isPalm.matches) {
       this.expandUI = true;
     }
 
-    const moreContrast = window.matchMedia('(prefers-contrast: more)');
+    const moreContrast = window.matchMedia("(prefers-contrast: more)");
 
     if (moreContrast.matches) {
       this.highContrast = true;
@@ -824,15 +931,15 @@ let colors = new Vue({
     if (hadSettings) {
       window.history.replaceState({}, document.title, location.pathname);
     } else {
-      const wantLightMode = window.matchMedia('(prefers-color-scheme: light)');
-      if ( wantLightMode ) {
+      const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
+      if (wantLightMode) {
         this.lightmode = true;
       }
     }
 
     this.addMagicControls();
 
-    document.querySelector('body').classList.remove('is-loading');
+    document.querySelector("body").classList.remove("is-loading");
 
     setTimeout(() => {
       this.isLoading = false;
@@ -842,10 +949,10 @@ let colors = new Vue({
       this.isAnimating = false;
     }, 1600);
 
-    if( this.animateBackgroundIntro ) {
+    if (this.animateBackgroundIntro) {
       setTimeout(() => {
         this.hasBackground = true;
       }, 2000);
     }
-  }
+  },
 });

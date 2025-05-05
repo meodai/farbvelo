@@ -297,7 +297,7 @@ html(lang="en-US")
               svg
                 use(xlink:href="#icon-dropdown")
               select(v-model="exportAs")
-                each exp in [{n: 'Simple List', v:'list'}, {n: 'CSV List', v:'csvList'}, {n: 'JS Array', v:'jsArray'}, {n: 'JS Object', v:'jsObject'}, {n: 'CSS Custom Properies', v:'css'}, {n: 'CSS Gradient', v:'cssGradient'}, {n: 'Image', v:'image'}]
+                each exp in [{n: 'Simple List', v:'list'}, {n: 'CSV List', v:'csvList'}, {n: 'JS Array', v:'jsArray'}, {n: 'JS Object', v:'jsObject'}, {n: 'CSS Custom Properies', v:'css'}, {n: 'CSS Gradient', v:'cssGradient'}, {n: 'Image', v:'image'}, {n: 'SVG Gradient', v:'SVG'}]
                   option(value=exp.v)=exp.n
 
           div.panel__export
@@ -308,10 +308,11 @@ html(lang="en-US")
               svg.minibutton__icon.minibutton__icon--check
                 use(xlink:href="#icon-check")
 
-            pre.panel__code(v-if="exportAs !== 'image'")
+            pre.panel__code(v-if="exportAs !== 'image' && exportAs !== 'SVG'")
               code {{colorList}}
             div.panel__img.panel__img--export(v-if="exportAs === 'image'")
               img(:src="buildImage(600, 0, true).toDataURL('image/png')" style="max-width: 100%;")
+            div.panel__img.panel__img--export(v-if="exportAs === 'SVG'", v-html="buildSVG(600, 0, true)" style="max-width: 100%;")
           label.panel__setting
             strong.panel__settingtitle Color Values
             .panel__inputs.panel__inputs--select
