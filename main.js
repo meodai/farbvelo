@@ -2,14 +2,13 @@
 import {hsluvToHex, hpluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import Seedrandom from 'seedrandom';
-import SimplexNoise from 'simplex-noise';
-import randomColor from 'randomcolor';
 import getShareLink from './lib/share-strings';
 import {
   quantize as quantizeGifenc
 } from "gifenc";
 import spectral from 'spectral.js';
 import { logColors, shuffleArray, randomStr, coordsToHex, unsplashURLtoID } from './utils.js';
+import generateRandomColors from './lib/generate-random-colors.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
@@ -486,179 +485,16 @@ let colors = new Vue({
       randomOrder = false,
       minHueDiffAngle = 60,
     ) {
-      let colors = [];
-
-      minHueDiffAngle = parseInt(minHueDiffAngle);
-      total = parseInt(total);
-      parts = parseInt(parts);
-
-      minHueDiffAngle = Math.min(minHueDiffAngle, 360/parts);
-
-      if (this.generatorFunction === 'Hue Bingo') {
-        // create an array of hues to pick from.
-        const baseHue = this.random(0, 360);
-        const hues = new Array(Math.round( 360 / minHueDiffAngle) ).fill('').map((offset, i) => {
-          return (baseHue + i * minHueDiffAngle) % 360;
-        });
-
-        //  low saturation color
-        const baseSaturation = this.random(5, 40);
-        const baseLightness = this.random(0, 20);
-        const rangeLightness = 90 - baseLightness;
-
-        colors.push(
-          coordsToHex(
-            hues[0],
-            baseSaturation,
-            baseLightness * this.random(0.25, 0.75),
-            this.colorMode
-          )
-        );
-
-        // random shades
-        const minSat = this.random(50, 70);
-        const maxSat = minSat + 30;
-        const minLight = this.random(35, 70);
-        const maxLight = Math.min(minLight + this.random(20, 40), 95);
-        // const lightDiff = maxLight - minLight;
-
-        const remainingHues = [...hues];
-
-        for (let i = 0; i < parts - 2; i++) {
-          const hue = remainingHues.splice(this.random(0, remainingHues.length - 1),1)[0];
-          const saturation = this.random(minSat, maxSat);
-          const light = baseLightness + this.random(0,10) + ((rangeLightness/(parts - 1)) * i);
-
-          colors.push(
-            coordsToHex(
-              hue,
-              saturation,
-              this.random(light, maxLight),
-              this.colorMode,
-            )
-          )
-        }
-
-        colors.push(
-          coordsToHex(
-            remainingHues[0],
-            baseSaturation,
-            rangeLightness + 10,
-            this.colorMode,
-          )
-        );
-      } else if (this.generatorFunction === 'Legacy') {
-        const part = Math.floor(total / parts);
-        const reminder = total % parts;
-
-        // hues to pick from
-        const baseHue = this.random(0, 360);
-        const hues = new Array(Math.round( 360 / minHueDiffAngle)).fill('').map((offset, i) => {
-          return (baseHue + i * minHueDiffAngle) % 360;
-        });
-
-        //  low saturated color
-        const baseSaturation = this.random(5, 40);
-        const baseLightness = this.random(0, 20);
-        const rangeLightness = 90 - baseLightness;
-
-        colors.push(
-          coordsToHex(
-            hues[0],
-            baseSaturation,
-            baseLightness * this.random(0.25, 0.75),
-            this.colorMode,
-          )
-        );
-
-        for (let i = 0; i < (part - 1); i++) {
-          colors.push(
-            coordsToHex(
-              hues[0],
-              baseSaturation,
-              baseLightness + (rangeLightness * Math.pow( i / (part - 1), 1.5)),
-              this.colorMode
-            )
-          );
-        }
-
-        // random shades
-        const minSat = this.random(50, 70);
-        const maxSat = minSat + 30;
-        const minLight = this.random(45, 80);
-        const maxLight = Math.min(minLight + 40, 95);
-
-        for (let i = 0; i < (part + reminder - 1); i++) {
-          colors.push(
-            coordsToHex(
-              hues[this.random(0, hues.length - 1)],
-              this.random(minSat, maxSat),
-              this.random(minLight, maxLight),
-              this.colorMode,
-            )
-          )
-        }
-
-        colors.push(
-          coordsToHex(
-            hues[0],
-            baseSaturation,
-            rangeLightness,
-            this.colorMode,
-          )
-        );
-      } else if (this.generatorFunction === 'Full Random') {
-        for (let i = 0; i < parts; i++) {
-          colors.push(
-            coordsToHex(
-              this.random(0, 360),
-              this.random(0, 100),
-              this.random(0, 100),
-              this.colorMode,
-            )
-          )
-        }
-      } else if (this.generatorFunction === 'Simplex Noise') {
-        const simplex = new SimplexNoise(this.currentSeed);
-
-        const minLight = this.random(50, 80);
-        const maxLight = Math.min(minLight + 40, 95);
-        const minSat = this.random(20, 80);
-        const maxSat = this.random(80,100)
-        const satRamp = maxSat - minSat;
-        for (let i = 0; i < parts + 1; i++) {
-          colors.push(
-            coordsToHex(
-              simplex.noise2D(.5, (i/parts) * (3 * (minHueDiffAngle / 360))) * 360,
-              minSat + (i/parts) * satRamp,
-              i ? 55 + i/parts * (maxLight - minLight) : this.random(10, 40),
-              this.colorMode,
-            )
-          )
-        }
-      } else if (this.generatorFunction === 'RandomColor.js') {
-        colors = [
-          randomColor({
-            luminosity: 'dark', //bright, light or dark
-            seed: this.currentSeed,
-          }),
-          ...randomColor({
-            //  luminosity: 'bright', //bright, light or dark
-            seed: this.currentSeed + 50,
-            count: parts - 2,
-          }),
-          randomColor({
-            luminosity: 'light', //bright, light or dark
-            seed: this.currentSeed + 100,
-          })
-        ];
-      }
-
-      if ( randomOrder ) {
-        colors = shuffleArray(colors);
-      }
-
-      return colors;
+      return generateRandomColors({
+        generatorFunction: this.generatorFunction,
+        random: this.random,
+        currentSeed: this.currentSeed,
+        colorMode: this.colorMode,
+        amount: total,
+        parts,
+        randomOrder,
+        minHueDiffAngle
+      });
     },
     copyExport(e) {
       clearTimeout(this.copyTimer);
