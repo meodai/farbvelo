@@ -9,105 +9,14 @@ import {
 import spectral from 'spectral.js';
 import { logColors, randomStr } from './utils.js';
 import generateRandomColors from './lib/generate-random-colors.js';
+import { loadImage } from './lib/image-palette.js';
+import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
 const workers = [];
 const CANVAS_SCALE = 0.4;
-
-const startWorker = (
-  imageUrl,
-  imageData,
-  width,
-  filterOptions,
-  colorsLength,
-) => {
-  const worker = new Worker('./worker.js');
-
-  workers.push(worker);
-
-  worker.addEventListener(
-    'message',
-    (e) => {
-      switch (e.data.type) {
-        case 'GENERATE_COLORS_ARRAY':
-          const pixels = e.data.colors;
-          for (let i = 0; i < 1; i++) {
-            worker.postMessage({
-              type: 'GENERATE_CLUSTERS',
-              pixels,
-              k: colorsLength,
-              filterOptions,
-            });
-          }
-          break;
-        case 'GENERATE_CLUSTERS':
-          console.timeEnd('calculating colors');
-          const clusters = e.data.colors;
-          colors.colorsValues = clusters.sort((c1,c2) =>
-            chroma(c1).lch()[0] - chroma(c2).lch()[0]
-          ).map(cluster =>
-            cluster
-          );
-
-          document.documentElement.classList.remove('is-imagefetching');
-        break;
-      }
-    },
-    false
-  );
-
-  worker.postMessage({
-    type: 'GENERATE_COLORS_ARRAY',
-    imageData,
-    width,
-    k: colorsLength,
-  });
-};
-
-const imageLoadCallback = (image, canvas, ctx, colorsLength, quantizationMethod) => {
-  console.time('calculating colors');
-
-  const width = Math.floor(image.naturalWidth * CANVAS_SCALE);
-  const height = Math.floor(image.naturalHeight * CANVAS_SCALE);
-  canvas.width = width;
-  canvas.height = height;
-  ctx.drawImage(image, 0, 0, width, height);
-
-  const imageData = ctx.getImageData(0, 0, width, height);
-
-
-  const filterOptions = {
-    saturation: 0,
-    lightness: 0
-  };
-
-  //console.log(quantizationMethod === 'pigmnts' && window.runPigments)
-
-  if (quantizationMethod === 'gifenc') {
-    const rgbColors = quantizeGifenc(imageData.data, colorsLength);
-    const hexColors = rgbColors.map(rgb => chroma(rgb[0], rgb[1], rgb[2]).hex());
-
-    colors.colorsValues = hexColors;
-    document.documentElement.classList.remove('is-imagefetching');
-  /*} else if (quantizationMethod === 'pigmnts' && window.runPigments) {
-    window.runPigments(canvas, colorsLength, colors);
-  */
-  } else {
-    //art-palette
-    startWorker(image.src, imageData, width, filterOptions, colorsLength);
-  }
-};
-
-const loadImage = (source, colorsLength, quantizationMethod) => {
-  workers.forEach(w => w.terminate());
-
-  const image = new Image();
-  image.crossOrigin = 'Anonymous';
-  image.src = source;
-  image.onload = imageLoadCallback.bind(null, image, canvas, ctx, colorsLength, quantizationMethod);
-};
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
@@ -553,47 +462,25 @@ let colors = new Vue({
         ? currentColor.set("hsl.l", "+.25").hex()
         : currentColor.set("hsl.l", "-.35").hex();
     },
-    generateRandomColors(
-      total,
-      mode = "lab",
-      padding = 0.1,
-      parts = 4,
-      randomOrder = false,
-      minHueDiffAngle = 60
-    ) {
-      return generateRandomColors({
-        generatorFunction: this.generatorFunction,
-        random: this.random,
-        currentSeed: this.currentSeed,
-        colorMode: this.colorMode,
-        amount: total,
-        parts,
-        randomOrder,
-        minHueDiffAngle,
+    copyExport(e) {
+      copyExport({
+        exportAs: this.exportAs,
+        colorList: this.colorList,
+        colors: this.colors,
+        lightmode: this.lightmode,
+        buildImageFn: buildImage,
+        buildSVGFn: buildSVG,
+        setCopying: (val) => { this.isCopiying = val; }
       });
     },
-    copyExport(e) {
-      clearTimeout(this.copyTimer);
-      this.isCopiying = true;
-      this.copyTimer = setTimeout(() => {
-        this.isCopiying = false;
-      }, 1000);
-      if (this.exportAs === "image") {
-        this.buildImage(1000, 0.1, true).toBlob((blob) => {
-          const item = new ClipboardItem({
-            "image/png": blob,
-          });
-          navigator.clipboard.write([item]);
-        });
-      } else if (
-        this.exportAs === "SVG" ||
-        this.exportAs === "svg"
-      ) {
-        const svg = this.buildSVG(1000, 0.1, true);
-        navigator.clipboard.writeText(svg);
-      } else {
-        navigator.clipboard.writeText(this.colorList);
-      }
+    shareURL() {
+      shareURL(this.currentURL);
+    },
+    buildImage(size = 100, padding = 0.1, hardStops = false) {
+      return buildImage(this.colors, this.lightmode, size, padding, hardStops);
+    },
+    buildSVG(size = 100, padding = 0.1, hardStops = false) {
+      return buildSVG(this.colors, size, padding, hardStops);
     },
     getNames(colors, onlyNames) {
       const url = new URL("https://api.color.pizza/v1/");
@@ -619,70 +506,6 @@ let colors = new Vue({
         )*/
           this.paletteTitle = data.paletteTitle;
         });
-    },
-    buildImage(size = 100, padding = 0.1, hardStops = false) {
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const innerSize = size * (1 - padding * 2);
-      const ctx = canvas.getContext("2d");
-
-      const gradient = ctx.createLinearGradient(0, 0, 0, size);
-
-      ctx.fillStyle = this.lightmode ? "#fff" : "#000";
-      ctx.fillRect(0, 0, size, size);
-
-      this.colors.forEach((color, i) => {
-        if (hardStops) {
-          ctx.fillStyle = color;
-
-          ctx.fillRect(
-            size * padding,
-            size * padding + (i / this.colors.length) * innerSize - 1,
-            innerSize,
-            innerSize / this.colors.length + 1
-          );
-          /*
-          ctx.fillStyle = '#000';
-          ctx.font = '20px "Inter UI"';
-          ctx.fillText(
-            color,
-            size * padding * 4,
-            size * padding + (i / this.colors.length * innerSize) - 1
-            + (innerSize / this.colors.length) * .5 + 10
-          );
-          */
-        } else {
-          gradient.addColorStop(Math.min(1, i / this.colors.length), color);
-        }
-      });
-
-      if (!hardStops) {
-        ctx.fillStyle = gradient;
-        ctx.fillRect(
-          size * padding,
-          size * padding,
-          size * (1 - padding * 2),
-          size * (1 - padding * 2)
-        );
-      }
-
-      return canvas;
-    },
-    buildSVG(size = 100, padding = 0.1, hardStops = false) {
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">
-        <defs>
-          <linearGradient id="gradient" x1="50%" y1="0%" x2="50%" y2="100%">
-            ${this.colors
-              .map((color, i) => {
-                return `<stop offset="${(i / this.colors.length) * 100}%" stop-color="${color}" />`;
-              })
-              .join("")}
-          </linearGradient>
-        </defs>
-        <rect width="${size}" height="${size}" fill="url(#gradient)" />
-      </svg>`;
-
     },
     updateMeta() {
       const theme = document.querySelector('[name="theme-color"]');
@@ -721,11 +544,6 @@ let colors = new Vue({
         return false;
       }
     },
-    shareURL() {
-      navigator.clipboard.writeText(
-        `${window.location.origin + "/?s=" + this.constructURL()}`
-      );
-    },
     constructURL() {
       const state = this.trackInURL.reduce(
         (o, i) => Object.assign(o, { [i.key]: this[i.prop] }),
@@ -745,41 +563,44 @@ let colors = new Vue({
     },
     newColors(newSeed) {
       document.documentElement.classList.remove("is-imagefetching");
-
       if (newSeed) {
         this.currentSeed = randomStr();
       }
-
       this.rnd = new Seedrandom(this.currentSeed);
-
       //this.updateURL();
-
       if (this.generatorFunction !== "ImageExtract") {
-        let colorArr = this.generateRandomColors(
-          this.amount,
-          this.interpolationColorModel,
-          parseFloat(this.padding),
-          this.colorsInGradient,
-          this.randomOrder,
-          this.minHueDistance
-        );
-
+        let colorArr = generateRandomColors({
+          generatorFunction: this.generatorFunction,
+          random: this.random,
+          currentSeed: this.currentSeed,
+          colorMode: this.colorMode,
+          amount: this.amount,
+          parts: this.colorsInGradient,
+          randomOrder: this.randomOrder,
+          minHueDiffAngle: this.minHueDistance,
+        });
         this.colorsValues = colorArr;
       } else if (this.generatorFunction === "ImageExtract") {
         if (this.imgURL && this.imgURL.startsWith("data:image/")) {
-          // Backward compatibility: load base64 image URL directly
           loadImage(
+            this,
+            canvas,
+            ctx,
             this.imgURL,
             this.colorsInGradient,
             this.quantizationMethod
           );
         } else {
-          // Use the current seed for deterministic Picsum images
-          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${
-            325 * 2
-          }/${483 * 2}`;
-          this.imgURL = imgSrc; // Ensure imgURL is set for UI and persistence
-          loadImage(imgSrc, this.colorsInGradient, this.quantizationMethod);
+          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${325 * 2}/${483 * 2}`;
+          this.imgURL = imgSrc;
+          loadImage(
+            this,
+            canvas,
+            ctx,
+            imgSrc,
+            this.colorsInGradient,
+            this.quantizationMethod
+          );
         }
         this.colorsValues = this.colorsValues;
       }
@@ -864,15 +685,16 @@ let colors = new Vue({
     },
     imageLoaded(event) {
       const srcimg = new Image();
-
-      srcimg.onload = imageLoadCallback.bind(
-        null,
-        srcimg,
-        canvas,
-        ctx,
-        this.colorsInGradient,
-        this.quantizationMethod
-      );
+      srcimg.onload = () => {
+        loadImage(
+          this,
+          canvas,
+          ctx,
+          srcimg.src,
+          this.colorsInGradient,
+          this.quantizationMethod
+        );
+      };
       srcimg.src = event.target.result;
       this.imgURL = event.target.result;
     },
