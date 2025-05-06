@@ -580,20 +580,25 @@ let colors = new Vue({
       const stateString = new URLSearchParams(params).get("s");
       let hadSettingsFromURL = false;
       if (stateString) {
-        let urlSettings = JSON.parse(
-          Buffer.from(stateString, "base64").toString("ascii")
-        );
-        Object.keys(urlSettings).forEach((settingKey) => {
-          const setting = this.trackInURL.find((s) => s.key === settingKey);
-          if (setting) {
-            mergedSettings[setting.prop] = setting.p
-              ? setting.p(urlSettings[settingKey])
-              : urlSettings[settingKey];
-          }
-        });
-        // side effects :(
-        this.animateBackgroundIntro = !!urlSettings.hb;
-        hadSettingsFromURL = true;
+        try {
+          let urlSettings = JSON.parse(
+            Buffer.from(stateString, "base64").toString("ascii")
+          );
+          Object.keys(urlSettings).forEach((settingKey) => {
+            const setting = this.trackInURL.find((s) => s.key === settingKey);
+            if (setting) {
+              mergedSettings[setting.prop] = setting.p
+                ? setting.p(urlSettings[settingKey])
+                : urlSettings[settingKey];
+            }
+          });
+          // side effects :(
+          this.animateBackgroundIntro = !!urlSettings.hb;
+          hadSettingsFromURL = true;
+        } catch (e) {
+          console.error("Error restoring settings from URL:", e);
+          // Continue with whatever settings we have from localStorage or defaults
+        }
       }
 
       // 2.5. If lightmode is not defined, use system preference
@@ -713,6 +718,11 @@ let colors = new Vue({
     },
     addMagicControls() {
       document.addEventListener("keydown", (e) => {
+        // Skip if any modifier key is pressed to avoid interfering with system shortcuts
+        if (e.metaKey || e.ctrlKey) {
+          return;
+        }
+
         if (e.code === "Space") {
           this.newColors(true);
         } else if (e.code === "ArrowRight") {
@@ -840,12 +850,6 @@ let colors = new Vue({
       window.history.replaceState({}, document.title, location.pathname);
     }
 
-    /*
-    window.addEventListener('popstate', () => {
-      console.log('ok');
-      this.settingsFromURL();
-    });
-    */
     if ("ondrop" in window) {
       document.documentElement.addEventListener("dragover", (e) => {
         e.preventDefault();
