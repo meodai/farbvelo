@@ -60,23 +60,31 @@ Vue.component('color', {
     value() {
       if(this.colorvaluetype === 'hex') {
         return `<span>${this.colorhex}</span>`;
-      } else if (this.colorvaluetype === 'cmyk') {
-        const letters = 'CMYK'.split('');
-        return `${chroma(this.colorhex).cmyk().map((d,i) => `${letters[i]} <sup>${Math.round(d * 100)}%</sup>`).join(' ')}`
-      } else if (this.colorvaluetype === 'rgb') {
-        const rgb = chroma(this.colorhex).rgb();
-        const letters = 'RGB'.split('');
-
-        return `${rgb.map((d,i) => `${letters[i]} <sup>${d}</sup>`).join(' ')}`
-      } else if (this.colorvaluetype === 'hsl') {
-        const hsl = chroma(this.colorhex).hsl();
-        hsl.pop()
-        const letters = 'HSL'.split('');
-        return `${hsl.map(
-          (d, i) => `${letters[i]} <sup>${Math.round(d * 1000) / (i ? 10 : 1000)}${i ? '%' : '°'}</sup>`
-        ).join(' ')}`
       } else {
-        return chroma(this.colorhex).css(this.colorvaluetype);
+        const formatters = {
+          'cmyk': () => {
+            const letters = 'CMYK'.split('');
+            return chroma(this.colorhex).cmyk().map((d,i) =>
+              `${letters[i]} <sup>${Math.round(d * 100)}%</sup>`).join(' ');
+          },
+          'rgb': () => {
+            const rgb = chroma(this.colorhex).rgb();
+            const letters = 'RGB'.split('');
+            return rgb.map((d,i) => `${letters[i]} <sup>${d}</sup>`).join(' ');
+          },
+          'hsl': () => {
+            const hsl = chroma(this.colorhex).hsl();
+            hsl.pop(); // Remove alpha
+            const letters = 'HSL'.split('');
+            return hsl.map((d, i) =>
+              `${letters[i]} <sup>${Math.round(d * 1000) / (i ? 10 : 1000)}${i ? '%' : '°'}</sup>`
+            ).join(' ');
+          }
+        };
+
+        return formatters[this.colorvaluetype] ?
+          formatters[this.colorvaluetype]() :
+          chroma(this.colorhex).css(this.colorvaluetype);
       }
     },
     hasWCAGColorPairs() {
@@ -774,8 +782,13 @@ let colors = new Vue({
       reader.readAsDataURL(e.target.files[0]);
     },
     imageLoaded(event) {
+      this.processImageSource(event.target.result);
+    },
+    processImageSource(src) {
       const srcimg = new Image();
       srcimg.onload = () => {
+        // Set imgURL to display the image in the UI
+        this.imgURL = src;
         loadImage(
           this,
           canvas,
@@ -785,8 +798,7 @@ let colors = new Vue({
           this.quantizationMethod
         );
       };
-      srcimg.src = event.target.result;
-      //this.imgURL = event.target.result;
+      srcimg.src = src;
     },
     getShareLink(provider) {
       return getShareLink(provider, this.currentURL, this.paletteTitle);
@@ -900,11 +912,13 @@ let colors = new Vue({
           this.imgURL = " ";
           this.generatorFunction = "ImageExtract";
           const reader = new FileReader();
-          reader.addEventListener("loadend", this.imageLoaded);
+          reader.addEventListener("loadend", (event) => {
+            this.processImageSource(event.target.result);
+            setTimeout(() => {
+              this.settingsVisible = true;
+            }, 500);
+          });
           reader.readAsDataURL(file);
-          setTimeout(() => {
-            this.settingsVisible = true;
-          }, 500);
         }
       });
     }
