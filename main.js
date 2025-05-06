@@ -188,7 +188,6 @@ let colors = new Vue({
         { key: "cm", prop: "interpolationColorModel" }, // 'lab'
         { key: "f", prop: "generatorFunction" }, // 'Legacy'
         { key: "c", prop: "colorMode" }, // 'hsluv'
-        { key: "iu", prop: "imgURL" }, // ''
         { key: "qm", prop: "quantizationMethod" }, // art-palette,
       ],
       trackInLocalStorage: [
@@ -629,11 +628,17 @@ let colors = new Vue({
     },
     updateURL() {
       if (this.trackSettingsInURL) {
-        history.pushState(
-          history.state,
-          document.title,
-          "?s=" + this.constructURL()
-        );
+        // Use pushState instead of directly modifying history.pushState
+        // to add a new entry to the browser's history stack
+        const newURL = "?s=" + this.constructURL();
+        // Only add to history if the URL actually changed
+        if (window.location.search !== newURL) {
+          history.pushState(
+            { seed: this.currentSeed, settings: this.constructURL() },
+            document.title,
+            newURL
+          );
+        }
       }
       this.saveSettingsToLocalStorage(); // Save settings when URL is updated
     },
@@ -657,29 +662,20 @@ let colors = new Vue({
         });
         this.colorsValues = colorArr;
       } else if (this.generatorFunction === "ImageExtract") {
-        if (this.imgURL && this.imgURL.startsWith("data:image/")) {
-          loadImage(
-            this,
-            canvas,
-            ctx,
-            this.imgURL,
-            this.colorsInGradient,
-            this.quantizationMethod
-          );
-        } else {
-          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${
-            325 * 2
-          }/${483 * 2}`;
-          this.imgURL = imgSrc;
-          loadImage(
-            this,
-            canvas,
-            ctx,
-            imgSrc,
-            this.colorsInGradient,
-            this.quantizationMethod
-          );
-        }
+        // Always use a random image when using ImageExtract
+        // This ensures uploaded images are not tracked in the URL
+        const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${
+          325 * 2
+        }/${483 * 2}`;
+        this.imgURL = imgSrc;
+        loadImage(
+          this,
+          canvas,
+          ctx,
+          imgSrc,
+          this.colorsInGradient,
+          this.quantizationMethod
+        );
         this.colorsValues = this.colorsValues;
       }
     },
@@ -790,7 +786,7 @@ let colors = new Vue({
         );
       };
       srcimg.src = event.target.result;
-      this.imgURL = event.target.result;
+      //this.imgURL = event.target.result;
     },
     getShareLink(provider) {
       return getShareLink(provider, this.currentURL, this.paletteTitle);
@@ -849,6 +845,44 @@ let colors = new Vue({
     if (hadSettingsFromURL && !this.trackSettingsInURL) {
       window.history.replaceState({}, document.title, location.pathname);
     }
+
+    // Add popstate event listener to handle browser back/forward buttons
+    window.addEventListener('popstate', (event) => {
+      // Handle state restoration when the user navigates through browser history
+      if (event.state && event.state.seed) {
+        this.currentSeed = event.state.seed;
+
+        // If we have settings in the state, restore them
+        if (event.state.settings) {
+          try {
+            let urlSettings = JSON.parse(
+              Buffer.from(event.state.settings, 'base64').toString('ascii')
+            );
+
+            // Apply the settings from history state
+            this.trackInURL.forEach((setting) => {
+              if (urlSettings[setting.key]) {
+                this[setting.prop] = setting.p
+                  ? setting.p(urlSettings[setting.key])
+                  : urlSettings[setting.key];
+              }
+            });
+
+            // Regenerate colors with the restored seed
+            this.rnd = new Seedrandom(this.currentSeed);
+            this.newColors(false); // false because we're restoring, not creating a new seed
+          } catch (e) {
+            console.error('Error restoring settings from history state:', e);
+          }
+        }
+      } else {
+        // If no state (e.g., user navigated to base URL), reset to defaults
+        if (!window.location.search) {
+          this.resetSettings();
+          this.newColors(true);
+        }
+      }
+    });
 
     if ("ondrop" in window) {
       document.documentElement.addEventListener("dragover", (e) => {
