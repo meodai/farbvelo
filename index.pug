@@ -52,7 +52,7 @@ html(lang="en-US")
       :style="appStyles"
       :class="appClasses")
       .bg-wrap
-        .bg(:style="{'background-image': backgroundGradient}")
+        .bg
       .panel(ref="panel" v-on:pointerdown="cancelSwipe")
         .panel__title
           h4.panel__settingtitle Palette Name
@@ -226,6 +226,13 @@ html(lang="en-US")
               use(xlink:href="#icon-check")
           strong.panel__settingtitle Autohide UI
 
+        label.panel__setting.panel__setting--checkbox.panel__setting--inline.panel__setting--contrast
+          input(type="checkbox", v-model="trackSettingsInURL")
+          i.panel__checkbox
+            svg
+              use(xlink:href="#icon-check")
+          strong.panel__settingtitle Track settings in URL
+
         label.panel__setting
           strong.panel__settingtitle Color Values
           .panel__inputs.panel__inputs--select
@@ -243,6 +250,10 @@ html(lang="en-US")
               select(v-model="nameList")
                 option(v-for="listKey in nameLists", :value=listKey).
                   {{ listKey }}
+
+        button.panel__button(v-on:click="resetSettings")
+          span Reset Settings
+
 
         .footer
           article.footer__about

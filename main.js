@@ -88,34 +88,44 @@ Vue.component('color', {
   }
 });
 
+const defaultSettings = {
+  amount: 6,
+  colorsInGradient: 4,
+  randomOrder: false,
+  hasGradients: true,
+  hasBackground: false,
+  animateBackgroundIntro: false,
+  hasOutlines: false,
+  highContrast: false,
+  autoHideUI: false,
+  expandUI: false,
+  hasBleed: false,
+  hasGrain: false,
+  hideText: false,
+  showContrast: false,
+  addBWContrast: true,
+  padding: 0.175,
+  colorMode: "hsluv",
+  minHueDistance: 60,
+  interpolationColorModel: "lab",
+  colorValueType: "hex",
+  generatorFunction: "Legacy",
+  quantizationMethod: "art-palette",
+  nameList: "bestOf",
+  showUI: true,
+  sameHeightColors: false,
+  exportAs: "jsArray",
+  imgURL: "",
+  imgID: "",
+};
+
 let colors = new Vue({
   el: "#app",
   data: () => {
     return {
       colorsValues: [],
       names: [],
-      amount: 6,
-      colorsInGradient: 4,
-      settingsVisible: false,
-      shareVisible: false,
-      randomOrder: false,
-      hasGradients: true,
-      hasBackground: false,
-      animateBackgroundIntro: false,
-      hasOutlines: false,
-      highContrast: false,
-      autoHideUI: false,
-      expandUI: false,
-      hasBleed: false,
-      hasGrain: false,
-      hideText: false,
-      showContrast: false,
-      addBWContrast: true,
-      padding: 0.175,
-      colorMode: "hsluv",
       colorModeList: ["hsluv", "oklch", "hcl", "hsl", "hcg", "hsv", "hpluv"],
-      minHueDistance: 60,
-      interpolationColorModel: "lab",
       interpolationColorModels: [
         "lab",
         "oklab",
@@ -128,9 +138,7 @@ let colors = new Vue({
         "hsi",
         "oklch",
       ],
-      colorValueType: "hex",
       colorValueTypes: ["hex", "rgb", "hsl", "cmyk"],
-      generatorFunction: "Legacy",
       generatorFunctionList: [
         "Hue Bingo",
         "Legacy",
@@ -158,25 +166,32 @@ let colors = new Vue({
         "x11",
         "xkcd",
       ],
-      quantizationMethod: "art-palette",
       quantizationMethods: ["art-palette", "gifenc" /*, 'pigmnts'*/],
-      nameList: "bestOf",
       changedNamesOnly: false,
       isLoading: true,
       isAnimating: true,
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
       moveTimer: null,
-      showUI: true,
-      lightmode: false,
-      sameHeightColors: false,
-      exportAs: "jsArray",
       isCopiying: false,
-      imgURL: "",
-      imgID: "",
       paletteTitle: "Double Rainbow",
+      lightmode: false,
+      settingsVisible: false,
+      shareVisible: false,
+      trackSettingsInURL: false,
       trackInURL: [
         { key: "s", prop: "currentSeed" },
+        { key: "a", prop: "amount", p: parseInt }, //6
+        { key: "cg", prop: "colorsInGradient", p: parseInt }, //4
+        { key: "p", prop: "padding", p: parseFloat }, // .175
+        { key: "md", prop: "minHueDistance", p: parseInt }, // 60,
+        { key: "cm", prop: "interpolationColorModel" }, // 'lab'
+        { key: "f", prop: "generatorFunction" }, // 'Legacy'
+        { key: "c", prop: "colorMode" }, // 'hsluv'
+        { key: "iu", prop: "imgURL" }, // ''
+        { key: "qm", prop: "quantizationMethod" }, // art-palette,
+      ],
+      trackInLocalStorage: [
         { key: "a", prop: "amount", p: parseInt }, //6
         { key: "cg", prop: "colorsInGradient", p: parseInt }, //4
         { key: "hg", prop: "hasGradients", p: Boolean }, // true
@@ -199,10 +214,32 @@ let colors = new Vue({
         { key: "cv", prop: "colorValueType" }, // hex,
         { key: "qm", prop: "quantizationMethod" }, // art-palette,
         { key: "nl", prop: "nameList" }, // nameList,
+        { key: "ts", prop: "trackSettingsInURL", p: Boolean }, // false
       ],
+      ...defaultSettings,
     };
   },
   watch: {
+    $data: {
+      handler: function (newValue, oldValue) {
+        if (this.trackSettingsInURL) {
+          console.log("updating URL");
+          this.updateURL();
+        }
+      },
+      deep: true,
+    },
+    trackSettingsInURL: function (newValue, oldValue) {
+      if (newValue === false) {
+        //remove the settings from the url
+        history.pushState(
+          history.state,
+          document.title,
+          window.location.pathname
+        );
+      }
+      this.trackSettingsInURL = newValue;
+    },
     amount: function () {
       this.amount = Math.min(Math.max(this.amount, 3), 10);
       this.colorsInGradient = Math.min(this.colorsInGradient, this.amount);
@@ -357,14 +394,14 @@ let colors = new Vue({
       gradient[gradient.length - 1] += this.sameHeightColors ? " 80%" : " 69%";
       return gradient.join(",");
     },
-    backgroundGradient() {
-      /*
-      // hard stops
-      let col = this.colors.reduce((r,d,i) => (`${r ? r + ',' : ''} ${d} ${((i)/this.colors.length) * 100}%, ${d} ${((i + 1)/this.colors.length) * 100}%`),'');
-      return `linear-gradient(to bottom, ${col})`;
-      */
-
-      return `linear-gradient(to bottom, ${this.gradientStops})`;
+    hardStops() {
+      return this.colors.map(
+          (c, i) =>
+            `${c} ${(i / this.colors.length) * 100}% ${
+              ((i + 1) / this.colors.length) * 100
+            }%`
+        )
+        .join(",");
     },
     appStyles() {
       return {
@@ -373,6 +410,8 @@ let colors = new Vue({
         "--color-last-contrast": this.lastColorContrast,
         "--color-first-contrast": this.firstColorContrast,
         "--colors": this.colors.length,
+        "--gradient": this.gradientStops,
+        "--gradient-hard": this.hardStops,
       };
     },
     appClasses() {
@@ -470,7 +509,9 @@ let colors = new Vue({
         lightmode: this.lightmode,
         buildImageFn: buildImage,
         buildSVGFn: buildSVG,
-        setCopying: (val) => { this.isCopiying = val; }
+        setCopying: (val) => {
+          this.isCopiying = val;
+        },
       });
     },
     shareURL() {
@@ -516,33 +557,60 @@ let colors = new Vue({
       const faviconBase64 = this.buildImage(100, 0.1).toDataURL("image/png");
       favicons.forEach(($icon) => ($icon.href = faviconBase64));
     },
-    settingsFromURL() {
+    settingsFromURLAndLocalStorage() {
+      // 1. Load all settings from localStorage (trackInLocalStorage)
+      const savedSettingsString = localStorage.getItem("farbveloSettings");
+      let mergedSettings = {};
+      if (savedSettingsString) {
+        try {
+          const settings = JSON.parse(savedSettingsString);
+          this.trackInLocalStorage.forEach((settingConfig) => {
+            if (settings.hasOwnProperty(settingConfig.prop)) {
+              mergedSettings[settingConfig.prop] = settings[settingConfig.prop];
+            }
+          });
+        } catch (e) {
+          console.error("Error loading settings from localStorage:", e);
+          localStorage.removeItem("farbveloSettings");
+        }
+      }
+
+      // 2. Load settings from URL (trackInURL) and overwrite mergedSettings
       const params = window.location.search;
       const stateString = new URLSearchParams(params).get("s");
-
-      const colorString = new URLSearchParams(params).get("c");
-
+      let hadSettingsFromURL = false;
       if (stateString) {
-        let settings = JSON.parse(
+        let urlSettings = JSON.parse(
           Buffer.from(stateString, "base64").toString("ascii")
         );
-
-        Object.keys(settings).forEach((settingKey) => {
+        Object.keys(urlSettings).forEach((settingKey) => {
           const setting = this.trackInURL.find((s) => s.key === settingKey);
-          //this[setting.prop] = settings[settingKey].prop;
-
-          this[setting.prop] = setting.p
-            ? setting.p(settings[settingKey])
-            : settings[settingKey];
+          if (setting) {
+            mergedSettings[setting.prop] = setting.p
+              ? setting.p(urlSettings[settingKey])
+              : urlSettings[settingKey];
+          }
         });
-
         // side effects :(
-        this.animateBackgroundIntro = !!settings.hb;
-
-        return true;
-      } else {
-        return false;
+        this.animateBackgroundIntro = !!urlSettings.hb;
+        hadSettingsFromURL = true;
       }
+
+      // 2.5. If lightmode is not defined, use system preference
+      if (typeof mergedSettings.lightmode === 'undefined') {
+        const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
+        mergedSettings.lightmode = wantLightMode.matches;
+      }
+
+      // 3. Apply merged settings to Vue instance
+      Object.keys(mergedSettings).forEach((prop) => {
+        this[prop] = mergedSettings[prop];
+      });
+
+      // 4. Save merged settings back to localStorage
+      this.saveSettingsToLocalStorage();
+
+      return hadSettingsFromURL;
     },
     constructURL() {
       const state = this.trackInURL.reduce(
@@ -555,11 +623,14 @@ let colors = new Vue({
       return serializedState;
     },
     updateURL() {
-      history.pushState(
-        history.state,
-        document.title,
-        "?s=" + this.constructURL()
-      );
+      if (this.trackSettingsInURL) {
+        history.pushState(
+          history.state,
+          document.title,
+          "?s=" + this.constructURL()
+        );
+      }
+      this.saveSettingsToLocalStorage(); // Save settings when URL is updated
     },
     newColors(newSeed) {
       document.documentElement.classList.remove("is-imagefetching");
@@ -567,7 +638,7 @@ let colors = new Vue({
         this.currentSeed = randomStr();
       }
       this.rnd = new Seedrandom(this.currentSeed);
-      //this.updateURL();
+      this.updateURL();
       if (this.generatorFunction !== "ImageExtract") {
         let colorArr = generateRandomColors({
           generatorFunction: this.generatorFunction,
@@ -591,7 +662,9 @@ let colors = new Vue({
             this.quantizationMethod
           );
         } else {
-          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${325 * 2}/${483 * 2}`;
+          const imgSrc = `https://picsum.photos/seed/${this.currentSeed}/${
+            325 * 2
+          }/${483 * 2}`;
           this.imgURL = imgSrc;
           loadImage(
             this,
@@ -604,6 +677,12 @@ let colors = new Vue({
         }
         this.colorsValues = this.colorsValues;
       }
+    },
+    resetSettings() {
+      // restore all settings set in defaultSettings
+      Object.keys(defaultSettings).forEach((key) => {
+        this[key] = defaultSettings[key];
+      });
     },
     toggleSettings() {
       this.shareVisible = false;
@@ -640,11 +719,16 @@ let colors = new Vue({
           this.padding = Math.min(1, this.padding + 0.01);
         } else if (e.code === "ArrowLeft") {
           this.padding = Math.max(0, this.padding - 0.01);
+        } else if (e.code === "Escape") {
+          if (this.settingsVisible || this.shareVisible) {
+            this.settingsVisible = false;
+            this.shareVisible = false;
+          }
         }
       });
 
       let isTouching = false;
-      let lastX;
+      let lastX = 0;
 
       // maybe add swipe controls at some point
       document.addEventListener("pointerdown", (e) => {
@@ -701,9 +785,61 @@ let colors = new Vue({
     getShareLink(provider) {
       return getShareLink(provider, this.currentURL, this.paletteTitle);
     },
+    saveSettingsToLocalStorage() {
+      const settingsToSave = this.trackInLocalStorage.reduce((acc, setting) => {
+        acc[setting.prop] = this[setting.prop];
+        return acc;
+      }, {});
+      try {
+        localStorage.setItem(
+          "farbveloSettings",
+          JSON.stringify(settingsToSave)
+        );
+      } catch (e) {
+        console.error("Error saving settings to localStorage:", e);
+      }
+    },
+    loadSettingsFromLocalStorage() {
+      const savedSettingsString = localStorage.getItem("farbveloSettings");
+      if (savedSettingsString) {
+        try {
+          const settings = JSON.parse(savedSettingsString);
+          let settingsApplied = false;
+          this.trackInLocalStorage.forEach((settingConfig) => {
+            if (settings.hasOwnProperty(settingConfig.prop)) {
+              this[settingConfig.prop] = settings[settingConfig.prop];
+              settingsApplied = true;
+            }
+          });
+
+          if (settingsApplied) {
+            // Apply side-effects for loaded settings
+            if (this.lightmode) {
+              document.querySelector("body").classList.add("lightmode");
+            } else {
+              document.querySelector("body").classList.remove("lightmode");
+            }
+            this.animateBackgroundIntro = !!this.hasBackground;
+            this.updateMeta();
+            return true;
+          }
+        } catch (e) {
+          console.error("Error loading settings from localStorage:", e);
+          localStorage.removeItem("farbveloSettings");
+        }
+      }
+      return false;
+    },
   },
   mounted() {
-    const hadSettings = this.settingsFromURL();
+    let hadSettingsFromURL = this.settingsFromURLAndLocalStorage();
+    const settingsActuallyLoaded = true; // always loaded something (defaults if nothing else)
+
+    // Remove URL if settings came from it and not tracking in URL
+    if (hadSettingsFromURL && !this.trackSettingsInURL) {
+      window.history.replaceState({}, document.title, location.pathname);
+    }
+
     /*
     window.addEventListener('popstate', () => {
       console.log('ok');
@@ -743,18 +879,17 @@ let colors = new Vue({
 
     const moreContrast = window.matchMedia("(prefers-contrast: more)");
 
-    if (moreContrast.matches) {
+    if (moreContrast.matches && !settingsActuallyLoaded) {
       this.highContrast = true;
       this.hasGradients = false;
     }
 
-    this.newColors(!hadSettings);
+    this.newColors(!settingsActuallyLoaded);
 
-    if (hadSettings) {
-      window.history.replaceState({}, document.title, location.pathname);
-    } else {
+    if (!settingsActuallyLoaded) {
+      // Only apply OS theme if no settings loaded from anywhere
       const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
-      if (wantLightMode) {
+      if (wantLightMode.matches) {
         this.lightmode = true;
       }
     }
@@ -771,10 +906,15 @@ let colors = new Vue({
       this.isAnimating = false;
     }, 1600);
 
-    if (this.animateBackgroundIntro) {
+    if (this.animateBackgroundIntro && !settingsActuallyLoaded) {
+      // Only animate intro if not loading from settings
       setTimeout(() => {
         this.hasBackground = true;
       }, 2000);
+    } else if (settingsActuallyLoaded && this.hasBackground) {
+      // If settings were loaded and hasBackground is true, ensure it's set.
+      // This should already be handled by loadSettingsFromLocalStorage or settingsFromURL.
+      // No specific action needed here as the property is already set.
     }
   },
 });

@@ -150,6 +150,11 @@ button {
       }
     }
   }
+  .buttons {
+    .button {
+      box-shadow: 0 0 0 3px var(--color-bg);
+    }
+  }
 }
 
 
@@ -170,6 +175,7 @@ button {
   opacity: 0;
   transform: scale(.7);
   transition: 300ms opacity linear, 220ms transform ease-out 50ms;
+  background-image: linear-gradient(to bottom, var(--gradient));
 }
 
 .bg-wrap {
@@ -445,7 +451,7 @@ button {
 
   right: 24%;
   //right: 50%;
-  bottom: 10vmin;
+  bottom: calc(10vmin - 0.1rem);
   display: flex;
   z-index: 20;
   transform: translate(1.1em, 1.1em);
@@ -1173,6 +1179,52 @@ button {
 
 .colors {
   z-index: 3;
+}
+
+.panel__button {
+  position: relative;
+  display: block;
+  text-align: center;
+  width: 100%;
+  border: none;
+  margin-top: calc(var(--size-gutter) * 2);;
+
+  background: var(--color-inverted);
+  color: var(--color-bg);
+
+  padding: 0.8em calc(var(--size-gutter) * 2);
+
+  font-size: 0.7rem;
+  font-weight: normal;
+  line-height: 1;
+
+  overflow: hidden;
+  transition: 100ms color linear 200ms;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(100% * var(--colors));
+    background: linear-gradient(to bottom, var(--gradient-hard));
+    transform: translateY(100%);
+    transition: 1000ms transform cubic-bezier(0.3, 0.7, 0, 1);
+    //--gradient-hard
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:hover {
+    color: var(--color-last-contrast, var(--color-inverted));
+    &::before {
+      transform: translateY(0%);
+    }
+  }
 }
 
 .panel__setting {
