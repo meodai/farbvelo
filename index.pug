@@ -251,7 +251,7 @@ html(lang="en-US")
               option(v-for="(list, key) in nameLists", :value="key" :key=key).
                 {{ list.title }}
           p.panel__text
-            | {{currentListData.description}}
+            | {{currentListData.description}} <span> — {{currentListData.colorCount}} names</span>
 
         button.panel__button(v-on:click="resetSettings")
           span Reset Settings
