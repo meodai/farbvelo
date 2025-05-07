@@ -239,17 +239,19 @@ html(lang="en-US")
             svg
               use(xlink:href="#icon-dropdown")
             select(v-model="colorValueType")
-              option(v-for="valueType in colorValueTypes", :value=valueType).
+              option(v-for="valueType in colorValueTypes", :value="valueType").
                 {{ valueType }}
-        //
-          label.panel__setting
-            strong.panel__settingtitle Color Name List
-            .panel__inputs.panel__inputs--select
-              svg
-                use(xlink:href="#icon-dropdown")
-              select(v-model="nameList")
-                option(v-for="listKey in nameLists", :value=listKey).
-                  {{ listKey }}
+
+        label.panel__setting
+          strong.panel__settingtitle Color Name List
+          .panel__inputs.panel__inputs--select
+            svg
+              use(xlink:href="#icon-dropdown")
+            select(v-model="nameList")
+              option(v-for="(list, key) in nameLists", :value="key" :key=key).
+                {{ list.title }}
+          p.panel__text
+            | {{currentListData.description}}
 
         button.panel__button(v-on:click="resetSettings")
           span Reset Settings

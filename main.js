@@ -155,25 +155,17 @@ let colors = new Vue({
         "Simplex Noise",
         "Full Random",
       ],
-      nameLists: [
-        "default",
-        "bestOf",
-        "wikipedia",
-        "basic",
-        "html",
-        "japaneseTraditional",
-        "leCorbusier",
-        "ntc",
-        "osxcrayons",
-        "ral",
-        "ridgway",
-        "sanzoWadaI",
-        "thesaurus",
-        "werner",
-        "windows",
-        "x11",
-        "xkcd",
-      ],
+      nameLists: {
+        bestOf: {
+          title: "Best of Color Names",
+          source: "https://github.com/meodai/color-names",
+          description: "Best color names selected from various sources.",
+          key: "bestOf",
+          colorCount: 4541,
+          license: "MIT",
+          url: "/v1/?list=bestOf",
+        },
+      },
       quantizationMethods: ["art-palette", "gifenc" /*, 'pigmnts'*/],
       changedNamesOnly: false,
       isLoading: true,
@@ -302,7 +294,10 @@ let colors = new Vue({
       this.updateMeta();
     },
     nameList: function () {
-      this.getNames(this.colorsValues, true);
+      // When the nameList changes, fetch names for the current colors with the new list
+      if (this.colorsValues && this.colorsValues.length) {
+        this.getNames(this.colors);
+      }
     },
   },
   computed: {
@@ -457,7 +452,9 @@ let colors = new Vue({
         };
       });
     },
-
+    currentListData() {
+      return this.nameLists[this.nameList];
+    },
     colorList() {
       const namedColors = this.namedColorList.map((color) => ({
         ...color,
@@ -530,12 +527,30 @@ let colors = new Vue({
     buildSVG(size = 100, padding = 0.1, hardStops = false) {
       return buildSVG(this.colors, size, padding, hardStops);
     },
+    getLists() {
+      const url = new URL("https://api.color.pizza/v1/lists/");
+      return fetch(url, {
+        headers: {
+          "X-Referrer": "https://farbvelo.elastiq.ch/",
+        },
+      })
+        .then((data) => data.json())
+        .then((data) => {
+          // some of the lists have to little names, remove all that have less than 100
+          const listsToKeep = {};
+          Object.keys(data.listDescriptions).forEach((key) => {
+            if (data.listDescriptions[key].colorCount > 150) {
+              listsToKeep[key] = data.listDescriptions[key];
+            }
+          });
+          this.nameLists = listsToKeep;
+        });
+    },
     getNames(colors, onlyNames) {
       const url = new URL("https://api.color.pizza/v1/");
 
       const params = {
         noduplicates: true,
-        //goodnamesonly: true,
         list: this.nameList,
         values: colors.map((c) => c.replace("#", "")),
       };
@@ -850,6 +865,7 @@ let colors = new Vue({
     },
   },
   mounted() {
+    this.getLists();
     let hadSettingsFromURL = this.settingsFromURLAndLocalStorage();
     const settingsActuallyLoaded = true; // always loaded something (defaults if nothing else)
 
