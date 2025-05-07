@@ -552,10 +552,6 @@ let colors = new Vue({
         .then((data) => data.json())
         .then((data) => {
           this.names = data.colors;
-          /*console.log(
-          this.names,
-          colors.map(c => c.replace('#', ''))
-        )*/
           this.paletteTitle = data.paletteTitle;
         });
     },

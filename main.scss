@@ -1149,12 +1149,18 @@ button {
   margin-top: 1px;
   margin-bottom: 1px;
 
+  /*scrollbar-width: thin;*/
+
+  scrollbar-color: var(--color-bg) var(--color-inverted);
+
+
   @media (max-width: 850px) {
     opacity: 0;
     z-index: 5;
     transform: translateX(0%) scale(.8);
     margin-top: 0;
     margin-bottom: 0;
+    scrollbar-width: thin;
   }
 }
 
@@ -1212,11 +1218,12 @@ button {
     transform: translateY(100%);
     transition: 1000ms transform cubic-bezier(0.3, 0.7, 0, 1);
     //--gradient-hard
+    z-index: 0;
   }
 
   span {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   &:hover {
