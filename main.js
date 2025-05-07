@@ -544,7 +544,11 @@ let colors = new Vue({
 
       url.search = new URLSearchParams(params).toString();
 
-      return fetch(url)
+      return fetch(url, {
+        headers: {
+          "X-Referrer": "https://farbvelo.elastiq.ch/",
+        },
+      })
         .then((data) => data.json())
         .then((data) => {
           this.names = data.colors;
