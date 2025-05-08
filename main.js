@@ -125,9 +125,10 @@ const defaultSettings = {
   exportAs: "jsArray",
   imgURL: "",
   imgID: "",
+  trackSettingsInURL: true,
 };
 
-let colors = new Vue({
+new Vue({
   el: "#app",
   data: () => {
     return {
