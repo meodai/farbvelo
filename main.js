@@ -3,9 +3,6 @@ import {hsluvToHex, hpluvToHex} from 'hsluv';
 import chroma from 'chroma-js';
 import Seedrandom from 'seedrandom';
 import getShareLink from './lib/share-strings';
-import {
-  quantize as quantizeGifenc
-} from "gifenc";
 import spectral from 'spectral.js';
 import { logColors, randomStr } from './utils.js';
 import generateRandomColors from './lib/generate-random-colors.js';
