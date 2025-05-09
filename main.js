@@ -1,5 +1,4 @@
 // import Vue from 'vue';
-import {hsluvToHex, hpluvToHex} from 'hsluv';
 import chroma from './lib/chroma-extensions.js'; // New import
 import Seedrandom from 'seedrandom';
 import getShareLink from './lib/share-strings';
@@ -8,12 +7,6 @@ import { logColors, randomStr } from './utils.js';
 import generateRandomColors from './lib/generate-random-colors.js';
 import { loadImage } from './lib/image-palette.js';
 import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
-
-// const canvas = document.createElement('canvas');
-// const ctx = canvas.getContext('2d');
-
-const workers = [];
-const CANVAS_SCALE = 0.4;
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
