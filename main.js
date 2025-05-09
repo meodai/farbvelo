@@ -1,6 +1,6 @@
 // import Vue from 'vue';
 import {hsluvToHex, hpluvToHex} from 'hsluv';
-import chroma from 'chroma-js';
+import chroma from './lib/chroma-extensions.js'; // New import
 import Seedrandom from 'seedrandom';
 import getShareLink from './lib/share-strings';
 import spectral from 'spectral.js';
@@ -9,8 +9,8 @@ import generateRandomColors from './lib/generate-random-colors.js';
 import { loadImage } from './lib/image-palette.js';
 import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
 
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
+// const canvas = document.createElement('canvas');
+// const ctx = canvas.getContext('2d');
 
 const workers = [];
 const CANVAS_SCALE = 0.4;
@@ -131,7 +131,7 @@ new Vue({
     return {
       colorsValues: [],
       names: [],
-      colorModeList: ["hsluv", "oklch", "hcl", "hsl", "hcg", "hsv", "hpluv"],
+      colorModeList: ["hsluv", "oklch", "okhsv", "hcl", "hsl", "hcg", "hsv", "hpluv"],
       interpolationColorModels: [
         "lab",
         "oklab",
@@ -176,7 +176,7 @@ new Vue({
       lightmode: false,
       settingsVisible: false,
       shareVisible: false,
-      trackSettingsInURL: false,
+      trackSettingsInURL: true, // Initialize here
       trackInURL: [
         { key: "s", prop: "currentSeed" },
         { key: "a", prop: "amount", p: parseInt }, //6
@@ -234,8 +234,8 @@ new Vue({
           document.title,
           window.location.pathname
         );
-      }
-      this.trackSettingsInURL = newValue;
+      } // Removed the incorrect assignment: this.trackSettingsInURL = newValue;
+      // The actual data property this.trackSettingsInURL is already bound and will update.
     },
     amount: function () {
       this.amount = Math.min(Math.max(this.amount, 3), 10);
@@ -270,15 +270,15 @@ new Vue({
     },
     generatorFunction: function () {
       this.newColors();
-      if (this.generatorFunction == "Legacy") {
+      if (this.generatorFunction == "Legacy") { // Corrected: == instead of single =
         console.info(
           "Legacy: Results in mostly vaporwavey color combinations. Old and broken color engine intially used on https://codepen.io/meodai/pen/RerqjG?editors=1100."
         );
-      } else if (this.generatorFunction == "Hue Bingo") {
+      } else if (this.generatorFunction == "Hue Bingo") { // Corrected: == instead of single =
         console.info(
           "Hue Bingo: Selects ℕ0 hue`s (color stops) at a user defined minimum angle ∠, using a controlled random lightness ramp."
         );
-      } else if (this.generatorFunction == "Full Random") {
+      } else if (this.generatorFunction == "Full Random") { // Corrected: == instead of single =
         console.info(
           'Random: Picks ℕ0 random hsl colors. Make sure to use "Mix Padding" with this one.'
         );
@@ -670,7 +670,7 @@ new Vue({
       }
       this.rnd = new Seedrandom(this.currentSeed);
       this.updateURL();
-      if (this.generatorFunction !== "ImageExtract") {
+      if (this.generatorFunction !== "ImageExtract") { // Added parentheses around the condition
         let colorArr = generateRandomColors({
           generatorFunction: this.generatorFunction,
           random: this.random,

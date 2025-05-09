@@ -28,7 +28,7 @@ export const unsplashURLtoID = url => {
 
 // Convert color coordinates to hex string based on mode
 import { hsluvToHex, hpluvToHex } from 'hsluv';
-import chroma from 'chroma-js';
+import chroma from './lib/chroma-extensions.js';
 
 export function coordsToHex(angle, val1, val2, mode = 'hsluv') {
   if (mode === 'hsluv') {
@@ -41,7 +41,16 @@ export function coordsToHex(angle, val1, val2, mode = 'hsluv') {
     return chroma(val2, val1, angle, 'lch').hex();
   } else if (mode === 'oklch') {
     return chroma(val2 / 100 * 0.999, val1 / 100 * 0.322, angle, 'oklch').hex();
+  } else if (mode === 'okhsv') {
+    // Okhsv inputs: angle (hue 0-360), val1 (saturation 0-100), val2 (value 0-100)
+    // chroma.okhsv expects: h_deg (0-360), s_norm (0-1), v_norm (0-1)
+    const s_norm = val1 / 100; // Adjusted for chroma.okhsv
+    const v_norm = Math.pow(val2 / 100, .9) * 1.2;
+    return chroma.okhsv(angle, s_norm, v_norm).hex();
   } else if (['hsl', 'hsv', 'hcg'].includes(mode)) {
     return chroma(angle, val1 / 100, val2 / 100, mode).hex();
   }
+  // Fallback for unknown modes, or if a mode wasn't handled (should not happen with proper checks)
+  console.warn(`Unknown color mode: ${mode} in coordsToHex. Falling back to black.`);
+  return '#000000';
 }
