@@ -902,6 +902,7 @@ button {
     padding: 0.25rem 1rem 0.25rem 0rem;
     background-color: transparent;
 
+    &,
     option {
       color: var(--color-inverted);
     }
@@ -1318,7 +1319,6 @@ button {
     transform: none;
   }
 }
-
 
 .panel__settingtitle {
   font-size: 0.7rem;
