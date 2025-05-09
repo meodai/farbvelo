@@ -131,7 +131,7 @@ new Vue({
     return {
       colorsValues: [],
       names: [],
-      colorModeList: ["hsluv", "oklch", "okhsv", "hcl", "hsl", "hcg", "hsv", "hpluv"],
+      colorModeList: ["hsluv", "oklch", "okhsv", "okhsl", "hcl", "hsl", "hcg", "hsv", "hpluv"],
       interpolationColorModels: [
         "lab",
         "oklab",
@@ -220,7 +220,6 @@ new Vue({
     $data: {
       handler: function (newValue, oldValue) {
         if (this.trackSettingsInURL) {
-          console.log("updating URL");
           this.updateURL();
         }
       },

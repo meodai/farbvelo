@@ -47,6 +47,10 @@ export function coordsToHex(angle, val1, val2, mode = 'hsluv') {
     const s_norm = val1 / 100; // Adjusted for chroma.okhsv
     const v_norm = Math.pow(val2 / 100, .9) * 1.2;
     return chroma.okhsv(angle, s_norm, v_norm).hex();
+  } else if (mode === 'okhsl') {
+    const s_norm = val1 / 100; // Adjusted for chroma.okhsl
+    const l_norm = val2 / 100;
+    return chroma.okhsl(angle, s_norm, l_norm).hex();
   } else if (['hsl', 'hsv', 'hcg'].includes(mode)) {
     return chroma(angle, val1 / 100, val2 / 100, mode).hex();
   }
