@@ -8,6 +8,9 @@ import generateRandomColors from './lib/generate-random-colors.js';
 import { loadImage } from './lib/image-palette.js';
 import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
 
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
   template: `<aside @click="copy" class="color" v-bind:style="{'--color': colorhex, '--color-next': nextcolorhex, '--color-text': contrastcolor, '--color-best-contrast': bestContrast}">

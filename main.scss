@@ -176,6 +176,7 @@ button {
   transform: scale(.7);
   transition: 300ms opacity linear, 220ms transform ease-out 50ms;
   background-image: linear-gradient(to bottom, var(--gradient));
+  /*mask-image: radial-gradient(circle at 50%, #000 10%, transparent 80%);*/
 }
 
 .bg-wrap {
