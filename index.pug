@@ -75,6 +75,9 @@ html(lang="en-US")
               svg.icon.icon--up
                 use(xlink:href="#icon-upload")
               input(type="file" accept="image/*" ref="file" v-on:change="handlefile")
+            .panel__imgpositions
+              span.panel__imgposition(v-for="(pos, i) in colorPositions", :key="i", :style="{'--x': pos.position.x, '--y': pos.position.y, '--c': pos.color}").
+
             svg.icon.icon--re(v-on:click="newColors(true)")
               use(xlink:href="#icon-refresh")
 

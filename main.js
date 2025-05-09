@@ -5,11 +5,12 @@ import getShareLink from './lib/share-strings';
 import spectral from 'spectral.js';
 import { logColors, randomStr } from './utils.js';
 import generateRandomColors from './lib/generate-random-colors.js';
-import { loadImage } from './lib/image-palette.js';
+import { loadImage, startColorLocatorWorker } from './lib/image-palette.js';
 import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
+import { visualizeColorPositions } from './lib/visualize-color-positions.js';
 
 const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
@@ -161,6 +162,7 @@ new Vue({
         },
       },
       quantizationMethods: ["art-palette", "gifenc" /*, 'pigmnts'*/],
+      colorPositions: [],
       changedNamesOnly: false,
       isLoading: true,
       isAnimating: true,
@@ -292,6 +294,12 @@ new Vue({
         this.getNames(this.colors);
       }
     },
+    colors: function() {
+      // When the final colors are calculated, find their positions if we're using ImageExtract
+      if (this.generatorFunction === 'ImageExtract' && this.currentImageData) {
+        this.findAndStoreColorLocations();
+      }
+    }
   },
   computed: {
     lastColor() {
@@ -855,6 +863,91 @@ new Vue({
         }
       }
       return false;
+    },
+    findAndStoreColorLocations() {
+      if (this.generatorFunction !== 'ImageExtract' || !this.currentImageData || !this.colors || this.colors.length === 0) {
+        return; // Exit if conditions aren't met
+      }
+
+      // Get RGB colors from the hex palette
+      const targetRgbColors = this.colors.map(hexColor => {
+        const rgb = chroma(hexColor).rgb();
+        return { r: rgb[0], g: rgb[1], b: rgb[2] };
+      });
+
+      // Create a mapping from RGB keys to hex colors
+      const rgbToHexMap = {};
+      targetRgbColors.forEach((rgb, index) => {
+        const key = `${rgb.r}-${rgb.g}-${rgb.b}`;
+        rgbToHexMap[key] = this.colors[index];
+      });
+
+      // Find color positions using the worker
+      startColorLocatorWorker(
+        this.currentImageData,
+        targetRgbColors,
+        (locations) => {
+          // Store only one position per color (the best one - closest to center with lowest distance)
+          const colorPositions = [];
+
+          Object.entries(locations).forEach(([colorKey, positions]) => {
+            // Filter out default positions
+            const realPositions = positions.filter(p => !p.isDefault);
+
+            if (realPositions.length > 0) {
+              // Sort positions by distance from center (ascending)
+              realPositions.sort((a, b) => a.distance - b.distance);
+
+              // Strategically select a position to avoid clustering at the absolute center
+              let strategicIndex = 0;
+              if (realPositions.length > 1) {
+                // If there are multiple positions, pick one that's not the absolute closest.
+                // This aims for roughly the median position by distance.
+                // Examples:
+                // - length 2: index 1 (the further one)
+                // - length 3: index 1 (the middle one)
+                // - length 4: index 2
+                // - length 5: index 2 (the middle one)
+                strategicIndex = Math.min(realPositions.length - 1, Math.floor(realPositions.length * 0.5));
+                // Ensure index is at least 0 if realPositions.length is 1.
+                if (realPositions.length === 1) strategicIndex = 0;
+              }
+              const bestPosition = realPositions[strategicIndex];
+
+              // Add to our array with hex color and position
+              colorPositions.push({
+                color: rgbToHexMap[colorKey] || colorKey,
+                position: {
+                  x: bestPosition.x,
+                  y: bestPosition.y,
+                  distance: bestPosition.distance
+                }
+              });
+            }
+          });
+
+          // Store the results
+          this.colorPositions = colorPositions;
+
+          // Find the image container to place the visualization
+          const imgContainer = document.querySelector('.image-container') || document.querySelector('.app-intro');
+          if (imgContainer && colorPositions.length > 0) {
+            // Convert to format needed by visualization function
+            const visLocations = {};
+            colorPositions.forEach(item => {
+              const rgb = chroma(item.color).rgb();
+              const key = `${rgb[0]}-${rgb[1]}-${rgb[2]}`;
+              visLocations[key] = [item.position];
+            });
+
+            // Visualize the positions on the image
+            visualizeColorPositions(visLocations, this.colors, imgContainer, this.currentImageData);
+          }
+        },
+        (error) => {
+          console.error("Color locator error:", error.message);
+        }
+      );
     },
   },
   mounted() {

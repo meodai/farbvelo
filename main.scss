@@ -1046,6 +1046,26 @@ button {
   }
 }
 
+.panel__imgpositions {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.panel__imgposition {
+  position: absolute;
+  top: calc(var(--y) * 100%);
+  left: calc(var(--x) * 100%);
+  width: .4rem;
+  height: .4rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px var(--color-inverted),
+              inset 0 0 0 1px var(--color-bg),
+              0 0 0 2px var(--c);
+}
+
 .panel__code {
   margin-top: 1rem;
   font-size: 0.6em;
