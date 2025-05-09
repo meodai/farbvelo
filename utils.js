@@ -44,8 +44,11 @@ export function coordsToHex(angle, val1, val2, mode = 'hsluv') {
   } else if (mode === 'okhsv') {
     // Okhsv inputs: angle (hue 0-360), val1 (saturation 0-100), val2 (value 0-100)
     // chroma.okhsv expects: h_deg (0-360), s_norm (0-1), v_norm (0-1)
-    const s_norm = val1 / 100; // Adjusted for chroma.okhsv
-    const v_norm = Math.pow(val2 / 100, .9) * 1.2;
+    let s_norm = val1 / 100; // Adjusted for chroma.okhsv
+    let v_norm = Math.pow(val2 / 100, .9) * 1.1 + 0.15; // Adjusted for chroma.okhsv
+    // max them out to 1
+    s_norm = Math.min(s_norm, 1);
+    v_norm = Math.min(v_norm, 1);
     return chroma.okhsv(angle, s_norm, v_norm).hex();
   } else if (mode === 'okhsl') {
     const s_norm = val1 / 100; // Adjusted for chroma.okhsl
