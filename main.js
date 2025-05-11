@@ -111,7 +111,7 @@ const defaultSettings = {
   minHueDistance: 60,
   interpolationColorModel: "lab",
   colorValueType: "hex",
-  generatorFunction: "Legacy",
+  generatorFunction: "Hue Bingo",
   quantizationMethod: "art-palette",
   nameList: "bestOf",
   showUI: true,
@@ -491,7 +491,7 @@ new Vue({
       }
     },
     currentURL() {
-      return window.location.origin + "/?s=" + this.constructURL();
+      return window.location.origin + "/?s=" + this.constructShareURL();
     },
   },
   methods: {
@@ -584,12 +584,14 @@ new Vue({
       // 1. Load all settings from localStorage (trackInLocalStorage)
       const savedSettingsString = localStorage.getItem("farbveloSettings");
       let mergedSettings = {};
+      let hadSettingsFromLocalStorage = false;
       if (savedSettingsString) {
         try {
           const settings = JSON.parse(savedSettingsString);
           this.trackInLocalStorage.forEach((settingConfig) => {
             if (settings.hasOwnProperty(settingConfig.prop)) {
               mergedSettings[settingConfig.prop] = settings[settingConfig.prop];
+              hadSettingsFromLocalStorage = true; // Set if any setting is loaded
             }
           });
         } catch (e) {
@@ -599,14 +601,23 @@ new Vue({
       }
 
       // 2. Load settings from URL (trackInURL) and overwrite mergedSettings
-      const params = window.location.search;
-      const stateString = new URLSearchParams(params).get("s");
+      const params = new URLSearchParams(window.location.search);
+      const shareStateString = params.get("s");
       let hadSettingsFromURL = false;
-      if (stateString) {
+
+      if (shareStateString) {
+        // Try parsing the compact share URL first
         try {
-          let urlSettings = JSON.parse(
-            Buffer.from(stateString, "base64").toString("ascii")
-          );
+          // Decode base64 (browser-native)
+          const binaryString = atob(shareStateString);
+          // Modern way to decode Base64 to UTF-8 string
+          const uint8Array = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
+          }
+          const jsonString = new TextDecoder().decode(uint8Array);
+          let urlSettings = JSON.parse(jsonString);
+
           Object.keys(urlSettings).forEach((settingKey) => {
             const setting = this.trackInURL.find((s) => s.key === settingKey);
             if (setting) {
@@ -615,12 +626,27 @@ new Vue({
                 : urlSettings[settingKey];
             }
           });
-          // side effects :(
-          this.animateBackgroundIntro = !!urlSettings.hb;
+          this.animateBackgroundIntro = !!urlSettings.hb; // side effect
           hadSettingsFromURL = true;
         } catch (e) {
-          console.error("Error restoring settings from URL:", e);
-          // Continue with whatever settings we have from localStorage or defaults
+          console.error("Error restoring settings from compact share URL:", e);
+        }
+      } else {
+        // If no 's' param, try parsing explicit URL parameters
+        let explicitSettingsFound = false;
+        this.trackInURL.forEach((settingConfig) => {
+          if (params.has(settingConfig.prop)) {
+            const value = params.get(settingConfig.prop);
+            mergedSettings[settingConfig.prop] = settingConfig.p
+              ? settingConfig.p(value)
+              : value;
+            explicitSettingsFound = true;
+          }
+        });
+        if (explicitSettingsFound) {
+          hadSettingsFromURL = true;
+          // Potentially handle side effects like 'animateBackgroundIntro' if needed for explicit params
+          // For now, assuming 'hb' (hasBackground) is only in compact URL or localStorage
         }
       }
 
@@ -628,6 +654,59 @@ new Vue({
       if (typeof mergedSettings.lightmode === 'undefined') {
         const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
         mergedSettings.lightmode = wantLightMode.matches;
+      }
+
+      // Validate and clamp settings before applying them to the instance
+      if (mergedSettings.hasOwnProperty('amount')) {
+        let numAmount = Number(mergedSettings.amount);
+        if (isNaN(numAmount)) numAmount = defaultSettings.amount; // Fallback for safety
+        mergedSettings.amount = Math.min(Math.max(numAmount, 3), 10);
+      }
+
+      if (mergedSettings.hasOwnProperty('colorsInGradient')) {
+        let numColorsInGradient = Number(mergedSettings.colorsInGradient);
+        if (isNaN(numColorsInGradient)) numColorsInGradient = defaultSettings.colorsInGradient; // Fallback
+
+        const amountToUse = mergedSettings.hasOwnProperty('amount')
+          ? mergedSettings.amount // Use the potentially just clamped amount from mergedSettings
+          : defaultSettings.amount; // Fallback to default if amount is not in mergedSettings
+        mergedSettings.colorsInGradient = Math.min(Math.max(numColorsInGradient, 2), amountToUse);
+      }
+
+      // Validate quantizationMethod
+      if (mergedSettings.hasOwnProperty('quantizationMethod') && !this.quantizationMethods.includes(mergedSettings.quantizationMethod)) {
+        console.warn(`Invalid quantizationMethod from URL/localStorage: ${mergedSettings.quantizationMethod}. Falling back to default.`);
+        mergedSettings.quantizationMethod = defaultSettings.quantizationMethod;
+      }
+
+      // Validate colorMode
+      if (mergedSettings.hasOwnProperty('colorMode') && !this.colorModeList.includes(mergedSettings.colorMode)) {
+        console.warn(`Invalid colorMode from URL/localStorage: ${mergedSettings.colorMode}. Falling back to default.`);
+        mergedSettings.colorMode = defaultSettings.colorMode;
+      }
+
+      // Validate interpolationColorModel
+      if (mergedSettings.hasOwnProperty('interpolationColorModel') && !this.interpolationColorModels.includes(mergedSettings.interpolationColorModel)) {
+        console.warn(`Invalid interpolationColorModel from URL/localStorage: ${mergedSettings.interpolationColorModel}. Falling back to default.`);
+        mergedSettings.interpolationColorModel = defaultSettings.interpolationColorModel;
+      }
+
+      // Validate generatorFunction
+      if (mergedSettings.hasOwnProperty('generatorFunction') && !this.generatorFunctionList.includes(mergedSettings.generatorFunction)) {
+        console.warn(`Invalid generatorFunction from URL/localStorage: ${mergedSettings.generatorFunction}. Falling back to default.`);
+        mergedSettings.generatorFunction = defaultSettings.generatorFunction;
+      }
+
+      // Validate colorValueType
+      if (mergedSettings.hasOwnProperty('colorValueType') && !this.colorValueTypes.includes(mergedSettings.colorValueType)) {
+        console.warn(`Invalid colorValueType from URL/localStorage: ${mergedSettings.colorValueType}. Falling back to default.`);
+        mergedSettings.colorValueType = defaultSettings.colorValueType;
+      }
+
+      // Validate nameList
+      if (mergedSettings.hasOwnProperty('nameList') && !Object.keys(this.nameLists).includes(mergedSettings.nameList)) {
+        console.warn(`Invalid nameList from URL/localStorage: ${mergedSettings.nameList}. Falling back to default.`);
+        mergedSettings.nameList = defaultSettings.nameList;
       }
 
       // 3. Apply merged settings to Vue instance
@@ -638,29 +717,43 @@ new Vue({
       // 4. Save merged settings back to localStorage
       this.saveSettingsToLocalStorage();
 
-      return hadSettingsFromURL;
+      return { hadSettingsFromURL, hadSettingsFromLocalStorage };
     },
-    constructURL() {
+    constructShareURL() { // Renamed from constructURL
       const state = this.trackInURL.reduce(
         (o, i) => Object.assign(o, { [i.key]: this[i.prop] }),
         {}
       );
-      const serializedState = Buffer.from(JSON.stringify(state)).toString(
-        "base64"
-      );
+      const jsonString = JSON.stringify(state);
+      // Modern way to encode UTF-8 string to Base64
+      const uint8Array = new TextEncoder().encode(jsonString);
+      const binaryString = String.fromCharCode.apply(null, uint8Array);
+      const serializedState = btoa(binaryString);
       return serializedState;
+    },
+    constructExplicitTrackingURL() {
+      const params = new URLSearchParams();
+      this.trackInURL.forEach(setting => {
+        // Do not include trackSettingsInURL itself in the explicit URL
+        if (setting.prop !== 'trackSettingsInURL' && this[setting.prop] !== undefined) {
+          params.append(setting.prop, this[setting.prop]);
+        }
+      });
+      return params.toString() ? '?' + params.toString() : '';
     },
     updateURL() {
       if (this.trackSettingsInURL) {
-        // Use pushState instead of directly modifying history.pushState
-        // to add a new entry to the browser's history stack
-        const newURL = "?s=" + this.constructURL();
-        // Only add to history if the URL actually changed
-        if (window.location.search !== newURL) {
+        const explicitTrackingURL = this.constructExplicitTrackingURL();
+        const shareableSettingsString = this.constructShareURL(); // For history state
+
+        const newPath = window.location.pathname + explicitTrackingURL;
+
+        // Only add to history if the path actually changed
+        if (window.location.pathname + window.location.search !== newPath) {
           history.pushState(
-            { seed: this.currentSeed, settings: this.constructURL() },
+            { seed: this.currentSeed, settings: shareableSettingsString }, // Store compact version in state
             document.title,
-            newURL
+            newPath
           );
         }
       }
@@ -952,10 +1045,12 @@ new Vue({
   },
   mounted() {
     this.getLists();
-    let hadSettingsFromURL = this.settingsFromURLAndLocalStorage();
-    const settingsActuallyLoaded = true; // always loaded something (defaults if nothing else)
+    const loadStatus = this.settingsFromURLAndLocalStorage();
+    const hadSettingsFromURL = loadStatus.hadSettingsFromURL;
+    const hadSettingsFromLocalStorage = loadStatus.hadSettingsFromLocalStorage;
+    const anySettingsLoaded = hadSettingsFromURL || hadSettingsFromLocalStorage;
 
-    // Remove URL if settings came from it and not tracking in URL
+    // Remove URL query string if settings came from it and not tracking in URL
     if (hadSettingsFromURL && !this.trackSettingsInURL) {
       window.history.replaceState({}, document.title, location.pathname);
     }
@@ -966,12 +1061,18 @@ new Vue({
       if (event.state && event.state.seed) {
         this.currentSeed = event.state.seed;
 
-        // If we have settings in the state, restore them
+        // If we have settings in the state, restore them (expects compact format)
         if (event.state.settings) {
           try {
-            let urlSettings = JSON.parse(
-              Buffer.from(event.state.settings, 'base64').toString('ascii')
-            );
+            // Decode base64 (browser-native)
+            const binaryString = atob(event.state.settings);
+            // Modern way to decode Base64 to UTF-8 string
+            const uint8Array = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              uint8Array[i] = binaryString.charCodeAt(i);
+            }
+            const jsonString = new TextDecoder().decode(uint8Array);
+            let urlSettings = JSON.parse(jsonString);
 
             // Apply the settings from history state
             this.trackInURL.forEach((setting) => {
@@ -1033,14 +1134,14 @@ new Vue({
 
     const moreContrast = window.matchMedia("(prefers-contrast: more)");
 
-    if (moreContrast.matches && !settingsActuallyLoaded) {
+    if (moreContrast.matches && !anySettingsLoaded) {
       this.highContrast = true;
       this.hasGradients = false;
     }
 
-    this.newColors(!settingsActuallyLoaded);
+    this.newColors(!anySettingsLoaded);
 
-    if (!settingsActuallyLoaded) {
+    if (!anySettingsLoaded) {
       // Only apply OS theme if no settings loaded from anywhere
       const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
       if (wantLightMode.matches) {
@@ -1060,15 +1161,11 @@ new Vue({
       this.isAnimating = false;
     }, 1600);
 
-    if (this.animateBackgroundIntro && !settingsActuallyLoaded) {
+    if (this.animateBackgroundIntro && !anySettingsLoaded) {
       // Only animate intro if not loading from settings
       setTimeout(() => {
         this.hasBackground = true;
       }, 2000);
-    } else if (settingsActuallyLoaded && this.hasBackground) {
-      // If settings were loaded and hasBackground is true, ensure it's set.
-      // This should already be handled by loadSettingsFromLocalStorage or settingsFromURL.
-      // No specific action needed here as the property is already set.
     }
   },
 });
