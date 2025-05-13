@@ -8,9 +8,14 @@ import generateRandomColors from './lib/generate-random-colors.js';
 import { loadImage, startColorLocatorWorker } from './lib/image-palette.js';
 import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.js';
 import { visualizeColorPositions } from './lib/visualize-color-positions.js';
+import { solidFirstImpressionSeeds } from './seeds.js';
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+const fistImpressionSeed = solidFirstImpressionSeeds[
+  Math.floor(Math.random() * solidFirstImpressionSeeds.length)
+];
 
 Vue.component('color', {
   props: ['colorhex', 'name', 'colorvaluetype', 'contrastcolor', 'nextcolorhex', 'contrastcolors'],
@@ -1143,14 +1148,19 @@ new Vue({
       this.hasGradients = false;
     }
 
-    this.newColors(!anySettingsLoaded);
-
     if (!anySettingsLoaded) {
-      // Only apply OS theme if no settings loaded from anywhere
+      // Use one of the solid first impression seeds if no settings loaded
+      this.currentSeed = fistImpressionSeed;
+      this.rnd = new Seedrandom(this.currentSeed);
+      this.newColors(false); // false because we're using a preset seed
+
+      // Apply OS theme if no settings loaded from anywhere
       const wantLightMode = window.matchMedia("(prefers-color-scheme: light)");
       if (wantLightMode.matches) {
         this.lightmode = true;
       }
+    } else {
+      this.newColors(false); // Don't generate a new seed if settings were loaded
     }
 
     this.addMagicControls();

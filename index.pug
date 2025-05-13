@@ -139,6 +139,11 @@ html(lang="en-US")
           .panel__inputs
             input(type="range", v-model.number="minHueDistance", min="1", :max="360/colorsInGradient", step="1")
 
+        //label.panel__setting(v-if="generatorFunction !== 'ImageExtract'")
+          h4.panel__settingtitle
+            span Seed
+            input(type="text", v-model="currentSeed" v-on:input="newColors(false)")
+
         label.panel__setting.panel__setting--checkbox.panel__setting--inline(title="WCAG 2.0 AA Contrasts")
           input(type="checkbox", v-model="showContrast")
           i.panel__checkbox
