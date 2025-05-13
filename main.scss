@@ -176,7 +176,7 @@ button {
   opacity: 0;
   transform: scale(.7);
   transition: 300ms opacity linear, 220ms transform ease-out 50ms;
-  background-image: linear-gradient(to bottom, var(--gradient));
+  background-image: linear-gradient(to bottom, var(--gradientBG));
   /*mask-image: radial-gradient(circle at 50%, #000 10%, transparent 80%);*/
 }
 
@@ -698,13 +698,15 @@ button {
   }
 
   &__checkbox {
+    display: block;
     position: relative;
-    display: inline-block;
+    flex: 0 0 0.8rem;
     width: .8em;
     height: .8em;
     border: 1px solid var(--color-inverted);
     margin-top: -0.3em;
-    flex: 0 0 0.8rem;
+    transform: scale(.95);
+    transition: 100ms transform cubic-bezier(0.3, 0.7, 0, 1);
 
     svg {
       opacity: 0;
@@ -1541,6 +1543,7 @@ button {
 .footer {
   h2 {
     font-weight: 900;
+    font-size: 2rem;
   }
 
   font-size: .7em;
@@ -1551,6 +1554,15 @@ button {
   p {
     margin-top: 1em;
     margin-bottom: 2em;
+  }
+
+  aside,
+  article {
+    h2 { font-size: 1.2rem; }
+    .title--main {
+      font-size: max(4vw, 1.2rem);
+      font-weight: 900;
+    }
   }
 
   aside {

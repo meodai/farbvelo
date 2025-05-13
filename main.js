@@ -391,11 +391,14 @@ new Vue({
         )
       );
     },
-    gradientStops() {
+    gradientStopsBG() {
       const gradient = [...this.colors];
       gradient[0] += " 12vh";
       gradient[gradient.length - 1] += this.sameHeightColors ? " 80%" : " 69%";
       return gradient.join(",");
+    },
+    gradientStops() {
+      return [...this.colors].join(',');
     },
     hardStops() {
       return this.colors.map(
@@ -413,8 +416,9 @@ new Vue({
         "--color-last-contrast": this.lastColorContrast,
         "--color-first-contrast": this.firstColorContrast,
         "--colors": this.colors.length,
-        "--gradient": this.gradientStops,
+        "--gradientBG": this.gradientStopsBG,
         "--gradient-hard": this.hardStops,
+        "--gradient": this.gradientStops,
       };
     },
     appClasses() {
