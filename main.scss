@@ -27,7 +27,8 @@ body, html {
 
 html {
   font-size: calc(.75rem + 1.15vh);
-  font-family: 'Inter UI', sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
 }
 
 body {
