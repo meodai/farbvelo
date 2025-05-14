@@ -310,16 +310,16 @@ new Vue({
     lastColor() {
       return this.colors && this.colors.length
         ? this.colors[this.colors.length - 1]
-        : "#212121";
+        : "#202126";
     },
     lastColorContrast() {
-      return chroma(this.lastColor).luminance() < 0.5 ? "#fff" : "#212121";
+      return chroma(this.lastColor).luminance() < 0.5 ? "#fff" : "#202126";
     },
     firstColor() {
-      return this.colors && this.colors.length ? this.colors[0] : "#212121";
+      return this.colors && this.colors.length ? this.colors[0] : "#202126";
     },
     firstColorContrast() {
-      return chroma(this.firstColor).luminance() < 0.5 ? "#fff" : "#212121";
+      return chroma(this.firstColor).luminance() < 0.5 ? "#fff" : "#202126";
     },
     colors() {
       let colors;
