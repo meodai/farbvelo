@@ -112,4 +112,5 @@ export const solidFirstImpressionSeeds = [
   "c024e1c6aa7d08",
   "43a8102b49c",
   "32d286eaef15c8",
+  "0346a357deb288",
 ];
