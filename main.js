@@ -300,6 +300,9 @@ new Vue({
       }
     },
     colors: function() {
+      this.getNames(this.colors);
+      logColors(this.colors);
+
       // When the final colors are calculated, find their positions if we're using ImageExtract
       if (this.generatorFunction === 'ImageExtract' && this.currentImageData) {
         this.findAndStoreColorLocations();
@@ -379,10 +382,6 @@ new Vue({
           )
           .colors(this.amount);
       }
-
-      this.getNames(colors);
-
-      logColors(colors);
 
       return colors;
     },
