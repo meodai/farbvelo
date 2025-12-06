@@ -99,6 +99,7 @@ const defaultSettings = {
   amount: 6,
   colorsInGradient: 4,
   randomOrder: false,
+  colorArrangement: "default",
   hasGradients: true,
   hasBackground: false,
   animateBackgroundIntro: false,
@@ -215,6 +216,7 @@ new Vue({
         { key: "qm", prop: "quantizationMethod" }, // art-palette,
         { key: "nl", prop: "nameList" }, // nameList,
         { key: "ts", prop: "trackSettingsInURL", p: Boolean }, // false
+        { key: "ca", prop: "colorArrangement" }, // default
       ],
       ...defaultSettings,
     };
@@ -254,6 +256,9 @@ new Vue({
       this.newColors();
     },
     randomOrder: function () {
+      this.newColors();
+    },
+    colorArrangement: function () {
       this.newColors();
     },
     minHueDistance: function () {
@@ -783,6 +788,7 @@ new Vue({
           amount: this.amount,
           parts: this.colorsInGradient,
           randomOrder: this.randomOrder,
+          colorArrangement: this.colorArrangement,
           minHueDiffAngle: this.minHueDistance,
         });
         this.colorsValues = colorArr;

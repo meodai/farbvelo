@@ -108,6 +108,16 @@ html(lang="en-US")
           .panel__inputs
             input(type="range", v-model.number="padding", min="0", max="1", step=".001")
 
+        label.panel__setting(v-if="generatorFunction === 'Legacy' || generatorFunction === 'Hue Bingo'")
+          h4.panel__settingtitle Lightness Ramp
+          .panel__inputs.panel__inputs--select
+            svg
+              use(xlink:href="#icon-dropdown")
+            select(v-model="colorArrangement")
+              option(value="default") Light to Dark
+              option(value="darkCenter") Dark Center
+              option(value="lightCenter") Light Center
+
         label.panel__setting(v-if="generatorFunction !== 'RandomColor.js' && generatorFunction !== 'ImageExtract'")
           h4.panel__settingtitle Color Mode
           .panel__inputs.panel__inputs--select
