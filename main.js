@@ -553,7 +553,7 @@ new Vue({
           // some of the lists have to little names, remove all that have less than 100
           const listsToKeep = {};
           Object.keys(data.listDescriptions).forEach((key) => {
-            if (data.listDescriptions[key].colorCount > 150) {
+            if (data.listDescriptions[key].colorCount > 120) {
               listsToKeep[key] = data.listDescriptions[key];
             }
           });
