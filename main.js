@@ -175,6 +175,8 @@ new Vue({
       currentSeed: randomStr(),
       rnd: new Seedrandom(),
       moveTimer: null,
+      fetchThrottleTimer: null,
+      fetchAbortController: null,
       isCopiying: false,
       paletteTitle: "Double Rainbow",
       lightmode: false,
@@ -561,28 +563,51 @@ new Vue({
         });
     },
     getNames(colors, onlyNames) {
-      const url = new URL("https://api.color.pizza/v1/");
+      // Clear any existing throttle timer
+      if (this.fetchThrottleTimer) {
+        clearTimeout(this.fetchThrottleTimer);
+      }
 
-      const params = {
-        noduplicates: true,
-        list: this.nameList,
-        values: colors.map((c) => c.replace("#", "")),
-      };
+      // Abort any ongoing fetch
+      if (this.fetchAbortController) {
+        this.fetchAbortController.abort();
+      }
 
-      //url.pathname += colors.join().replace(/#/g, '');
+      // Throttle the fetch by 100ms
+      this.fetchThrottleTimer = setTimeout(() => {
+        // Create new AbortController for this fetch
+        this.fetchAbortController = new AbortController();
 
-      url.search = new URLSearchParams(params).toString();
+        const url = new URL("https://api.color.pizza/v1/");
 
-      return fetch(url, {
-        headers: {
-          "X-Referrer": "https://farbvelo.elastiq.ch/",
-        },
-      })
-        .then((data) => data.json())
-        .then((data) => {
-          this.names = data.colors;
-          this.paletteTitle = data.paletteTitle;
-        });
+        const params = {
+          noduplicates: true,
+          list: this.nameList,
+          values: colors.map((c) => c.replace("#", "")),
+        };
+
+        //url.pathname += colors.join().replace(/#/g, '');
+
+        url.search = new URLSearchParams(params).toString();
+
+        return fetch(url, {
+          headers: {
+            "X-Referrer": "https://farbvelo.elastiq.ch/",
+          },
+          signal: this.fetchAbortController.signal,
+        })
+          .then((data) => data.json())
+          .then((data) => {
+            this.names = data.colors;
+            this.paletteTitle = data.paletteTitle;
+          })
+          .catch((error) => {
+            // Ignore abort errors
+            if (error.name !== 'AbortError') {
+              console.error('Fetch error:', error);
+            }
+          });
+      }, 100);
     },
     updateMeta() {
       const theme = document.querySelector('[name="theme-color"]');
