@@ -1,6 +1,6 @@
 {
   "name": "FarbVelo — Random Color Cycler",
-  "description": "Generative color harmonies. The random color expolorer",
+  "description": "Generative color harmonies. The random color explorer for designers and artists.",
   "version": "1",
   "manifest_version": 2,
   "app": {
