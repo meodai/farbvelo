@@ -13,6 +13,46 @@ import { solidFirstImpressionSeeds } from './seeds.js';
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
+let colorSortWorker;
+let colorSortRequestId = 0;
+let latestColorSortRequestId = 0;
+
+function getColorSortWorker() {
+  if (!colorSortWorker) {
+    colorSortWorker = new Worker("./color-sort-worker.js");
+  }
+  return colorSortWorker;
+}
+
+function sortColorsWithWorker(colors, onSuccess, onError) {
+  const worker = getColorSortWorker();
+  const requestId = ++colorSortRequestId;
+  latestColorSortRequestId = requestId;
+
+  const handleMessage = (event) => {
+    const { status, sorted, requestId: responseId, message } = event.data || {};
+    if (responseId !== requestId) {
+      return;
+    }
+    worker.removeEventListener("message", handleMessage);
+    if (status === "SUCCESS" && Array.isArray(sorted)) {
+      onSuccess(sorted, responseId);
+    } else {
+      onError(message || "Color sorting failed.", responseId);
+    }
+  };
+
+  const handleError = (event) => {
+    worker.removeEventListener("message", handleMessage);
+    onError((event && event.message) || "Color sorting worker error.", requestId);
+  };
+
+  worker.addEventListener("message", handleMessage);
+  worker.addEventListener("error", handleError, { once: true });
+  worker.postMessage({ colors, requestId });
+  return requestId;
+}
+
 const fistImpressionSeed = solidFirstImpressionSeeds[
   Math.floor(Math.random() * solidFirstImpressionSeeds.length)
 ];
@@ -805,6 +845,10 @@ new Vue({
       this.rnd = new Seedrandom(this.currentSeed);
       this.updateURL();
       if (this.generatorFunction !== "ImageExtract") { // Added parentheses around the condition
+        const shouldWorkerSort =
+          this.generatorFunction === "Full Random" ||
+          this.generatorFunction === "RandomColor.js";
+        const generatorAtRequest = this.generatorFunction;
         let colorArr = generateRandomColors({
           generatorFunction: this.generatorFunction,
           random: this.random,
@@ -812,11 +856,31 @@ new Vue({
           colorMode: this.colorMode,
           amount: this.amount,
           parts: this.colorsInGradient,
-          randomOrder: this.randomOrder,
+          randomOrder: shouldWorkerSort ? false : this.randomOrder,
           colorArrangement: this.colorArrangement,
           minHueDiffAngle: this.minHueDistance,
         });
-        this.colorsValues = colorArr;
+
+        if (shouldWorkerSort) {
+          sortColorsWithWorker(
+            colorArr,
+            (sortedColors, responseId) => {
+              if (responseId !== latestColorSortRequestId || this.generatorFunction !== generatorAtRequest) {
+                return;
+              }
+              this.colorsValues = sortedColors;
+            },
+            (errorMessage, responseId) => {
+              if (responseId !== latestColorSortRequestId || this.generatorFunction !== generatorAtRequest) {
+                return;
+              }
+              console.warn(errorMessage);
+              this.colorsValues = colorArr;
+            }
+          );
+        } else {
+          this.colorsValues = colorArr;
+        }
       } else if (this.generatorFunction === "ImageExtract") {
         // Always use a random image when using ImageExtract
         // This ensures uploaded images are not tracked in the URL

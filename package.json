@@ -5,7 +5,9 @@
   "main": "index.pug",
   "scripts": {
     "start": "parcel index.pug",
+    "prebuild": "node scripts/transpile-colorsort.mjs",
     "build": "parcel build *.pug",
+    "postinstall": "node scripts/transpile-colorsort.mjs",
     "test": "npm run build"
   },
   "repository": {
@@ -19,15 +21,18 @@
   },
   "homepage": "https://github.com/meodai/farbvelo#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
+    "@babel/core": "^7.12.0",
+    "@babel/plugin-transform-class-properties": "^7.12.0",
+    "@babel/preset-env": "^7.12.0",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.5.0",
     "pug": "^3.0.0",
-    "sass": "^1.29.0"
+    "sass": "^1.29.0",
+    "terser": "^5.46.0"
   },
   "dependencies": {
     "chroma-js": "^2.4.2",
+    "colorsort-js": "^3.0.2",
     "gifenc": "^1.0.3",
     "hsluv": "^0.1.0",
     "randomcolor": "^0.6.2",
@@ -38,5 +43,8 @@
   },
   "staticFiles": {
     "staticPath": "public"
-  }
+  },
+  "browserslist": [
+    "last 2 Chrome versions"
+  ]
 }
