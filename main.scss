@@ -992,21 +992,26 @@ button {
   gap: .5rem;
 }
 
-.panel__tokenbeam-token,
-.panel__tokenbeam-unlink {
-  background: transparent;
-  border: 0;
-  color: var(--color-bg);
-  font-size: 1em;
-  font-family: 'Space Mono', monospace;
+.panel__tokenbeam-inputwrap {
+  position: relative;
+  flex: 1;
 }
 
 .panel__tokenbeam-token {
-  text-align: left;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: var(--color-bg) !important;
+  font-size: 1em;
+  font-family: 'Space Mono', monospace;
+  text-align: left !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-decoration: underline;
+  margin: 0;
+  padding: 0;
+  padding-right: 3rem;
+
 
   &:disabled {
     opacity: .7;
@@ -1014,6 +1019,11 @@ button {
 }
 
 .panel__tokenbeam-unlink {
+  background: transparent;
+  border: 0;
+  color: var(--color-bg);
+  font-size: 1em;
+  font-family: 'Space Mono', monospace;
   text-decoration: underline;
 }
 
@@ -1165,6 +1175,8 @@ button {
   padding: .4em .6em .5em .8em;
   border: none;
   cursor: pointer;
+  opacity: 1;
+  transition: 150ms opacity;
 
   .minibutton__icon--check {
     display: none;
@@ -1194,6 +1206,16 @@ button {
     margin-left: .5em;
     position: relative;
     top: .12em;
+  }
+}
+
+.panel__urlcopy {
+  .minibutton {
+    opacity: 0;
+  }
+
+  &:hover .minibutton {
+    opacity: 1;
   }
 }
 

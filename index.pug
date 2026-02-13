@@ -342,8 +342,14 @@ html(lang="en-US")
                   a(:href="plugin.url" rel="noopener" target="_blank") {{plugin.name}}
             .panel__tokenbeam(:class="'panel__tokenbeam--' + tokenBeamWidgetState")
               .panel__inputs.panel__tokenbeam-row
-                button(type="button" class="panel__tokenbeam-token" :title="tokenBeamToken || 'Connecting…'" v-on:click="copyTokenBeamToken" :disabled="!tokenBeamToken")
-                  | {{ tokenBeamToken || 'Connecting…' }}
+                .panel__tokenbeam-inputwrap
+                  input(type="text" :value="tokenBeamToken || 'Connecting…'" readonly :disabled="!tokenBeamToken").panel__tokenbeam-token
+              button.minibutton(:class="{'minibutton--copy': isCopyingTokenBeamToken}" aria-label="copy token to clipboard" v-on:click="copyTokenBeamToken" :disabled="!tokenBeamToken")
+                span.minibutton__label copy
+                svg.minibutton__icon
+                  use(xlink:href="#icon-copy")
+                svg.minibutton__icon.minibutton__icon--check
+                  use(xlink:href="#icon-check")
                 button.panel__tokenbeam-unlink(type="button" v-if="tokenBeamWidgetState === 'syncing'" v-on:click="disconnectTokenBeam")
                   | Unlink
               p.panel__text(v-if="tokenBeamStatus") {{tokenBeamStatus}}

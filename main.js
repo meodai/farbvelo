@@ -249,6 +249,8 @@ new Vue({
       tokenBeamSyncTimer: null,
       tokenBeamSyncClientClass: null,
       tokenBeamCreateCollection: null,
+      isCopyingTokenBeamToken: false,
+      tokenBeamTokenCopyTimer: null,
       isCopyingURL: false,
       urlCopyTimer: null,
       trackSettingsInURL: true, // Initialize here
@@ -740,6 +742,14 @@ new Vue({
       if (!this.tokenBeamToken) {
         return;
       }
+      if (this.tokenBeamTokenCopyTimer) {
+        clearTimeout(this.tokenBeamTokenCopyTimer);
+      }
+      this.isCopyingTokenBeamToken = true;
+      this.tokenBeamTokenCopyTimer = setTimeout(() => {
+        this.isCopyingTokenBeamToken = false;
+      }, 1000);
+
       navigator.clipboard.writeText(this.tokenBeamToken);
     },
     random(min = 1, max) {
@@ -1342,6 +1352,10 @@ new Vue({
     if (this.urlCopyTimer) {
       clearTimeout(this.urlCopyTimer);
       this.urlCopyTimer = null;
+    }
+    if (this.tokenBeamTokenCopyTimer) {
+      clearTimeout(this.tokenBeamTokenCopyTimer);
+      this.tokenBeamTokenCopyTimer = null;
     }
     if (this.tokenBeamSyncTimer) {
       clearTimeout(this.tokenBeamSyncTimer);
