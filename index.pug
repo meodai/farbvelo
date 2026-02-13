@@ -321,8 +321,33 @@ html(lang="en-US")
           label.panel__setting
             h4.panel__settingtitle
               |Link to palette
-            .panel__inputs
-              input(type="url" :value="currentURL").input--url
+            .panel__inputs.panel__urlcopy
+              input(type="text" :value="currentURL" readonly).input--url
+              button.minibutton(:class="{'minibutton--copy': isCopyingURL}" aria-label="copy URL to clipboard" v-on:click.prevent="copyCurrentURL")
+                span.minibutton__label copy
+                svg.minibutton__icon
+                  use(xlink:href="#icon-copy")
+                svg.minibutton__icon.minibutton__icon--check
+                  use(xlink:href="#icon-check")
+
+          label.panel__setting.panel__setting--tokenbeam
+            h4.panel__settingtitle.panel__settingtitle--tokenbeam
+              span Token Beam
+              button(type="button" class="panel__tokenbeam-aboutbutton" v-on:click="toggleTokenBeamAbout") About
+            .panel__tokenbeam-about(v-if="tokenBeamAboutOpen")
+              p.panel__text.
+                This widget allows you to sync this website with your favorite design program.
+              ul.panel__tokenbeam-links
+                li(v-for="plugin in tokenBeamPluginLinks" :key="plugin.id")
+                  a(:href="plugin.url" rel="noopener" target="_blank") {{plugin.name}}
+            .panel__tokenbeam(:class="'panel__tokenbeam--' + tokenBeamWidgetState")
+              .panel__inputs.panel__tokenbeam-row
+                button(type="button" class="panel__tokenbeam-token" :title="tokenBeamToken || 'Connecting…'" v-on:click="copyTokenBeamToken" :disabled="!tokenBeamToken")
+                  | {{ tokenBeamToken || 'Connecting…' }}
+                button.panel__tokenbeam-unlink(type="button" v-if="tokenBeamWidgetState === 'syncing'" v-on:click="disconnectTokenBeam")
+                  | Unlink
+              p.panel__text(v-if="tokenBeamStatus") {{tokenBeamStatus}}
+              p.panel__text(v-if="tokenBeamError") {{tokenBeamError}}
 
 
           label.panel__setting

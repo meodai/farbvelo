@@ -10,6 +10,23 @@ import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.j
 import { visualizeColorPositions } from './lib/visualize-color-positions.js';
 import { solidFirstImpressionSeeds } from './seeds.js';
 
+const TOKEN_BEAM_CDN_URL = 'https://esm.sh/token-beam@0.1.0';
+let tokenBeamModulePromise = null;
+const TOKEN_BEAM_PLUGIN_LINKS = [
+  { id: 'figma', name: 'Figma', url: 'https://github.com/meodai/token-beam/releases' },
+  { id: 'sketch', name: 'Sketch', url: 'https://github.com/meodai/token-beam/releases' },
+  { id: 'aseprite', name: 'Aseprite', url: 'https://github.com/meodai/token-beam/releases' },
+  { id: 'krita', name: 'Krita', url: 'https://github.com/meodai/token-beam/releases' },
+  { id: 'adobe-xd', name: 'Adobe XD', url: 'https://github.com/meodai/token-beam/releases' },
+];
+
+function loadTokenBeamModule() {
+  if (!tokenBeamModulePromise) {
+    tokenBeamModulePromise = import(TOKEN_BEAM_CDN_URL);
+  }
+  return tokenBeamModulePromise;
+}
+
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
@@ -222,6 +239,18 @@ new Vue({
       lightmode: false,
       settingsVisible: false,
       shareVisible: false,
+      syncClient: null,
+      tokenBeamToken: "",
+      tokenBeamStatus: "",
+      tokenBeamError: "",
+      tokenBeamWidgetState: "connecting",
+      tokenBeamAboutOpen: false,
+      tokenBeamPluginLinks: TOKEN_BEAM_PLUGIN_LINKS,
+      tokenBeamSyncTimer: null,
+      tokenBeamSyncClientClass: null,
+      tokenBeamCreateCollection: null,
+      isCopyingURL: false,
+      urlCopyTimer: null,
       trackSettingsInURL: true, // Initialize here
       trackInURL: [
         { key: "s", prop: "currentSeed" },
@@ -349,6 +378,7 @@ new Vue({
     colors: function() {
       this.getNames(this.colors);
       logColors(this.colors);
+      this.scheduleTokenBeamSync();
 
       // When the final colors are calculated, find their positions if we're using ImageExtract
       if (this.generatorFunction === 'ImageExtract' && this.currentImageData) {
@@ -550,6 +580,168 @@ new Vue({
     },
   },
   methods: {
+    async copyTextToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (_error) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.pointerEvents = 'none';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+
+        let copied = false;
+        try {
+          copied = document.execCommand('copy');
+        } catch (_fallbackError) {
+          copied = false;
+        }
+
+        document.body.removeChild(textarea);
+        return copied;
+      }
+    },
+    toggleTokenBeamAbout() {
+      this.tokenBeamAboutOpen = !this.tokenBeamAboutOpen;
+    },
+    copyCurrentURL() {
+      if (this.urlCopyTimer) {
+        clearTimeout(this.urlCopyTimer);
+      }
+      this.isCopyingURL = true;
+      this.urlCopyTimer = setTimeout(() => {
+        this.isCopyingURL = false;
+      }, 1000);
+
+      this.copyTextToClipboard(this.currentURL);
+    },
+    getSyncServerUrl() {
+      return 'wss://token-beam.fly.dev';
+    },
+    buildTokenBeamPayload() {
+      if (!this.tokenBeamCreateCollection) {
+        return null;
+      }
+
+      const tokens = this.colors.reduce((acc, hex, index) => {
+        const tokenName = String(index + 1).padStart(2, '0');
+        acc[tokenName] = hex;
+        return acc;
+      }, {});
+
+      return this.tokenBeamCreateCollection('farbvelo', tokens);
+    },
+    scheduleTokenBeamSync() {
+      if (this.tokenBeamSyncTimer) {
+        clearTimeout(this.tokenBeamSyncTimer);
+      }
+
+      this.tokenBeamSyncTimer = setTimeout(() => {
+        this.syncTokenBeam();
+      }, 160);
+    },
+    syncTokenBeam() {
+      if (!this.syncClient || !this.syncClient.isConnected() || this.tokenBeamWidgetState !== 'syncing') {
+        return;
+      }
+
+      try {
+        const payload = this.buildTokenBeamPayload();
+        if (!payload) {
+          return;
+        }
+        this.syncClient.sync(payload);
+      } catch (error) {
+        this.tokenBeamError = String(error);
+        this.tokenBeamWidgetState = 'error';
+      }
+    },
+    async initTokenBeam() {
+      if (this.syncClient) {
+        this.syncClient.disconnect();
+      }
+
+      this.tokenBeamToken = '';
+      this.tokenBeamError = '';
+      this.tokenBeamStatus = 'Connecting…';
+      this.tokenBeamWidgetState = 'connecting';
+
+      try {
+        const tokenBeam = await loadTokenBeamModule();
+        this.tokenBeamSyncClientClass = tokenBeam.SyncClient;
+        this.tokenBeamCreateCollection = tokenBeam.createCollection;
+      } catch (error) {
+        this.tokenBeamError = String(error);
+        this.tokenBeamStatus = '';
+        this.tokenBeamWidgetState = 'error';
+        return;
+      }
+
+      if (!this.tokenBeamSyncClientClass || !this.tokenBeamCreateCollection) {
+        this.tokenBeamError = 'Token Beam module did not provide expected exports.';
+        this.tokenBeamStatus = '';
+        this.tokenBeamWidgetState = 'error';
+        return;
+      }
+
+      this.syncClient = new this.tokenBeamSyncClientClass({
+        serverUrl: this.getSyncServerUrl(),
+        clientType: 'web',
+        origin: 'Farbvelo',
+        icon: { type: 'unicode', value: '🎨' },
+        onPaired: (token) => {
+          this.tokenBeamToken = token;
+          this.tokenBeamError = '';
+          this.tokenBeamStatus = 'Waiting for a design tool to connect.';
+          this.tokenBeamWidgetState = 'ready';
+        },
+        onTargetConnected: () => {
+          this.tokenBeamError = '';
+          this.tokenBeamStatus = 'Connected. Syncing this palette.';
+          this.tokenBeamWidgetState = 'syncing';
+          this.scheduleTokenBeamSync();
+        },
+        onDisconnected: () => {
+          this.tokenBeamStatus = 'Disconnected. Reconnecting…';
+          this.tokenBeamWidgetState = 'disconnected';
+        },
+        onError: (error) => {
+          if (typeof error === 'string' && error.includes('client disconnected')) {
+            this.tokenBeamError = '';
+            this.tokenBeamStatus = 'Waiting for a design tool to connect.';
+            this.tokenBeamWidgetState = 'ready';
+            return;
+          }
+
+          this.tokenBeamError = error;
+          this.tokenBeamStatus = '';
+          this.tokenBeamWidgetState = 'error';
+        },
+      });
+
+      this.syncClient.connect().catch((error) => {
+        this.tokenBeamError = String(error);
+        this.tokenBeamStatus = '';
+        this.tokenBeamWidgetState = 'error';
+      });
+    },
+    disconnectTokenBeam() {
+      if (this.syncClient) {
+        this.syncClient.disconnect();
+      }
+      this.initTokenBeam();
+    },
+    copyTokenBeamToken() {
+      if (!this.tokenBeamToken) {
+        return;
+      }
+      navigator.clipboard.writeText(this.tokenBeamToken);
+    },
     random(min = 1, max) {
       if (!max) return this.rnd() * min;
       return Math.floor(this.rnd() * (max - min + 1)) + min;
@@ -1146,6 +1338,20 @@ new Vue({
       );
     },
   },
+  beforeDestroy() {
+    if (this.urlCopyTimer) {
+      clearTimeout(this.urlCopyTimer);
+      this.urlCopyTimer = null;
+    }
+    if (this.tokenBeamSyncTimer) {
+      clearTimeout(this.tokenBeamSyncTimer);
+      this.tokenBeamSyncTimer = null;
+    }
+    if (this.syncClient) {
+      this.syncClient.disconnect();
+      this.syncClient = null;
+    }
+  },
   mounted() {
     this.getLists();
     const loadStatus = this.settingsFromURLAndLocalStorage();
@@ -1256,6 +1462,8 @@ new Vue({
     } else {
       this.newColors(false); // Don't generate a new seed if settings were loaded
     }
+
+    this.initTokenBeam();
 
     this.addMagicControls();
 

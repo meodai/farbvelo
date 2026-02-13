@@ -39,6 +39,7 @@
     "seedrandom": "^3.0.5",
     "simplex-noise": "^3.0.1",
     "spectral.js": "^2.0.0",
+    "token-beam": "^0.1.0",
     "vue": "^2.6.12"
   },
   "staticFiles": {

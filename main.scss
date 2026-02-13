@@ -944,6 +944,79 @@ button {
   }
 }
 
+.panel__setting--tokenbeam {
+  .panel__text {
+    margin-top: .6em;
+    margin-bottom: 0;
+  }
+}
+
+.panel__settingtitle--tokenbeam {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel__tokenbeam-aboutbutton {
+  text-decoration: underline;
+  font-size: .85em;
+}
+
+.panel__tokenbeam-about {
+  margin-bottom: .75rem;
+  font-size: .65em;
+}
+
+.panel__tokenbeam-links {
+  margin-top: .6em;
+  list-style: none;
+
+  li + li {
+    margin-top: .25em;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.panel__tokenbeam {
+  border: 1px solid var(--color-inverted);
+  padding: .45rem .55rem;
+  font-size: .65em;
+  background: var(--color-inverted);
+  color: var(--color-bg);
+}
+
+.panel__tokenbeam-row {
+  align-items: center;
+  gap: .5rem;
+}
+
+.panel__tokenbeam-token,
+.panel__tokenbeam-unlink {
+  background: transparent;
+  border: 0;
+  color: var(--color-bg);
+  font-size: 1em;
+  font-family: 'Space Mono', monospace;
+}
+
+.panel__tokenbeam-token {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: underline;
+
+  &:disabled {
+    opacity: .7;
+  }
+}
+
+.panel__tokenbeam-unlink {
+  text-decoration: underline;
+}
+
 
 .panel-share {
   padding: calc(var(--size-gutter) * 2);
@@ -1115,6 +1188,52 @@ button {
     }
 
 
+
+    svg {
+      width: 1em;
+      height: 1em;
+      margin-left: .5em;
+      position: relative;
+      top: .12em;
+    }
+  }
+}
+
+.panel__urlcopy {
+  position: relative;
+
+  .minibutton {
+    z-index: 2;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--color-bg);
+    color: var(--color-inverted);
+    line-height: 1;
+    font-size: .6rem;
+    padding: .4em .6em .5em .8em;
+
+    .minibutton__icon--check {
+      display: none;
+    }
+
+    &--copy {
+      .minibutton__label {
+        display: none;
+      }
+
+      &::before {
+        content: 'jeah!';
+      }
+
+      .minibutton__icon {
+        display: none;
+      }
+
+      .minibutton__icon--check {
+        display: inline-block;
+      }
+    }
 
     svg {
       width: 1em;
