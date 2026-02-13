@@ -1153,96 +1153,54 @@ button {
   text-overflow: ellipsis;
 }
 
-.panel__export {
-  position: relative;
-  margin-bottom: 1rem;
+.minibutton {
+  z-index: 2;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: var(--color-bg);
+  color: var(--color-inverted);
+  line-height: 1;
+  font-size: .6rem;
+  padding: .4em .6em .5em .8em;
+  border: none;
+  cursor: pointer;
 
-  .minibutton {
-    z-index: 2;
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    background: var(--color-bg);
-    color: var(--color-inverted);
-    line-height: 1;
-    font-size: .6rem;
-    padding: .4em .6em .5em .8em;
+  .minibutton__icon--check {
+    display: none;
+  }
 
-    .minibutton__icon--check {
+  &--copy {
+    .minibutton__label {
       display: none;
     }
 
-    &--copy {
-      .minibutton__label {
-        display: none;
-      }
-      &::before {
-        content: 'jeah!';
-      }
-      .minibutton__icon {
-        display: none;
-      }
-      .minibutton__icon--check {
-        display: inline-block;
-      }
+    &::before {
+      content: 'jeah!';
     }
 
-
-
-    svg {
-      width: 1em;
-      height: 1em;
-      margin-left: .5em;
-      position: relative;
-      top: .12em;
+    .minibutton__icon {
+      display: none;
     }
+
+    .minibutton__icon--check {
+      display: inline-block;
+    }
+  }
+
+  svg {
+    width: 1em;
+    height: 1em;
+    margin-left: .5em;
+    position: relative;
+    top: .12em;
   }
 }
 
+.panel__export,
 .panel__urlcopy {
   position: relative;
-
-  .minibutton {
-    z-index: 2;
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    background: var(--color-bg);
-    color: var(--color-inverted);
-    line-height: 1;
-    font-size: .6rem;
-    padding: .4em .6em .5em .8em;
-
-    .minibutton__icon--check {
-      display: none;
-    }
-
-    &--copy {
-      .minibutton__label {
-        display: none;
-      }
-
-      &::before {
-        content: 'jeah!';
-      }
-
-      .minibutton__icon {
-        display: none;
-      }
-
-      .minibutton__icon--check {
-        display: inline-block;
-      }
-    }
-
-    svg {
-      width: 1em;
-      height: 1em;
-      margin-left: .5em;
-      position: relative;
-      top: .12em;
-    }
-  }
+  margin-bottom: 1rem;
 }
 
 .wrap__showcontrast .panel__setting--bnw {
