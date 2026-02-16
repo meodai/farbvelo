@@ -623,7 +623,7 @@ new Vue({
       this.copyTextToClipboard(this.currentURL);
     },
     getSyncServerUrl() {
-      return 'wss://token-beam.fly.dev';
+      return 'wss://tokenbeam.dev';
     },
     buildTokenBeamPayload() {
       if (!this.tokenBeamCreateCollection) {
