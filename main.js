@@ -10,7 +10,7 @@ import { buildImage, buildSVG, copyExport, shareURL } from './lib/export-utils.j
 import { visualizeColorPositions } from './lib/visualize-color-positions.js';
 import { solidFirstImpressionSeeds } from './seeds.js';
 
-const TOKEN_BEAM_CDN_URL = 'https://esm.sh/token-beam@0.1.0';
+const TOKEN_BEAM_CDN_URL = 'https://esm.sh/token-beam@1.6.0';
 let tokenBeamModulePromise = null;
 const TOKEN_BEAM_PLUGIN_LINKS = [
   { id: 'figma', name: 'Figma', url: 'https://github.com/meodai/token-beam/releases' },
@@ -247,7 +247,7 @@ new Vue({
       tokenBeamAboutOpen: false,
       tokenBeamPluginLinks: TOKEN_BEAM_PLUGIN_LINKS,
       tokenBeamSyncTimer: null,
-      tokenBeamSyncClientClass: null,
+      tokenBeamSourceSessionClass: null,
       tokenBeamCreateCollection: null,
       isCopyingTokenBeamToken: false,
       tokenBeamTokenCopyTimer: null,
@@ -648,7 +648,7 @@ new Vue({
       }, 160);
     },
     syncTokenBeam() {
-      if (!this.syncClient || !this.syncClient.isConnected() || this.tokenBeamWidgetState !== 'syncing') {
+      if (!this.syncClient || this.tokenBeamWidgetState !== 'syncing') {
         return;
       }
 
@@ -675,7 +675,7 @@ new Vue({
 
       try {
         const tokenBeam = await loadTokenBeamModule();
-        this.tokenBeamSyncClientClass = tokenBeam.SyncClient;
+        this.tokenBeamSourceSessionClass = tokenBeam.SourceSession;
         this.tokenBeamCreateCollection = tokenBeam.createCollection;
       } catch (error) {
         this.tokenBeamError = String(error);
@@ -684,46 +684,55 @@ new Vue({
         return;
       }
 
-      if (!this.tokenBeamSyncClientClass || !this.tokenBeamCreateCollection) {
+      if (!this.tokenBeamSourceSessionClass || !this.tokenBeamCreateCollection) {
         this.tokenBeamError = 'Token Beam module did not provide expected exports.';
         this.tokenBeamStatus = '';
         this.tokenBeamWidgetState = 'error';
         return;
       }
 
-      this.syncClient = new this.tokenBeamSyncClientClass({
+      this.syncClient = new this.tokenBeamSourceSessionClass({
         serverUrl: this.getSyncServerUrl(),
         clientType: 'web',
         origin: 'Farbvelo',
         icon: { type: 'unicode', value: '🎨' },
-        onPaired: (token) => {
-          this.tokenBeamToken = token;
+      });
+
+      this.syncClient.on('paired', ({ sessionToken }) => {
+        this.tokenBeamToken = sessionToken;
+        this.tokenBeamError = '';
+        this.tokenBeamStatus = 'Waiting for a design tool to connect.';
+        this.tokenBeamWidgetState = 'ready';
+      });
+
+      this.syncClient.on('peer-connected', () => {
+        this.tokenBeamError = '';
+        this.tokenBeamStatus = 'Connected. Syncing this palette.';
+        this.tokenBeamWidgetState = 'syncing';
+        this.scheduleTokenBeamSync();
+      });
+
+      this.syncClient.on('peer-disconnected', () => {
+        if (this.syncClient && !this.syncClient.hasPeers()) {
           this.tokenBeamError = '';
           this.tokenBeamStatus = 'Waiting for a design tool to connect.';
           this.tokenBeamWidgetState = 'ready';
-        },
-        onTargetConnected: () => {
-          this.tokenBeamError = '';
-          this.tokenBeamStatus = 'Connected. Syncing this palette.';
-          this.tokenBeamWidgetState = 'syncing';
-          this.scheduleTokenBeamSync();
-        },
-        onDisconnected: () => {
-          this.tokenBeamStatus = 'Disconnected. Reconnecting…';
-          this.tokenBeamWidgetState = 'disconnected';
-        },
-        onError: (error) => {
-          if (typeof error === 'string' && error.includes('client disconnected')) {
-            this.tokenBeamError = '';
-            this.tokenBeamStatus = 'Waiting for a design tool to connect.';
-            this.tokenBeamWidgetState = 'ready';
-            return;
-          }
+        }
+      });
 
-          this.tokenBeamError = error;
-          this.tokenBeamStatus = '';
-          this.tokenBeamWidgetState = 'error';
-        },
+      this.syncClient.on('warning', () => {
+        this.tokenBeamError = '';
+      });
+
+      this.syncClient.on('disconnected', () => {
+        this.tokenBeamStatus = 'Disconnected. Reconnecting…';
+        this.tokenBeamWidgetState = 'disconnected';
+      });
+
+      this.syncClient.on('error', ({ message }) => {
+        this.tokenBeamError = message;
+        this.tokenBeamStatus = '';
+        this.tokenBeamWidgetState = 'error';
       });
 
       this.syncClient.connect().catch((error) => {
